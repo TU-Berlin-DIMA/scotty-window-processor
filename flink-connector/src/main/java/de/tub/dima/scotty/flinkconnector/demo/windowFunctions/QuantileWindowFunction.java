@@ -1,0 +1,30 @@
+package de.tub.dima.scotty.flinkconnector.demo.windowFunctions;
+
+import de.tub.dima.scotty.core.windowFunction.*;
+import org.apache.flink.api.java.tuple.*;
+
+public class QuantileWindowFunction implements AggregateFunction<Tuple2<Integer, Integer>, Tuple2<Integer, QuantileTreeMap>, Tuple2<Integer, Integer>> {
+
+    private final double quantile;
+
+    public QuantileWindowFunction(final double quantile) {
+        this.quantile = quantile;
+    }
+
+
+    @Override
+    public Tuple2<Integer, QuantileTreeMap> lift(Tuple2<Integer, Integer> inputTuple) {
+        return new Tuple2<>(inputTuple.f0, new QuantileTreeMap(inputTuple.f1, quantile));
+    }
+
+    @Override
+    public Tuple2<Integer, Integer> lower(Tuple2<Integer, QuantileTreeMap> aggregate) {
+        return new Tuple2<>(aggregate.f0, aggregate.f1.getQuantile());
+    }
+
+    @Override
+    public Tuple2<Integer, QuantileTreeMap> combine(Tuple2<Integer, QuantileTreeMap> partialAggregate1, Tuple2<Integer, QuantileTreeMap> partialAggregate2) {
+        return new Tuple2<>(partialAggregate1.f0, partialAggregate1.f1.clone().merge(partialAggregate2.f1.clone()));
+
+    }
+}

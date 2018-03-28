@@ -1,0 +1,21 @@
+{
+  "name" : "tumbling_window_benchmark",
+  "runtime" : 30,
+  "throughput": 1600,
+  "windowConfigurations": [
+    [
+      "randomTumbling(1,1,20)"
+    ]
+  ],
+  "configurations": [
+    "Flink"
+  ],
+  "sessionConfig": {
+    "gapCount": 10,
+    "minGapTime": 1000,
+    "maxGapTime": 1001
+  },
+  "aggFunctions":[
+    "Sum"
+  ]
+}
