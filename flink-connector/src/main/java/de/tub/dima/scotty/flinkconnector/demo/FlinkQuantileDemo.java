@@ -28,11 +28,7 @@ public class FlinkQuantileDemo implements Serializable {
         stream
                 .keyBy(0)
                 .process(windowOperator)
-                .flatMap((FlatMapFunction<AggregateWindow<Tuple2<Integer, Integer>>, Tuple2<Integer, Integer>>) (tuple2AggregateWindow, collector) -> {
-                        for(Tuple2<Integer,Integer> value: tuple2AggregateWindow.getAggValue()){
-                            collector.collect(value);
-                        }
-                })
+                .map(x -> x.getAggValue().get(0).f1)
                 .print();
 
         sev.execute("demo");

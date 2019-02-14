@@ -16,6 +16,8 @@ public class FlinkSumDemo implements Serializable {
     public static void main(String[] args) throws Exception {
         LocalStreamEnvironment sev = StreamExecutionEnvironment.createLocalEnvironment();
         sev.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        sev.setParallelism(1);
+        sev.setMaxParallelism(1);
 
         DataStream<Tuple2<Integer, Integer>> stream = sev.addSource(new DemoSource());
 

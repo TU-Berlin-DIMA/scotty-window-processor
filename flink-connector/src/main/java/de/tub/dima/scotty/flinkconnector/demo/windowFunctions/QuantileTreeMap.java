@@ -49,11 +49,6 @@ public class QuantileTreeMap implements java.io.Serializable {
 		TreeMap<Integer, Integer> outer = newValues;
 		TreeMap<Integer, Integer> innter = values;
 
-		if (outer.size() > innter.size()) {
-			outer = values;
-			innter = newValues;
-		}
-
 		counter = (innter.size() - outer.size());
 
 		for (Map.Entry<Integer, Integer> entry : outer.entrySet()) {

@@ -5,8 +5,8 @@ import de.tub.dima.scotty.core.windowFunction.*;
 import de.tub.dima.scotty.core.windowType.*;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
+import de.tub.dima.scotty.slicing.state.*;
 import de.tub.dima.scotty.state.*;
-import de.tub.dima.scotty.core.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
