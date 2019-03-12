@@ -28,7 +28,7 @@ public class ScottyWindowTopology {
 
         if (topology.equals("Scotty")) {
             BaseBasicBolt scottyBolt = new ScottyBolt<Integer, Integer>(new sumWindowFunction());
-            ((ScottyBolt) scottyBolt).addWindow(new TumblingWindow(WindowMeasure.Time, 2000));
+            ((ScottyBolt) scottyBolt).addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
 
             builder.setSpout("integer", new RandomIntegerSpout(), 1);
             builder.setBolt("scottyWindow", scottyBolt, 1).fieldsGrouping("integer", new Fields("key"));
@@ -37,7 +37,7 @@ public class ScottyWindowTopology {
         } else {
             builder.setSpout("integer", new RandomIntegerSpout(), 1);
             //builder.setBolt("slidingsum", new SlidingWindowSumBolt().withWindow(Duration.seconds(5)), 1).fieldsGrouping("integer",new Fields("key"));
-            builder.setBolt("tumblingsum", new TumblingWindowSumBolt().withTumblingWindow(Duration.of(2000)), 1)
+            builder.setBolt("tumblingsum", new TumblingWindowSumBolt().withTumblingWindow(Duration.of(1000)), 1)
                     .fieldsGrouping("integer", new Fields("key"));
             builder.setBolt("printer", new PrinterBolt(), 1).shuffleGrouping("tumblingsum");
 
