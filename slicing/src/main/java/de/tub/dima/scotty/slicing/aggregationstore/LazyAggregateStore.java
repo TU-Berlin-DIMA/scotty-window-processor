@@ -2,9 +2,9 @@ package de.tub.dima.scotty.slicing.aggregationstore;
 
 import de.tub.dima.scotty.core.*;
 import de.tub.dima.scotty.slicing.*;
-import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.Slice;
-import de.tub.dima.scotty.core.*;
+import de.tub.dima.scotty.slicing.state.*;
+import de.tub.dima.scotty.slicing.state.AggregateWindowState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +68,10 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
     @Override
     public void aggregate(WindowManager.AggregationWindowCollector aggregateWindows, long minTs, long maxTs) {
 
-        int startIndex = findSliceIndexByTimestamp(minTs);
-        int endIndex = Math.max(this.size() - 1, findSliceIndexByTimestamp(maxTs));
+        // start index = 0 || minTS
+        int startIndex = Math.max(findSliceIndexByTimestamp(minTs),0);
+        // endIndex = this.size()-1 || maxTs
+        int endIndex = Math.min(this.size() - 1, findSliceIndexByTimestamp(maxTs));
 
         for (int i = startIndex; i <= endIndex; i++) {
             Slice currentSlice = getSlice(i);

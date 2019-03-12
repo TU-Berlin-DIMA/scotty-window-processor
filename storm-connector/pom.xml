@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>de.tub.dima.scotty</groupId>
+        <version>0.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>storm-connector</artifactId>
+<dependencies>
+    <dependency>
+        <groupId>de.tub.dima.scotty</groupId>
+        <artifactId>core</artifactId>
+        <version>0.2</version>
+    </dependency>
+    <dependency>
+        <groupId>de.tub.dima.scotty</groupId>
+        <artifactId>slicing</artifactId>
+        <version>0.2</version>
+    </dependency>
+    <dependency>
+        <groupId>de.tub.dima.scotty</groupId>
+        <artifactId>state</artifactId>
+        <version>0.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.storm/storm-core -->
+    <dependency>
+        <groupId>org.apache.storm</groupId>
+        <artifactId>storm-core</artifactId>
+        <version>1.2.2</version>
+    </dependency>
+</dependencies>
+
+</project>

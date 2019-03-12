@@ -2,8 +2,6 @@ package de.tub.dima.scotty.core.windowType;
 
 import de.tub.dima.scotty.core.*;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
-import de.tub.dima.scotty.core.*;
-import de.tub.dima.scotty.core.windowType.windowContext.*;
 
 public class SessionWindow implements ForwardContextAware {
 
@@ -41,12 +39,14 @@ public class SessionWindow implements ForwardContextAware {
         @Override
         public ActiveWindow updateContext(Object tuple, long position) {
 
+            //? Why end and start are the same
             if (hasActiveWindows()) {
                 addNewWindow(0, position, position);
                 return getWindow(0);
             }
             int sessionIndex = getSession(position);
 
+            //? When does this happen
             if (sessionIndex == -1) {
                 addNewWindow(0, position, position);
 
@@ -91,6 +91,7 @@ public class SessionWindow implements ForwardContextAware {
             for (; i < numberOfActiveWindows(); i++) {
                 ActiveWindow s = getWindow(i);
                 if (s.getStart() - gap <= position && s.getEnd() + gap >= position) {
+                    //?
                     return i;
                 } else if (s.getStart() - gap > position)
                     return i - 1;

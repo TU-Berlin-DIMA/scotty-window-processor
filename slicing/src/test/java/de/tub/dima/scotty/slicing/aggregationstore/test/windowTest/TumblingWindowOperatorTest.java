@@ -50,11 +50,11 @@ public class TumblingWindowOperatorTest {
         slicingWindowOperator.processElement(1, 0);
         slicingWindowOperator.processElement(2, 0);
         slicingWindowOperator.processElement(3, 20);
-        slicingWindowOperator.processElement(4, 30);
+        slicingWindowOperator.processElement(4, 36);
         slicingWindowOperator.processElement(5, 40);
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
-
+        //? Why first AggregateWindow has 3 and second is null
         Assert.assertEquals(3, resultWindows.get(0).getAggValue().get(0));
         Assert.assertEquals(null, resultWindows.get(1).getAggValue().get(0));
 

@@ -9,7 +9,6 @@ public class StreamSlicer {
     private final SliceManager<?> sliceManager;
     private final WindowManager windowManager;
     private long maxEventTime = Long.MIN_VALUE;
-    //private long min_next_edge =  Long.MIN_VALUE;
     private long min_next_edge = Long.MIN_VALUE;
     private long count_between_edges;
 
@@ -74,11 +73,13 @@ public class StreamSlicer {
         maxEventTime = Math.max(te, maxEventTime);
     }
 
+    //?
     private long calculateNextFixedEdge(long te) {
         // next_edge will be the last edge
         long current_min_edge = min_next_edge == Long.MIN_VALUE ? Long.MAX_VALUE : min_next_edge;
         long t_c = Math.max(te - this.windowManager.getMaxLateness(), current_min_edge);
         long edge = Long.MAX_VALUE;
+        //Among all the windows, find the edge that belongs to first next window
         for (ContextFreeWindow tw : this.windowManager.getContextFreeWindows()) {
             //long newNextEdge = t_c + tw.getSize() - (t_c) % tw.getSize();
             long newNextEdge = tw.assignNextWindowStart(t_c);

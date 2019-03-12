@@ -14,7 +14,6 @@ public class SumAggregation implements InvertibleReduceAggregateFunction<Tuple4<
 
     @Override
     public Tuple4<String, Integer, Long, Long> combine(Tuple4<String, Integer, Long, Long> partialAggregate1, Tuple4<String, Integer, Long, Long> partialAggregate2) {
-
         return new Tuple4<>(partialAggregate1.f0, partialAggregate1.f1 + partialAggregate2.f1, partialAggregate1.f2, partialAggregate1.f3);
     }
 }

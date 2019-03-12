@@ -16,6 +16,8 @@ public class FlinkSumDemo implements Serializable {
     public static void main(String[] args) throws Exception {
         LocalStreamEnvironment sev = StreamExecutionEnvironment.createLocalEnvironment();
         sev.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        //sev.setBufferTimeout(10);
+        sev.setParallelism(1);
 
         DataStream<Tuple2<Integer, Integer>> stream = sev.addSource(new DemoSource());
 
@@ -23,7 +25,7 @@ public class FlinkSumDemo implements Serializable {
                 new KeyedScottyWindowOperator<>(new SumWindowFunction());
 
         processingFunction.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
-        processingFunction.addWindow(new SlidingWindow(WindowMeasure.Time, 1000,5000));
+        //processingFunction.addWindow(new SlidingWindow(WindowMeasure.Time, 1000,5000));
 
         stream
                 .keyBy(0)

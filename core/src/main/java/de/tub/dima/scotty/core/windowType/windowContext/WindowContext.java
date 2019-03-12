@@ -1,11 +1,11 @@
 package de.tub.dima.scotty.core.windowType.windowContext;
 
 import de.tub.dima.scotty.core.*;
-import de.tub.dima.scotty.core.*;
 
 import java.io.*;
 import java.util.*;
 
+//? Tuple
 public abstract class WindowContext<Tuple> implements Serializable {
 
     private Set<WindowModifications> modifiedWindowEdges;
@@ -33,6 +33,7 @@ public abstract class WindowContext<Tuple> implements Serializable {
     }
 
     public final ActiveWindow mergeWithPre(int sessionIndex) {
+        //? Why not less than 1
         assert sessionIndex >= 1;
         ActiveWindow window = activeWindows.get(sessionIndex);
         ActiveWindow preWindow = activeWindows.get(sessionIndex - 1);

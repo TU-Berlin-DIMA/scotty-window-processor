@@ -5,7 +5,6 @@ import de.tub.dima.scotty.core.windowFunction.*;
 import de.tub.dima.scotty.core.windowType.*;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.state.memory.*;
-import de.tub.dima.scotty.core.*;
 import org.apache.flink.configuration.*;
 import org.apache.flink.streaming.api.functions.*;
 import org.apache.flink.util.*;

@@ -1,6 +1,6 @@
 package de.tub.dima.scotty.microbenchmark;
 
-import de.tub.dima.scotty.slicing.AggregationState;
+import de.tub.dima.scotty.slicing.state.AggregateState;
 import de.tub.dima.scotty.state.memory.MemoryStateFactory;
 import de.tub.dima.scotty.core.windowFunction.ReduceAggregateFunction;
 import org.openjdk.jmh.annotations.*;
@@ -17,7 +17,7 @@ public class AggregationStoreBenchmark {
 
     private long ts;
     private long n;
-    private AggregationState aggregationState;
+    private AggregateState aggregationState;
     private AggregationStateInline aggregationStateInline;
 
     @Setup(Level.Iteration)
@@ -31,7 +31,7 @@ public class AggregationStoreBenchmark {
                 return partialAggregate1 + partialAggregate2;
             }
         };
-        this.aggregationState = new AggregationState(memoryStateFactory, Collections.singletonList(wf));
+        this.aggregationState = new AggregateState(memoryStateFactory, Collections.singletonList(wf));
         this.aggregationStateInline  = new AggregationStateInline(memoryStateFactory);
     }
 
