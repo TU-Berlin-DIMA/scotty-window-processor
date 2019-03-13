@@ -61,7 +61,6 @@ public class WindowManager {
     }
 
     private void assignContextFreeWindows(long watermarkTs, WindowCollector windowCollector) {
-
         for (ContextFreeWindow window : contextFreeWindows) {
             window.triggerWindows(windowCollector, lastWatermark, watermarkTs);
         }
@@ -123,6 +122,8 @@ public class WindowManager {
 
         public void trigger(long start, long end) {
             AggregateWindowState aggWindow = new AggregateWindowState(start, end, stateFactory, windowFunctions);
+            System.out.println("Trigger:" + start + "," + (end));
+
             this.aggregationStores.add(aggWindow);
         }
 

@@ -42,16 +42,19 @@ public class SlidingWindow implements ContextFreeWindow {
         return recordStamp + getSlide() - (recordStamp) % getSlide();
     }
 
+    public static long getWindowStartWithOffset(long timestamp, long windowSize) {
+        return timestamp - (timestamp  + windowSize) % windowSize;
+    }
+
     @Override
     public void triggerWindows(WindowCollector collector, long lastWatermark, long currentWatermark) {
-        long swSize = getSize();
-        long swSlice = getSlide();
-        while (lastWatermark + swSize < currentWatermark) {
-            long windowStart = lastWatermark - (lastWatermark % swSlice);
-            long windowEnd = windowStart + swSize;
-            collector.trigger(windowStart, windowEnd);
-            lastWatermark = windowStart + swSlice;
+        long lastStart  = getWindowStartWithOffset(currentWatermark, slide);
+
+        for (long windowStart = lastStart; windowStart + size > lastWatermark; windowStart -= slide) {
+            if (windowStart>=0 && windowStart + size <= currentWatermark + 1)
+                collector.trigger(windowStart, windowStart + size);
         }
+
     }
 
     @Override
