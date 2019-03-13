@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 
 public class AggregateState<InputType> implements Serializable {
-    private final List<AggregateValueState<InputType, Object, Object>> aggregateValueStates;
+    private final List<AggregateValueState<InputType,Object,Object>> aggregateValueStates;
 
     public AggregateState(StateFactory stateFactory, List<AggregateFunction> windowFunctions) {
 
@@ -18,10 +18,11 @@ public class AggregateState<InputType> implements Serializable {
     }
 
     public void addElement(InputType state) {
-        for (AggregateValueState<InputType, Object, Object> valueState : aggregateValueStates) {
+        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
             valueState.addElement(state);
         }
     }
+
 
 
     public void merge(AggregateState<InputType> otherAggState) {
@@ -38,7 +39,7 @@ public class AggregateState<InputType> implements Serializable {
 
     public List<Object> getValues() {
         List<Object> objectList = new ArrayList<>(aggregateValueStates.size());
-        for (AggregateValueState<InputType, Object, Object> valueState : aggregateValueStates) {
+        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
             objectList.add(valueState.getValue());
         }
         return objectList;
@@ -58,18 +59,16 @@ public class AggregateState<InputType> implements Serializable {
         return Objects.hash(aggregateValueStates);
     }
 
-    //? To Be Changed
     @Override
     public String toString() {
         return "AggregateState{" +
-                // "values=" + aggregateValueStates + '}';
                 "values=" + printValues();
     }
-
-    private String printValues() {
-        String str = "";
-        for (Object o : getValues())
+    private String printValues(){
+        String str="";
+        for(Object o :getValues()){
             str += o.toString();
+        }
         return str;
     }
 }
