@@ -53,12 +53,12 @@ public class RandomIntegerSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
-        //incrVal +=1;
         collector.emit(new Values("tuple",1, incrVal, System.currentTimeMillis(), ++msgId), msgId);
         if (lastWatermark + 1000 < System.currentTimeMillis()) {
             collector.emit(new Values("waterMark",1,1,System.currentTimeMillis(), ++msgId),msgId);
             lastWatermark = System.currentTimeMillis();
         }
+        incrVal +=1;
         Utils.sleep(100);
     }
 

@@ -27,8 +27,8 @@ public class ScottyWindowTopology {
         TopologyBuilder builder = new TopologyBuilder();
 
         if (topology.equals("Scotty")) {
-            BaseBasicBolt scottyBolt = new ScottyBolt<Integer, Integer>(new sumWindowFunction());
-            ((ScottyBolt) scottyBolt).addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
+            ScottyBolt scottyBolt = new ScottyBolt<Integer, Integer>(new sumWindowFunction());
+            scottyBolt.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
 
             builder.setSpout("integer", new RandomIntegerSpout(), 1);
             builder.setBolt("scottyWindow", scottyBolt, 1).fieldsGrouping("integer", new Fields("key"));
@@ -42,8 +42,11 @@ public class ScottyWindowTopology {
             builder.setBolt("printer", new PrinterBolt(), 1).shuffleGrouping("tumblingsum");
 
         }
+
         Config conf = new Config();
         conf.setDebug(true);
+        conf.put(Config.STORM_ZOOKEEPER_SESSION_TIMEOUT, 10000);
+        conf.put(Config.STORM_ZOOKEEPER_CONNECTION_TIMEOUT, 10000);
         String topoName = "test";
         conf.setDebug(false);
         conf.setNumWorkers(1);
