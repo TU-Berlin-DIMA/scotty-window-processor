@@ -1,6 +1,6 @@
 package de.tub.dima.scotty.slicing.slice;
 
-import de.tub.dima.scotty.slicing.*;
+import de.tub.dima.scotty.slicing.state.*;
 
 public interface Slice<InputType, ValueType> {
 
@@ -52,7 +52,7 @@ public interface Slice<InputType, ValueType> {
     /**
      * @return
      */
-    AggregationState getAggState();
+    AggregateState getAggState();
 
     /**
      * Add a element to the slice.

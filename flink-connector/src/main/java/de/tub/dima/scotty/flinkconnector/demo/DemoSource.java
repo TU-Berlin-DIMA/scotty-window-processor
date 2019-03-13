@@ -27,7 +27,7 @@ public class DemoSource extends RichSourceFunction<Tuple2<Integer, Integer>> imp
         public void run(SourceContext<Tuple2<Integer, Integer>> ctx) throws Exception {
             while (!canceled) {
 
-                ctx.collectWithTimestamp(new Tuple2<>(key.nextInt(1), value.nextInt(10)), System.currentTimeMillis());
+                ctx.collectWithTimestamp(new Tuple2<>(1, value.nextInt(10)), System.currentTimeMillis());
                 if (lastWatermark + 1000 < System.currentTimeMillis()) {
                     ctx.emitWatermark(new Watermark(System.currentTimeMillis()));
                     lastWatermark = System.currentTimeMillis();

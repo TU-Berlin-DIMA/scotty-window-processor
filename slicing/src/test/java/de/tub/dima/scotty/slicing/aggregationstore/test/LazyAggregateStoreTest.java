@@ -5,6 +5,7 @@ import de.tub.dima.scotty.core.windowFunction.*;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.*;
+import de.tub.dima.scotty.slicing.state.*;
 import de.tub.dima.scotty.state.*;
 import static org.junit.Assert.*;
 import org.junit.*;

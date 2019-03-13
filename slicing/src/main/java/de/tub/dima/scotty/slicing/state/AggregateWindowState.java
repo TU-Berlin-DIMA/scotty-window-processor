@@ -1,4 +1,4 @@
-package de.tub.dima.scotty.slicing;
+package de.tub.dima.scotty.slicing.state;
 
 import de.tub.dima.scotty.state.StateFactory;
 import de.tub.dima.scotty.core.AggregateWindow;
@@ -12,12 +12,12 @@ public class AggregateWindowState implements AggregateWindow {
     private final long startTs;
     private final long endTs;
 
-    private AggregationState windowState;
+    private AggregateState windowState;
 
     public AggregateWindowState(long startTs, long endTs, StateFactory stateFactory, List<AggregateFunction> windowFunctionList) {
         this.startTs = startTs;
         this.endTs = endTs;
-        this.windowState = new AggregationState(stateFactory, windowFunctionList);
+        this.windowState = new AggregateState(stateFactory, windowFunctionList);
     }
 
     public long getStartTs() {
@@ -33,7 +33,7 @@ public class AggregateWindowState implements AggregateWindow {
         return windowState.getValues();
     }
 
-    public void addState(AggregationState aggregationState) {
+    public void addState(AggregateState aggregationState) {
         this.windowState.merge(aggregationState);
     }
 

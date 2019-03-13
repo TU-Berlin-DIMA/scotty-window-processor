@@ -2,6 +2,7 @@ package de.tub.dima.scotty.slicing.aggregationstore;
 
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.slicing.slice.Slice;
+import de.tub.dima.scotty.slicing.state.*;
 
 public interface AggregationStore<InputType> {
 
