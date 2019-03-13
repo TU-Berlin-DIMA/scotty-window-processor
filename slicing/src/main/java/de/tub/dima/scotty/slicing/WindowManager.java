@@ -122,8 +122,6 @@ public class WindowManager {
 
         public void trigger(long start, long end) {
             AggregateWindowState aggWindow = new AggregateWindowState(start, end, stateFactory, windowFunctions);
-            System.out.println("Trigger:" + start + "," + (end));
-
             this.aggregationStores.add(aggWindow);
         }
 
