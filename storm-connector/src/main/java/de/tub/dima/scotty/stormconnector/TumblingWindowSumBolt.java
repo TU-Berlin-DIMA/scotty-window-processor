@@ -32,23 +32,22 @@ public class TumblingWindowSumBolt extends BaseWindowedBolt {
     @Override
     public void execute(TupleWindow inputWindow) {
         int sum = 0;
+        Object key = null;
         List<Tuple> tuplesInWindow = inputWindow.get();
         LOG.debug("Events in current window: " + tuplesInWindow.size());
         if (tuplesInWindow.size() > 0) {
-            /*
-             * Since this is a tumbling window calculation,
-             * we use all the tuples in the window to compute the avg.
-             */
             for (Tuple tuple : tuplesInWindow) {
-                if(tuple.getString(0).equals("tuple"))
+                if (tuple.getString(0).equals("tuple")) {
+                    if (key == null) key = tuple.getValue(1);
                     sum += (int) tuple.getValue(2);
+                }
             }
-            collector.emit(new Values(sum));
+            collector.emit(new Values(key, sum));
         }
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("avg"));
+        declarer.declare(new Fields("key", "sum"));
     }
 }

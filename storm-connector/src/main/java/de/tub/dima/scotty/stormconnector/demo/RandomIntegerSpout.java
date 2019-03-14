@@ -26,10 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * Emits a random integer and a timestamp value (offset by one day),
- * every 100 ms. The ts field can be used in tuple time based windowing.
- */
 public class RandomIntegerSpout extends BaseRichSpout {
     private static final Logger LOG = LoggerFactory.getLogger(RandomIntegerSpout.class);
     private SpoutOutputCollector collector;
@@ -38,28 +34,34 @@ public class RandomIntegerSpout extends BaseRichSpout {
     private Random value;
     private int incrVal = 1;
     private long lastWatermark = 0;
+    private int numKeys;
 
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("type","key", "value", "ts", "msgid"));
-    }
-
-    @Override
-    public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
-        this.collector = spoutOutputCollector;
+    public RandomIntegerSpout(int numKeys) {
+        this.numKeys = numKeys;
         this.key = new Random(42);
         this.value = new Random(43);
     }
 
     @Override
+    public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
+        this.collector = spoutOutputCollector;
+    }
+
+    @Override
     public void nextTuple() {
-        collector.emit(new Values("tuple",1, incrVal, System.currentTimeMillis(), ++msgId), msgId);
+        // collector.emit(new Values("tuple", 0, incrVal, System.currentTimeMillis(), ++msgId), msgId);
+        collector.emit(new Values("tuple", key.nextInt(numKeys), incrVal, System.currentTimeMillis(), ++msgId), msgId);
         if (lastWatermark + 1000 < System.currentTimeMillis()) {
-            collector.emit(new Values("waterMark",1,1,System.currentTimeMillis(), ++msgId),msgId);
+            collector.emit(new Values("waterMark", key.nextInt(numKeys), 1, System.currentTimeMillis(), ++msgId), msgId);
             lastWatermark = System.currentTimeMillis();
         }
-        incrVal +=1;
+        incrVal += 1;
         Utils.sleep(100);
+    }
+
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        declarer.declare(new Fields("type", "key", "value", "ts", "msgid"));
     }
 
     @Override

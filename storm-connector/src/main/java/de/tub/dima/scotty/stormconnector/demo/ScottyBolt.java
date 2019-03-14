@@ -41,7 +41,7 @@ public class ScottyBolt<Key, Value> extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("sum"));
+        outputFieldsDeclarer.declare(new Fields("key", "sum"));
     }
 
     @Override
@@ -54,19 +54,26 @@ public class ScottyBolt<Key, Value> extends BaseBasicBolt {
             SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
             slicingWindowOperator.processElement((Value) tuple.getValue(2), tuple.getLong(3));
         } else //WaterMark
-            processWatermark(tuple.getLong(3), basicOutputCollector);
+            processWatermark((Key) tuple.getValue(1), tuple.getLong(3), basicOutputCollector);
     }
 
-    private void processWatermark(long ts, BasicOutputCollector basicOutputCollector) {
+    private void processWatermark(Key currentKey, long ts, BasicOutputCollector basicOutputCollector) {
         long currentWaterMark = ts;
 
         if (currentWaterMark > this.lastWatermark) {
-            for (SlicingWindowOperator<Value> slicingWindowOperator : this.slicingWindowOperatorMap.values()) {
+            for (SlicingWindowOperator<Value> slicingWindowOperator : slicingWindowOperatorMap.values()) {
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
-                for (AggregateWindow<Integer> aggregateWindow : aggregates) {
-                    basicOutputCollector.emit(new Values(aggregateWindow));
+                for (AggregateWindow<Value> aggregateWindow : aggregates) {
+                    basicOutputCollector.emit(new Values(currentKey,aggregateWindow));
                 }
             }
+/*            SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
+            List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
+            for (AggregateWindow<Value> aggregateWindow : aggregates) {
+                basicOutputCollector.emit(new Values(currentKey, aggregateWindow));
+            }*/
+
+
             this.lastWatermark = currentWaterMark;
         }
     }

@@ -67,7 +67,7 @@ public class AggregateState<InputType> implements Serializable {
     private String printValues(){
         String str="";
         for(Object o :getValues()){
-            str += o.toString();
+            if(o!=null) str += o.toString();
         }
         return str;
     }
