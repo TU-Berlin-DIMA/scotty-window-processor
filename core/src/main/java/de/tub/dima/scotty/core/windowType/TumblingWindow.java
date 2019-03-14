@@ -6,6 +6,7 @@ import de.tub.dima.scotty.core.*;
 public class TumblingWindow implements ContextFreeWindow {
 
     private final WindowMeasure measure;
+
     /**
      * Size of the tumbling window
      */
@@ -32,15 +33,9 @@ public class TumblingWindow implements ContextFreeWindow {
 
     @Override
     public void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark) {
-        long twSize = getSize();
-        while (lastWatermark + twSize < currentWatermark) {
-            //Find the window start and end time that covers the last watermark
-            long windowStart = lastWatermark - (lastWatermark % twSize);
-            long windowEnd = windowStart + twSize;
-            //Trigger computation and output of the window that covers last watermark
-            aggregateWindows.trigger(windowStart, windowEnd);
-            //Update the last watermark to trigger next window computation
-            lastWatermark = windowEnd;
+        long lastStart = lastWatermark - ((lastWatermark + size) % size);
+        for (long windowStart = lastStart; windowStart + size <= currentWatermark; windowStart += size) {
+            aggregateWindows.trigger(windowStart, windowStart + size);
         }
     }
 

@@ -61,7 +61,6 @@ public class WindowManager {
     }
 
     private void assignContextFreeWindows(long watermarkTs, WindowCollector windowCollector) {
-
         for (ContextFreeWindow window : contextFreeWindows) {
             window.triggerWindows(windowCollector, lastWatermark, watermarkTs);
         }
