@@ -1,11 +1,8 @@
 {
-  "name" : "tumbling_window_benchmark",
+  "name" : "sliding_window_benchmark",
   "runtime" : 30,
-  "throughput": 1600000,
+  "throughput": 100000,
   "windowConfigurations": [
-    [
-      "Sliding(60000,60000)"
-    ],
     [
       "Sliding(60000,60000)"
     ],

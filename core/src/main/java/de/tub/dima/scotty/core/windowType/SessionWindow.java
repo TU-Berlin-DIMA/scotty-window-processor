@@ -39,14 +39,12 @@ public class SessionWindow implements ForwardContextAware {
         @Override
         public ActiveWindow updateContext(Object tuple, long position) {
 
-            //? Why end and start are the same
             if (hasActiveWindows()) {
                 addNewWindow(0, position, position);
                 return getWindow(0);
             }
             int sessionIndex = getSession(position);
 
-            //? When does this happen
             if (sessionIndex == -1) {
                 addNewWindow(0, position, position);
 

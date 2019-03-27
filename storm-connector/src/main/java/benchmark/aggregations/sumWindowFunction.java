@@ -1,4 +1,4 @@
-package de.tub.dima.scotty.stormconnector.demo.windowFunctions;
+package benchmark.aggregations;
 
 import de.tub.dima.scotty.core.windowFunction.InvertibleReduceAggregateFunction;
 

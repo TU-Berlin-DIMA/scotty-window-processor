@@ -32,12 +32,19 @@ public class RandomIntegerSpout extends BaseRichSpout {
     private long msgId = 0;
     private Random key;
     private Random value;
-    private int incrVal = 1;
+    private int incrVal = 0;
     private long lastWatermark = 0;
     private int numKeys;
+    //event time should be long
+    private long eventTime = 0;
+    private int lag = 0;
+    private int sessionStep = 1;
+    private boolean sessionGap = false;
 
-    public RandomIntegerSpout(int numKeys) {
+    public RandomIntegerSpout(int numKeys, int lag, boolean sessionGap) {
         this.numKeys = numKeys;
+        this.sessionGap = sessionGap;
+        this.lag = lag;
         this.key = new Random(42);
         this.value = new Random(43);
     }
@@ -49,14 +56,23 @@ public class RandomIntegerSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
-        // collector.emit(new Values("tuple", 0, incrVal, System.currentTimeMillis(), ++msgId), msgId);
-        collector.emit(new Values("tuple", key.nextInt(numKeys), incrVal, System.currentTimeMillis(), ++msgId), msgId);
+        collector.emit(new Values("tuple", key.nextInt(numKeys), ++incrVal, ++eventTime, ++msgId), msgId);
+        //Emit Watermarks every 1 sec
         if (lastWatermark + 1000 < System.currentTimeMillis()) {
-            collector.emit(new Values("waterMark", key.nextInt(numKeys), 1, System.currentTimeMillis(), ++msgId), msgId);
+            //We want to emit watermarks with all keys since watermarks are independent of key
+            for (int key = 0; key < numKeys; key++)
+                collector.emit(new Values("waterMark", key, 1, eventTime, ++msgId), msgId);
             lastWatermark = System.currentTimeMillis();
         }
-        incrVal += 1;
-        Utils.sleep(100);
+        Utils.sleep(lag);
+        //Session Gap
+        if (sessionGap) {
+            if (sessionStep == 100) {
+                eventTime += 1000;
+                sessionStep = 0;
+            }
+            sessionStep++;
+        }
     }
 
     @Override

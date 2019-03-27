@@ -25,79 +25,68 @@ import static org.apache.flink.streaming.api.windowing.time.Time.seconds;
  */
 public class BenchmarkJob {
 
-	public BenchmarkJob(List<Window> assigner, StreamExecutionEnvironment env, final long runtime,
-						final int throughput, final List<Tuple2<Long, Long>> gaps) {
+    public BenchmarkJob(List<Window> assigner, StreamExecutionEnvironment env, final long runtime,
+                        final int throughput, final List<Tuple2<Long, Long>> gaps) {
 
 
-		Map<String, String> configMap = new HashMap<>();
-		ParameterTool parameters = ParameterTool.fromMap(configMap);
+        Map<String, String> configMap = new HashMap<>();
+        ParameterTool parameters = ParameterTool.fromMap(configMap);
 
-		env.getConfig().setGlobalJobParameters(parameters);
-		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-		env.setParallelism(1);
-		env.setMaxParallelism(1);
-
-
-		KeyedScottyWindowOperator<Tuple, Tuple4<String, Integer, Long, Long>, Tuple4<String, Integer, Long, Long>> windowOperator =
-				new KeyedScottyWindowOperator<>(new SumAggregation());
-
-		for(Window w: assigner){
-			windowOperator.addWindow(w);
-		}
+        env.getConfig().setGlobalJobParameters(parameters);
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.setParallelism(1);
+        env.setMaxParallelism(1);
 
 
-		DataStream<Tuple4<String, Integer, Long, Long>> messageStream = env
-			.addSource(new de.tub.dima.scotty.flinkBenchmark.LoadGeneratorSource(runtime, throughput,  gaps));
+        KeyedScottyWindowOperator<Tuple, Tuple4<String, Integer, Long, Long>, Tuple4<String, Integer, Long, Long>> windowOperator =
+                new KeyedScottyWindowOperator<>(new SumAggregation());
 
-		messageStream.flatMap(new de.tub.dima.scotty.flinkBenchmark.ThroughputLogger<>(200, throughput));
-
-
-
-		final SingleOutputStreamOperator<Tuple4<String, Integer, Long, Long>> timestampsAndWatermarks = messageStream
-			.assignTimestampsAndWatermarks(new TimestampsAndWatermarks());
+        for (Window w : assigner) {
+            windowOperator.addWindow(w);
+        }
 
 
+        DataStream<Tuple4<String, Integer, Long, Long>> messageStream = env
+                .addSource(new de.tub.dima.scotty.flinkBenchmark.LoadGeneratorSource(runtime, throughput, gaps));
 
-		timestampsAndWatermarks
-				.keyBy(0)
-				.process(windowOperator)
-				.addSink(new SinkFunction() {
-
-					@Override
-					public void invoke(final Object value) throws Exception {
-						//System.out.println(value);
-					}
-				});
-
-		try {
-			env.execute();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+        messageStream.flatMap(new de.tub.dima.scotty.flinkBenchmark.ThroughputLogger<>(200, throughput));
 
 
+        final SingleOutputStreamOperator<Tuple4<String, Integer, Long, Long>> timestampsAndWatermarks = messageStream
+                .assignTimestampsAndWatermarks(new TimestampsAndWatermarks());
+
+        timestampsAndWatermarks
+                .keyBy(0)
+                .process(windowOperator);
+        //.print();
+
+        try {
+            env.execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
-	public static class TimestampsAndWatermarks implements AssignerWithPeriodicWatermarks<Tuple4<String, Integer, Long, Long>> {
-		private final long maxOutOfOrderness = seconds(20).toMilliseconds(); // 5 seconds
-		private long currentMaxTimestamp;
-		private long startTime = System.currentTimeMillis();
+    public static class TimestampsAndWatermarks implements AssignerWithPeriodicWatermarks<Tuple4<String, Integer, Long, Long>> {
+        private final long maxOutOfOrderness = seconds(20).toMilliseconds(); // 5 seconds
+        private long currentMaxTimestamp;
+        private long startTime = System.currentTimeMillis();
 
-		@Override
-		public long extractTimestamp(final Tuple4<String, Integer, Long, Long> element, final long previousElementTimestamp) {
-			long timestamp = element.f3;
-			currentMaxTimestamp = Math.max(timestamp, currentMaxTimestamp);
-			return timestamp;
-		}
+        @Override
+        public long extractTimestamp(final Tuple4<String, Integer, Long, Long> element, final long previousElementTimestamp) {
+            long timestamp = element.f3;
+            currentMaxTimestamp = Math.max(timestamp, currentMaxTimestamp);
+            return timestamp;
+        }
 
-		@Nullable
-		@Override
-		public Watermark getCurrentWatermark() {
-			return new Watermark(currentMaxTimestamp);
-		}
+        @Nullable
+        @Override
+        public Watermark getCurrentWatermark() {
+            return new Watermark(currentMaxTimestamp);
+        }
 
-	}
+    }
 }

@@ -29,10 +29,10 @@ public class ScottyWindowTopology {
 
         Config conf = new Config();
         conf.setDebug(false);
-        String topoName = "test";
         conf.setNumWorkers(1);
 
         int numRandomKeys = 1;
+        int lag = 1;//ms
         String windowType = "sliding";
         String topology = "scotty";
 
@@ -41,34 +41,44 @@ public class ScottyWindowTopology {
             switch (windowType) {
                 case "tumbling":
                     scottyBolt.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
+                    builder.setSpout("integer", new RandomIntegerSpout(numRandomKeys, lag, false));
+                    break;
+                case "sliding":
+                    scottyBolt.addWindow(new SlidingWindow(WindowMeasure.Time, 1000, 250));
+                    builder.setSpout("integer", new RandomIntegerSpout(numRandomKeys, lag, false));
                     break;
                 case "session":
                     scottyBolt.addWindow(new SessionWindow(WindowMeasure.Time, 1000));
-                    break;
-                case "sliding":
-                    scottyBolt.addWindow(new SlidingWindow(WindowMeasure.Time, 1000, 2000));
+                    builder.setSpout("integer", new RandomIntegerSpout(numRandomKeys, lag, true));
                     break;
             }
-            builder.setSpout("integer", new RandomIntegerSpout(numRandomKeys));
             builder.setBolt("scottyWindow", scottyBolt, numRandomKeys).fieldsGrouping("integer", new Fields("key"));
             builder.setBolt("printer", new PrinterBolt()).shuffleGrouping("scottyWindow");
 
         } else {
-            builder.setSpout("integer", new RandomIntegerSpout(numRandomKeys));
+            builder.setSpout("integer", new RandomIntegerSpout(numRandomKeys, lag, false));
             switch (windowType) {
                 case "tumbling":
-                    builder.setBolt("tumblingsum", new TumblingWindowSumBolt().withTumblingWindow(Duration.of(1000)), numRandomKeys).fieldsGrouping("integer", new Fields("key"));
+                    builder.setBolt("tumblingsum", new TumblingWindowSumBolt()
+                            .withTimestampField("ts")
+                            .withWatermarkInterval(Duration.of(1000))//1 Sec Watermark
+                            .withTumblingWindow(Duration.of(1000)), numRandomKeys)
+                            .fieldsGrouping("integer", new Fields("key"));
                     builder.setBolt("printer", new PrinterBolt()).shuffleGrouping("tumblingsum");
                     break;
                 case "sliding":
-                    builder.setBolt("slidingsum", new SlidingWindowSumBolt().withWindow(Duration.seconds(5)), numRandomKeys).fieldsGrouping("integer", new Fields("key"));
-                    builder.setBolt("printer", new PrinterBolt()).shuffleGrouping("slidinggsum");
+                    builder.setBolt("slidingsum", new SlidingWindowSumBolt()
+                            .withTimestampField("ts")
+                            .withWatermarkInterval(Duration.of(1000))//1 Sec Watermark
+                            .withWindow(Duration.of(1000), Duration.of(200)), numRandomKeys)
+                            .fieldsGrouping("integer", new Fields("key"));
+                    builder.setBolt("printer", new PrinterBolt()).shuffleGrouping("slidingsum");
                     break;
             }
         }
 
         //StormSubmitter.submitTopologyWithProgressBar(topoName, conf, builder.createTopology());
-        cluster.submitTopology(topoName, conf, builder.createTopology());
+        cluster.submitTopology("testTopology", conf, builder.createTopology());
         //Utils.sleep(10000);
         //cluster.killTopology(topoName);
         // cluster.shutdown();

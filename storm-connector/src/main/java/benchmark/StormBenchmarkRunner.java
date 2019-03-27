@@ -1,23 +1,22 @@
-package de.tub.dima.scotty.flinkBenchmark;
+package benchmark;
 
-import com.google.gson.*;
-import de.tub.dima.scotty.core.*;
+import benchmark.jobs.ScottyBenchmarkJob;
+import benchmark.jobs.StormBenchmarkJob;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import de.tub.dima.scotty.core.TimeMeasure;
 import de.tub.dima.scotty.core.windowType.*;
-import de.tub.dima.scotty.core.*;
-import org.apache.flink.api.java.tuple.*;
-import org.apache.flink.configuration.*;
-import org.apache.flink.streaming.api.environment.*;
-import static org.apache.flink.streaming.api.windowing.time.Time.*;
+import org.javatuples.Pair;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/**
- * Created by philipp on 5/28/17.
- */
-public class BenchmarkRunner {
+import static de.tub.dima.scotty.core.TimeMeasure.seconds;
+
+public class StormBenchmarkRunner {
 
     private static String configPath;
 
@@ -27,12 +26,8 @@ public class BenchmarkRunner {
 
         BenchmarkConfig config = loadConfig();
 
-        PrintWriter resultWriter = new PrintWriter(new FileOutputStream(new File("result_" + config.name + ".txt"),true));
-
-        Configuration conf = new Configuration();
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
-
-        List<Tuple2<Long, Long>> gaps = Collections.emptyList();
+        PrintWriter resultWriter = new PrintWriter(new FileOutputStream(new File("result_" + config.name + ".txt"), true));
+        List<Pair<Long, Long>> gaps = Collections.emptyList();
         if (config.sessionConfig != null)
             gaps = generateSessionGaps(config.sessionConfig.gapCount, (int) TimeMeasure.minutes(2).toMilliseconds(), config.sessionConfig.minGapTime, config.sessionConfig.maxGapTime);
 
@@ -45,39 +40,33 @@ public class BenchmarkRunner {
                 for (String agg : config.aggFunctions) {
                     System.out.println("\n\n\n\n\n\n\n");
 
-                    System.out.println("Start Benchmark " + benchConfig + " with windows " + config.windowConfigurations );
+                    System.out.println("Start Benchmark " + benchConfig + " with windows " + config.windowConfigurations);
                     System.out.println("\n\n\n\n\n\n\n");
                     // [Bucket, Naive, Slicing_Lazy, Slicing_Heap]
                     switch (benchConfig) {
                         case "Slicing": {
-                            new BenchmarkJob(getAssigners(windows), env, TimeMeasure.seconds(config.runtime).toMilliseconds(), config.throughput, gaps);
+                            new ScottyBenchmarkJob(getAssigners(windows), seconds(config.runtime).toMilliseconds(), config.throughput, gaps);
                             break;
                         }
-                        case "Flink": {
-                            new FlinkBenchmarkJob(getAssigners(windows), env, TimeMeasure.seconds(config.runtime).toMilliseconds(), config.throughput, gaps);
+                        case "Storm": {
+                            new StormBenchmarkJob(getAssigners(windows), seconds(config.runtime).toMilliseconds(), config.throughput, gaps);
                             break;
                         }
                     }
 
                     System.out.println(ThroughputStatistics.getInstance().toString());
 
-
-                    resultWriter.append(benchConfig  + "\t" + config.throughput + "\t" + windows + " \t" + agg + " \t" +
-                           ThroughputStatistics.getInstance().mean() + "\t");
+                    resultWriter.append(benchConfig + "\t" + config.throughput + "\t" + windows + " \t" + agg + " \t" +
+                            ThroughputStatistics.getInstance().mean() + "\t");
                     resultWriter.append("\n");
                     resultWriter.flush();
                     ThroughputStatistics.getInstance().clean();
 
-                    Thread.sleep(seconds(10).toMilliseconds());
+                    //Thread.sleep(seconds(10).toMilliseconds());
                 }
             }
-
-
         }
-
         resultWriter.close();
-
-
     }
 
     private static List<Window> getAssigners(List<String> config) {
@@ -114,7 +103,7 @@ public class BenchmarkRunner {
             Matcher matcher = pattern.matcher(windowConfig);
             matcher.find();
             int GAP_SIZE = Integer.valueOf(matcher.group(0));
-            return Collections.singleton(new SessionWindow(WindowMeasure.Time, TimeMeasure.seconds(GAP_SIZE).toMilliseconds()));
+            return Collections.singleton(new SessionWindow(WindowMeasure.Time, seconds(GAP_SIZE).toMilliseconds()));
         }
 
         if (windowConfig.startsWith("RandomSession")) {
@@ -129,7 +118,7 @@ public class BenchmarkRunner {
             Collection<Window> resultList = new ArrayList<>();
             for (int i = 0; i < Session_NR; i++) {
                 long GapSize = MinGap + random.nextInt(MaxGap - MinGap);
-                resultList.add(new SessionWindow(WindowMeasure.Time, TimeMeasure.seconds(GapSize).toMilliseconds()));
+                resultList.add(new SessionWindow(WindowMeasure.Time, seconds(GapSize).toMilliseconds()));
             }
             return resultList;
         }
@@ -171,21 +160,21 @@ public class BenchmarkRunner {
         return null;
     }
 
-    public static List<Tuple2<Long, Long>> generateSessionGaps(int gapCount, int maxTs, int minGapTime, int maxGapTime) {
+    public static List<Pair<Long, Long>> generateSessionGaps(int gapCount, int maxTs, int minGapTime, int maxGapTime) {
         Random gapStartRandom = new Random(333);
         Random gapLengthRandom = new Random(777);
 
-        List<Tuple2<Long, Long>> result = new ArrayList<>();
+        List<Pair<Long, Long>> result = new ArrayList<>();
         for (int i = 0; i < gapCount; i++) {
             long gapStart = gapStartRandom.nextInt(maxTs);
             long gapLength = gapLengthRandom.nextInt(maxGapTime - minGapTime) + minGapTime;
-            result.add(new Tuple2<>(gapStart, gapLength));
+            result.add(new Pair<>(gapStart, gapLength));
         }
 
-        result.sort(new Comparator<Tuple2<Long, Long>>() {
+        result.sort(new Comparator<Pair<Long, Long>>() {
             @Override
-            public int compare(final Tuple2<Long, Long> o1, final Tuple2<Long, Long> o2) {
-                return Long.compare(o1.f0, o2.f0);
+            public int compare(final Pair<Long, Long> o1, final Pair<Long, Long> o2) {
+                return Long.compare(o1.getValue0(), o2.getValue0());
             }
         });
         return result;
@@ -193,7 +182,7 @@ public class BenchmarkRunner {
 
 
     private static BenchmarkConfig loadConfig() throws Exception {
-        try (java.io.Reader reader = new InputStreamReader(new FileInputStream(configPath), "UTF-8")) {
+        try (Reader reader = new InputStreamReader(new FileInputStream(configPath), "UTF-8")) {
             Gson gson = new GsonBuilder().create();
             return gson.fromJson(reader, BenchmarkConfig.class);
         }

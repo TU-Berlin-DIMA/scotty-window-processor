@@ -61,20 +61,21 @@ public class ScottyBolt<Key, Value> extends BaseBasicBolt {
         long currentWaterMark = ts;
 
         if (currentWaterMark > this.lastWatermark) {
-            for (SlicingWindowOperator<Value> slicingWindowOperator : slicingWindowOperatorMap.values()) {
+            /*for (SlicingWindowOperator<Value> slicingWindowOperator : slicingWindowOperatorMap.values()) {
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
                 for (AggregateWindow<Value> aggregateWindow : aggregates) {
                     basicOutputCollector.emit(new Values(currentKey,aggregateWindow));
                 }
-            }
-/*            SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
-            List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
-            for (AggregateWindow<Value> aggregateWindow : aggregates) {
-                basicOutputCollector.emit(new Values(currentKey, aggregateWindow));
             }*/
+            SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
+            if (slicingWindowOperator != null) {
+                List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
+                for (AggregateWindow<Value> aggregateWindow : aggregates) {
+                    basicOutputCollector.emit(new Values(currentKey, aggregateWindow));
+                }
+                this.lastWatermark = currentWaterMark;
+            }
 
-
-            this.lastWatermark = currentWaterMark;
         }
     }
 

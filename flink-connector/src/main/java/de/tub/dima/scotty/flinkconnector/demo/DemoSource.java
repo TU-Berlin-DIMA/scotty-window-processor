@@ -25,11 +25,13 @@ public class DemoSource extends RichSourceFunction<Tuple2<Integer, Integer>> imp
 
         @Override
         public void run(SourceContext<Tuple2<Integer, Integer>> ctx) throws Exception {
+            int counter=1;
+            int eventTime = 1;
             while (!canceled) {
-
-                ctx.collectWithTimestamp(new Tuple2<>(key.nextInt(1), value.nextInt(10)), System.currentTimeMillis());
+                //value.nextInt(10)
+                ctx.collectWithTimestamp(new Tuple2<>(key.nextInt(1), ++counter), ++eventTime);
                 if (lastWatermark + 1000 < System.currentTimeMillis()) {
-                    ctx.emitWatermark(new Watermark(System.currentTimeMillis()));
+                    ctx.emitWatermark(new Watermark(eventTime));
                     lastWatermark = System.currentTimeMillis();
                 }
                 Thread.sleep(1);

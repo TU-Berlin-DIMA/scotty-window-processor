@@ -38,30 +38,15 @@ public class FlinkBenchmarkJob {
 
             if (w instanceof TumblingWindow) {
                 WindowedStream<Tuple4<String, Integer, Long, Long>, Tuple, TimeWindow> tw = keyedStream.timeWindow(Time.seconds(((TumblingWindow) w).getSize()));
-
-                tw.sum(1).addSink(new SinkFunction() {
-
-                    @Override
-                    public void invoke(final Object value) throws Exception {
-                        //System.out.println(value);
-                    }
-                });
+                tw.sum(1);
+                        //.print();
             }
             if (w instanceof SlidingWindow) {
                 WindowedStream<Tuple4<String, Integer, Long, Long>, Tuple, TimeWindow> tw = keyedStream.timeWindow(Time.milliseconds(((SlidingWindow) w).getSize()), Time.milliseconds(((SlidingWindow) w).getSlide()));
-
-                tw.sum(1).addSink(new SinkFunction() {
-
-                    @Override
-                    public void invoke(final Object value) throws Exception {
-                        //System.out.println(value);
-                    }
-                });
+                tw.sum(1);
+                        //.print();
             }
-
-
         }
-
 
         try {
             env.execute();
