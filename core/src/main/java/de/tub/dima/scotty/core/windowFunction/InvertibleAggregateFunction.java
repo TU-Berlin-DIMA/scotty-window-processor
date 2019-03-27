@@ -8,4 +8,9 @@ public interface InvertibleAggregateFunction<InputType, PartialAggregateType, Fi
      * @return
      */
     PartialAggregateType invert(PartialAggregateType currentAggregate, PartialAggregateType toRemove);
+
+    default PartialAggregateType liftAndInvert(PartialAggregateType partialAggregate, InputType toRemove){
+        PartialAggregateType lifted = lift(toRemove);
+        return invert(partialAggregate, lifted);
+    };
 }

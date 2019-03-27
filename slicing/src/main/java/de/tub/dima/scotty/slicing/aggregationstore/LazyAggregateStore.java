@@ -2,7 +2,9 @@ package de.tub.dima.scotty.slicing.aggregationstore;
 
 import de.tub.dima.scotty.core.*;
 import de.tub.dima.scotty.slicing.*;
+import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.Slice;
+import de.tub.dima.scotty.slicing.state.AggregateWindowState;
 import de.tub.dima.scotty.slicing.state.*;
 import de.tub.dima.scotty.slicing.state.AggregateWindowState;
 
@@ -28,6 +30,18 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
         for (int i = size() - 1; i >= 0; i--) {
             Slice<InputType, ?> currentSlice = this.getSlice(i);
             if (currentSlice.getTStart() <= ts) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    @Override
+    public int findSliceIndexByCount(long count) {
+        for (int i = size() - 1; i >= 0; i--) {
+            Slice<InputType, ?> currentSlice = this.getSlice(i);
+            if (currentSlice.getCStart() <= count) {
                 return i;
             }
         }
@@ -66,18 +80,20 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
     }
 
     @Override
-    public void aggregate(WindowManager.AggregationWindowCollector aggregateWindows, long minTs, long maxTs) {
+    public void aggregate(WindowManager.AggregationWindowCollector aggregateWindows, long minTs, long maxTs, long minCount, long maxCount) {
 
         // start index = 0 || minTS
         int startIndex = Math.max(findSliceIndexByTimestamp(minTs),0);
+        startIndex = Math.min(startIndex, findSliceIndexByCount(minCount));
         // endIndex = this.size()-1 || maxTs
         int endIndex = Math.min(this.size() - 1, findSliceIndexByTimestamp(maxTs));
+        endIndex = Math.max(endIndex, findSliceIndexByCount(maxCount));
 
         for (int i = startIndex; i <= endIndex; i++) {
             Slice currentSlice = getSlice(i);
             for (AggregateWindow window : aggregateWindows) {
                 AggregateWindowState ws = (AggregateWindowState) window;
-                if (ws.getStartTs() <= currentSlice.getTStart() && (ws.getEndTs() > currentSlice.getTLast())) {
+                if(ws.containsSlice(currentSlice)){
                     ws.addState(currentSlice.getAggState());
                 }
             }

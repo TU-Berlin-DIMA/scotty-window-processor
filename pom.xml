@@ -9,7 +9,7 @@
     <groupId>de.tub.dima.scotty</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.2</version>
+    <version>0.3</version>
 
     <name>Scotty Window Processor</name>
     <url>https://github.com/TU-Berlin-DIMA/scotty-window-processor</url>

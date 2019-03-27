@@ -1,8 +1,7 @@
 package de.tub.dima.scotty.slicing.aggregationstore.test;
 
-import de.tub.dima.scotty.state.ListState;
-import de.tub.dima.scotty.state.StateFactory;
-import de.tub.dima.scotty.state.ValueState;
+import de.tub.dima.scotty.state.*;
+import de.tub.dima.scotty.state.memory.*;
 
 public class StateFactoryMock implements StateFactory {
     @Override
@@ -40,5 +39,10 @@ public class StateFactoryMock implements StateFactory {
     @Override
     public <T> ListState<T> createListState() {
         return null;
+    }
+
+    @Override
+    public <T extends Comparable<T>> SetState<T> createSetState() {
+        return new MemorySetState<>();
     }
 }

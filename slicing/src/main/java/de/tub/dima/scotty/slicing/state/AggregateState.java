@@ -1,19 +1,24 @@
 package de.tub.dima.scotty.slicing.state;
 
 import de.tub.dima.scotty.core.windowFunction.*;
+import de.tub.dima.scotty.slicing.slice.*;
 import de.tub.dima.scotty.state.*;
 
 import java.io.*;
 import java.util.*;
 
 public class AggregateState<InputType> implements Serializable {
+
     private final List<AggregateValueState<InputType,Object,Object>> aggregateValueStates;
 
     public AggregateState(StateFactory stateFactory, List<AggregateFunction> windowFunctions) {
+        this(stateFactory, windowFunctions, null);
+    }
 
+    public AggregateState(StateFactory stateFactory, List<AggregateFunction> windowFunctions, SetState<StreamRecord<InputType>> records) {
         this.aggregateValueStates = new ArrayList<>();
         for (int i = 0; i < windowFunctions.size(); i++) {
-            this.aggregateValueStates.add(new AggregateValueState<>(stateFactory.createValueState(), windowFunctions.get(i)));
+            this.aggregateValueStates.add(new AggregateValueState<>(stateFactory.createValueState(), windowFunctions.get(i), records));
         }
     }
 
@@ -23,6 +28,17 @@ public class AggregateState<InputType> implements Serializable {
         }
     }
 
+    public void removeElement(StreamRecord<InputType> toRemove){
+        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
+            valueState.removeElement(toRemove);
+        }
+    }
+
+    public void clear() {
+       for(AggregateValueState valueState: aggregateValueStates){
+           valueState.clear();
+       }
+    }
 
 
     public void merge(AggregateState<InputType> otherAggState) {
@@ -61,7 +77,7 @@ public class AggregateState<InputType> implements Serializable {
 
     @Override
     public String toString() {
-        return "AggregateState{" +
-                "values=" + aggregateValueStates + '}';
+        return aggregateValueStates.toString();
     }
+
 }

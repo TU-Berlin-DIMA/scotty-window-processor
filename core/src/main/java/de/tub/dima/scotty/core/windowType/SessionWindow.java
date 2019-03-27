@@ -2,8 +2,6 @@ package de.tub.dima.scotty.core.windowType;
 
 import de.tub.dima.scotty.core.*;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
-import de.tub.dima.scotty.core.*;
-import de.tub.dima.scotty.core.windowType.windowContext.*;
 
 public class SessionWindow implements ForwardContextAware {
 
@@ -109,7 +107,7 @@ public class SessionWindow implements ForwardContextAware {
         public void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark) {
             ActiveWindow session = getWindow(0);
             while (session.getEnd() + gap < currentWatermark) {
-                aggregateWindows.trigger(session.getStart(), session.getEnd() + gap);
+                aggregateWindows.trigger(session.getStart(), session.getEnd() + gap, measure);
                 removeWindow(0);
                 if (hasActiveWindows())
                     return;

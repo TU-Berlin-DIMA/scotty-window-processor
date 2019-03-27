@@ -5,7 +5,6 @@ import de.tub.dima.scotty.core.windowFunction.*;
 import de.tub.dima.scotty.core.windowType.*;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.state.memory.*;
-import de.tub.dima.scotty.core.*;
 import org.junit.*;
 
 import java.util.*;
@@ -33,13 +32,13 @@ public class SessionWindowOperatorTest {
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
 
-        Assert.assertEquals(1, resultWindows.get(0).getAggValue().get(0));
+        Assert.assertEquals(1, resultWindows.get(0).getAggValues().get(0));
 
 
         resultWindows = slicingWindowOperator.processWatermark(55);
-        Assert.assertEquals(9, resultWindows.get(0).getAggValue().get(0));
+        Assert.assertEquals(9, resultWindows.get(0).getAggValues().get(0));
         resultWindows = slicingWindowOperator.processWatermark(80);
-        Assert.assertEquals(5, resultWindows.get(0).getAggValue().get(0));
+        Assert.assertEquals(5, resultWindows.get(0).getAggValues().get(0));
 
     }
 
@@ -55,12 +54,12 @@ public class SessionWindowOperatorTest {
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
 
-        Assert.assertEquals(3, resultWindows.get(0).getAggValue().get(0));
+        Assert.assertEquals(3, resultWindows.get(0).getAggValues().get(0));
 
         resultWindows = slicingWindowOperator.processWatermark(55);
-        Assert.assertEquals(3, resultWindows.get(0).getAggValue().get(0));
-        Assert.assertEquals(4, resultWindows.get(1).getAggValue().get(0));
-        Assert.assertEquals(5, resultWindows.get(2).getAggValue().get(0));
+        Assert.assertEquals(3, resultWindows.get(0).getAggValues().get(0));
+        Assert.assertEquals(4, resultWindows.get(1).getAggValues().get(0));
+        Assert.assertEquals(5, resultWindows.get(2).getAggValues().get(0));
     }
 
 

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>de.tub.dima.scotty</groupId>
-        <version>0.2</version>
+        <version>0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,12 +15,12 @@
         <dependency>
             <groupId>de.tub.dima.scotty</groupId>
             <artifactId>slicing</artifactId>
-            <version>0.2</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>de.tub.dima.scotty</groupId>
             <artifactId>flink-connector</artifactId>
-            <version>0.2</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmh</groupId>

@@ -62,6 +62,22 @@ public interface Slice<InputType, ValueType> {
      */
     void addElement(InputType element, long ts);
 
+    default void removeElement(InputType element){
+
+    };
+
+    /**
+     * Element count of first element
+     * @return
+     */
+    long getCStart();
+
+    /**
+     * Element count of last element
+     * @return
+     */
+    long getCLast();
+
 
     interface Type {
         boolean isMovable();
