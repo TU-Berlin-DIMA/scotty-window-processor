@@ -41,6 +41,12 @@ public class WindowManager {
         if (this.lastWatermark == -1)
             this.lastWatermark = Math.max(0, watermarkTs - maxLateness);
 
+        long oldestSliceStart = this.aggregationStore.getSlice(0).getTStart();
+
+        if(this.lastWatermark<oldestSliceStart){
+            this.lastWatermark = oldestSliceStart;
+        }
+
         AggregationWindowCollector windows = new AggregationWindowCollector();
         assignContextFreeWindows(watermarkTs, windows);
         assignContextAwareWindows(watermarkTs, windows);

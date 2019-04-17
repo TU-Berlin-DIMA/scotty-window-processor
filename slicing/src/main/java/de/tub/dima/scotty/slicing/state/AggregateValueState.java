@@ -69,7 +69,9 @@ public class AggregateValueState<Input, Partial, Output> {
     }
 
     public Output getValue() {
-        return this.aggregateFunction.lower(partialAggregateState.get());
+        if(partialAggregateState.get() != null)
+            return this.aggregateFunction.lower(partialAggregateState.get());
+        return null;
     }
 
     @Override
