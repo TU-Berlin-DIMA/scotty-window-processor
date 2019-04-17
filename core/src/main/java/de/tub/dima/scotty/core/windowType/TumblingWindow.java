@@ -39,6 +39,11 @@ public class TumblingWindow implements ContextFreeWindow {
     }
 
     @Override
+    public long clearDelay() {
+        return size;
+    }
+
+    @Override
     public String toString() {
         return "TumblingWindow{" +
                 "measure=" + measure +

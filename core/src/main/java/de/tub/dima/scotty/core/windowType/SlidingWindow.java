@@ -57,6 +57,11 @@ public class SlidingWindow implements ContextFreeWindow {
     }
 
     @Override
+    public long clearDelay() {
+        return size;
+    }
+
+    @Override
     public String toString() {
         return "SlidingWindow{" +
                 "measure=" + measure +

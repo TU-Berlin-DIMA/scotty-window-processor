@@ -22,6 +22,7 @@ public class WindowManager {
     private boolean hasCountMeasure;
     private long minSessionTimeout;
     private long maxLateness = 1000;
+    private long maxFixedWindowSize = 0;
     private final List<ContextFreeWindow> contextFreeWindows = new ArrayList<>();
     private final List<WindowContext> contextAwareWindows = new ArrayList<>();
     private final List<AggregateFunction> windowFunctions = new ArrayList<>();
@@ -43,7 +44,7 @@ public class WindowManager {
 
         long oldestSliceStart = this.aggregationStore.getSlice(0).getTStart();
 
-        if(this.lastWatermark<oldestSliceStart){
+        if (this.lastWatermark < oldestSliceStart) {
             this.lastWatermark = oldestSliceStart;
         }
 
@@ -54,10 +55,10 @@ public class WindowManager {
         long minTs = Long.MAX_VALUE, maxTs = 0, minCount = currentCount, maxCount = 0;
 
         for (AggregateWindow aggregateWindow : windows) {
-            if(aggregateWindow.getMeasure() == Time) {
+            if (aggregateWindow.getMeasure() == Time) {
                 minTs = Math.min(aggregateWindow.getStart(), minTs);
                 maxTs = Math.max(aggregateWindow.getEnd(), maxTs);
-            }else if(aggregateWindow.getMeasure() == Count){
+            } else if (aggregateWindow.getMeasure() == Count) {
                 minCount = Math.min(aggregateWindow.getStart(), minCount);
                 maxCount = Math.max(aggregateWindow.getEnd(), maxCount);
             }
@@ -67,9 +68,23 @@ public class WindowManager {
             this.aggregationStore.aggregate(windows, minTs, maxTs, minCount, maxCount);
         }
         this.lastWatermark = watermarkTs;
-        this.lastCount = currentCount-5;
+        this.lastCount = currentCount - 5;
+        clearAfterWatermark(watermarkTs - maxLateness);
         return windows.aggregationStores;
     }
+
+    public void clearAfterWatermark(long currentWatermark) {
+        long maxDelay = maxFixedWindowSize;
+        for (WindowContext<?> context : contextAwareWindows) {
+           for(WindowContext.ActiveWindow window : context.getActiveWindows()){
+               maxDelay = Math.max(maxDelay, window.getStart());
+           }
+        }
+        long removeFromTimestamp = currentWatermark - maxDelay;
+
+        this.aggregationStore.removeSlices(removeFromTimestamp);
+    }
+
 
     private void assignContextAwareWindows(long watermarkTs, AggregationWindowCollector windows) {
         for (WindowContext context : contextAwareWindows) {
@@ -85,10 +100,10 @@ public class WindowManager {
             else if (window.getWindowMeasure() == Count) {
                 int sliceIndex = this.aggregationStore.findSliceIndexByTimestamp(watermarkTs);
                 Slice slice = this.aggregationStore.getSlice(sliceIndex);
-                if(slice.getTLast() >= watermarkTs)
-                    slice = this.aggregationStore.getSlice(sliceIndex-1);
+                if (slice.getTLast() >= watermarkTs)
+                    slice = this.aggregationStore.getSlice(sliceIndex - 1);
                 long cend = slice.getCLast();
-                window.triggerWindows(windowCollector, lastCount, cend+1);
+                window.triggerWindows(windowCollector, lastCount, cend + 1);
             }
         }
     }
@@ -97,6 +112,7 @@ public class WindowManager {
     public void addWindowAssigner(Window window) {
         if (window instanceof ContextFreeWindow) {
             contextFreeWindows.add((ContextFreeWindow) window);
+            maxFixedWindowSize = Math.max(maxFixedWindowSize, ((ContextFreeWindow) window).clearDelay());
             hasFixedWindows = true;
         }
         if (window instanceof ForwardContextAware) {
@@ -183,7 +199,7 @@ public class WindowManager {
             return aggregationStores.iterator();
         }
 
-        boolean isEmpty(){
+        boolean isEmpty() {
             return this.aggregationStores.isEmpty();
         }
     }

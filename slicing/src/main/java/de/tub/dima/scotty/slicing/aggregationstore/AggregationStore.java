@@ -82,4 +82,6 @@ public interface AggregationStore<InputType> {
     void mergeSlice(int sliceIndex);
 
     int findSliceByEnd(long pre);
+
+    void removeSlices(long maxTimestamp);
 }

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class LazyAggregateStore<InputType> implements AggregationStore<InputType> {
 
-    private final List<Slice<InputType, ?>> slices = new ArrayList<>();
+    private final SliceList slices = new SliceList();
 
     @Override
     public Slice<InputType, ?> getCurrentSlice() {
@@ -106,7 +106,7 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
         //        ws.addState(currentSlice.getAggState());
         //    }
         //}
-
+        System.out.println(this.slices.size());
 
     }
 
@@ -132,5 +132,27 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
             }
         }
         return -1;
+    }
+
+    @Override
+    public void removeSlices(final long maxTimestamp) {
+        final int index = this.findSliceIndexByTimestamp(maxTimestamp - 1);
+
+        if (index <= 0)
+            return;
+        this.slices.removeRange(0, index);
+        //System.out.println("remove");
+
+    }
+
+    private class SliceList extends ArrayList<Slice<InputType, ?>> {
+        public SliceList() {
+            super(1000);
+        }
+
+        @Override
+        public void removeRange(final int fromIndex, final int toIndex) {
+            super.removeRange(fromIndex, toIndex);
+        }
     }
 }
