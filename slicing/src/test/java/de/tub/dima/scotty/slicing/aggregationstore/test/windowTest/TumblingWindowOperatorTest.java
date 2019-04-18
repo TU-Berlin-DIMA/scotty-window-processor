@@ -58,7 +58,7 @@ public class TumblingWindowOperatorTest {
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
 
         Assert.assertEquals(3, resultWindows.get(0).getAggValues().get(0));
-        Assert.assertEquals(null, resultWindows.get(1).getAggValues().get(0));
+        Assert.assertFalse( resultWindows.get(1).hasValue());;
 
         resultWindows = slicingWindowOperator.processWatermark(55);
         Assert.assertEquals(3, resultWindows.get(0).getAggValues().get(0));
@@ -161,7 +161,7 @@ public class TumblingWindowOperatorTest {
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
 
         Assert.assertEquals(1, resultWindows.get(0).getAggValues().get(0));
-        Assert.assertEquals(null, resultWindows.get(1).getAggValues().get(0));
+        Assert.assertFalse( resultWindows.get(1).hasValue());;
 
         resultWindows = slicingWindowOperator.processWatermark(55);
         Assert.assertEquals(3, resultWindows.get(0).getAggValues().get(0));
