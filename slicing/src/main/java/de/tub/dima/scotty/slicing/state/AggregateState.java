@@ -53,10 +53,20 @@ public class AggregateState<InputType> implements Serializable {
         return otherAggState.aggregateValueStates.size() <= this.aggregateValueStates.size();
     }
 
+    public boolean hasValues(){
+        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
+          if(valueState.hasValue()){
+              return true;
+          }
+        }
+        return false;
+    }
+
     public List<Object> getValues() {
         List<Object> objectList = new ArrayList<>(aggregateValueStates.size());
         for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
-            objectList.add(valueState.getValue());
+            if(valueState.hasValue())
+                objectList.add(valueState.getValue());
         }
         return objectList;
     }

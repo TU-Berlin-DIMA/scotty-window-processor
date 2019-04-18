@@ -43,6 +43,11 @@ public class AggregateWindowState implements AggregateWindow {
         return windowState.getValues();
     }
 
+    @Override
+    public boolean hasValue() {
+        return windowState.hasValues();
+    }
+
     public void addState(AggregateState aggregationState) {
         this.windowState.merge(aggregationState);
     }

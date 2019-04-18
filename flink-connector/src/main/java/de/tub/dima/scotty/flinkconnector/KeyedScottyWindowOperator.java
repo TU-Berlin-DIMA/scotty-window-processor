@@ -69,7 +69,8 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
             for (SlicingWindowOperator<InputType> slicingWindowOperator : this.slicingWindowOperatorMap.values()) {
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
                 for (AggregateWindow<FinalAggregateType> aggregateWindow : aggregates) {
-                    out.collect(aggregateWindow);
+                    if(aggregateWindow.hasValue())
+                        out.collect(aggregateWindow);
                 }
             }
             this.lastWatermark = currentWaterMark;

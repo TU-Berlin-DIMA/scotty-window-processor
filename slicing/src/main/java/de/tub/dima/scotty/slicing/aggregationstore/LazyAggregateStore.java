@@ -106,7 +106,7 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
         //        ws.addState(currentSlice.getAggState());
         //    }
         //}
-        System.out.println(this.slices.size());
+        //System.out.println(this.slices.size());
 
     }
 

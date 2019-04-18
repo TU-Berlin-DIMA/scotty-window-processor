@@ -68,6 +68,10 @@ public class AggregateValueState<Input, Partial, Output> {
 
     }
 
+    public boolean hasValue(){
+        return !partialAggregateState.isEmpty();
+    }
+
     public Output getValue() {
         if(partialAggregateState.get() != null)
             return this.aggregateFunction.lower(partialAggregateState.get());
