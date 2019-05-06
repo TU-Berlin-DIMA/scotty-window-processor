@@ -42,6 +42,11 @@ public class WindowManager {
         if (this.lastWatermark == -1)
             this.lastWatermark = Math.max(0, watermarkTs - maxLateness);
 
+        if (this.aggregationStore.isEmpty()) {
+            this.lastWatermark = watermarkTs;
+            return new ArrayList<>();
+        }
+
         long oldestSliceStart = this.aggregationStore.getSlice(0).getTStart();
 
         if (this.lastWatermark < oldestSliceStart) {
