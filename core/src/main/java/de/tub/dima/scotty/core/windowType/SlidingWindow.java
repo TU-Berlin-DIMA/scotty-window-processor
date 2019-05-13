@@ -52,9 +52,13 @@ public class SlidingWindow implements ContextFreeWindow {
 
         for (long windowStart = lastStart; windowStart + size > lastWatermark; windowStart -= slide) {
             if (windowStart>=0 && windowStart + size <= currentWatermark + 1)
-                collector.trigger(windowStart, windowStart + size);
+                collector.trigger(windowStart, windowStart + size, measure);
         }
+    }
 
+    @Override
+    public long clearDelay() {
+        return size;
     }
 
     @Override

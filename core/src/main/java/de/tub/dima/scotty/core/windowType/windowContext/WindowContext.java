@@ -24,6 +24,10 @@ public abstract class WindowContext<Tuple> implements Serializable {
         return newWindow;
     }
 
+    public ArrayList<ActiveWindow> getActiveWindows() {
+        return activeWindows;
+    }
+
     public final ActiveWindow getWindow(int i) {
         return activeWindows.get(i);
     }

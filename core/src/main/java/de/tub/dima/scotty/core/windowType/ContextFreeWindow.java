@@ -12,4 +12,6 @@ public interface ContextFreeWindow extends Window {
     Method reports all windows which ended between lastWatermark and currentWatermark
     */
     void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark);
+
+    long clearDelay();
 }

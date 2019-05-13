@@ -1,8 +1,6 @@
 package de.tub.dima.scotty.state.memory;
 
-import de.tub.dima.scotty.state.ListState;
-import de.tub.dima.scotty.state.StateFactory;
-import de.tub.dima.scotty.state.ValueState;
+import de.tub.dima.scotty.state.*;
 
 public class MemoryStateFactory implements StateFactory {
     @Override
@@ -13,5 +11,10 @@ public class MemoryStateFactory implements StateFactory {
     @Override
     public <T> ListState<T> createListState() {
         return new MemoryListState<>();
+    }
+
+    @Override
+    public <T extends Comparable<T>> SetState<T> createSetState() {
+        return new MemorySetState<>();
     }
 }

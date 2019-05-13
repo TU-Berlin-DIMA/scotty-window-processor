@@ -2,6 +2,7 @@ package de.tub.dima.scotty.slicing.aggregationstore.test;
 
 
 import de.tub.dima.scotty.core.windowFunction.*;
+import de.tub.dima.scotty.core.windowType.*;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.*;
@@ -113,8 +114,8 @@ public class LazyAggregateStoreTest {
 
 
         List<AggregateWindowState> window = new ArrayList<>();
-        window.add(new AggregateWindowState(10, 40, stateFactory, windowManager.getAggregations()));
-        window.add(new AggregateWindowState(10, 20, stateFactory, windowManager.getAggregations()));
+        window.add(new AggregateWindowState(10, 40, WindowMeasure.Time, stateFactory, windowManager.getAggregations()));
+        window.add(new AggregateWindowState(10, 20, WindowMeasure.Time, stateFactory, windowManager.getAggregations()));
 
 
     }

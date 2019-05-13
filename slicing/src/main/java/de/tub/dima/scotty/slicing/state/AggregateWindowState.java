@@ -1,64 +1,84 @@
 package de.tub.dima.scotty.slicing.state;
 
-import de.tub.dima.scotty.state.StateFactory;
-import de.tub.dima.scotty.core.AggregateWindow;
-import de.tub.dima.scotty.core.windowFunction.AggregateFunction;
+import de.tub.dima.scotty.core.*;
+import de.tub.dima.scotty.core.windowFunction.*;
+import de.tub.dima.scotty.core.windowType.*;
+import de.tub.dima.scotty.slicing.slice.*;
+import de.tub.dima.scotty.state.*;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class AggregateWindowState implements AggregateWindow {
 
-    private final long startTs;
+    private final long start;
     private final long endTs;
+    private final WindowMeasure measure;
+    private final AggregateState windowState;
 
-    private AggregateState windowState;
-
-    public AggregateWindowState(long startTs, long endTs, StateFactory stateFactory, List<AggregateFunction> windowFunctionList) {
-        this.startTs = startTs;
+    public AggregateWindowState(long startTs, long endTs, WindowMeasure measure, StateFactory stateFactory, List<AggregateFunction> windowFunctionList) {
+        this.start = startTs;
         this.endTs = endTs;
         this.windowState = new AggregateState(stateFactory, windowFunctionList);
+        this.measure = measure;
     }
 
-    public long getStartTs() {
-        return startTs;
+    public boolean containsSlice(Slice currentSlice) {
+        if (measure == WindowMeasure.Time) {
+            return this.getStart() <= currentSlice.getTStart() && (this.getEnd() > currentSlice.getTLast());
+        } else {
+            return this.getStart() <= currentSlice.getCStart() && (this.getEnd() >= currentSlice.getCLast());
+        }
     }
 
-    public long getEndTs() {
+    public long getStart() {
+        return start;
+    }
+
+    public long getEnd() {
         return endTs;
     }
 
     @Override
-    public List getAggValue() {
+    public List getAggValues() {
         return windowState.getValues();
+    }
+
+    @Override
+    public boolean hasValue() {
+        return windowState.hasValues();
     }
 
     public void addState(AggregateState aggregationState) {
         this.windowState.merge(aggregationState);
     }
 
+    public WindowMeasure getMeasure() {
+        return measure;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AggregateWindowState that = (AggregateWindowState) o;
-        return startTs == that.startTs &&
+        return start == that.start &&
                 endTs == that.endTs &&
                 Objects.equals(windowState, that.windowState);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(startTs, endTs, windowState);
+        return Objects.hash(start, endTs, windowState);
     }
 
     @Override
     public String toString() {
-        return "AggregateWindowState{" +
-                "startTs=" + startTs +
-                ", endTs=" + endTs +
-                ", windowState=" + windowState +
-                '}';
+        return "WindowResult(" +
+                measure.toString() + ","+
+                start + "-" + endTs +
+                "," + windowState +
+                ')';
     }
 }

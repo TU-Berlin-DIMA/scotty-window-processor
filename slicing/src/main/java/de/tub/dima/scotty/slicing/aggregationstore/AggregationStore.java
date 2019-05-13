@@ -20,6 +20,8 @@ public interface AggregationStore<InputType> {
      */
     int findSliceIndexByTimestamp(long ts);
 
+    int findSliceIndexByCount(long count);
+
     /**
      * Returns slice for a given index or @{@link IndexOutOfBoundsException}
      *
@@ -58,8 +60,10 @@ public interface AggregationStore<InputType> {
      * @param aggregateWindows definition of the requested window
      * @param minTs startTimestamp of the earliest window.
      * @param maxTs endTimestamp of the latest window
+     * @param minCount
+     * @param maxCount
      */
-    void aggregate(WindowManager.AggregationWindowCollector aggregateWindows, long minTs, long maxTs);
+    void aggregate(WindowManager.AggregationWindowCollector aggregateWindows, long minTs, long maxTs, long minCount, long maxCount);
 
     /**
      * Add a new Slice at a specific index
@@ -78,4 +82,6 @@ public interface AggregationStore<InputType> {
     void mergeSlice(int sliceIndex);
 
     int findSliceByEnd(long pre);
+
+    void removeSlices(long maxTimestamp);
 }
