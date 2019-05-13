@@ -10,6 +10,7 @@ import org.apache.storm.tuple.Values;
 
 import java.util.Map;
 
+//Expects spout/bolt instance that sends tuples
 public class WatermarkGenerator extends BaseBasicBolt {
 
     //private final long maxOutOfOrderness = seconds(20).toMilliseconds(); // 5 seconds
@@ -23,14 +24,22 @@ public class WatermarkGenerator extends BaseBasicBolt {
     }
 
     @Override
+    //Called everytime a tuple arrives to the bolt
     public void execute(Tuple input, BasicOutputCollector collector) {
-        //Emit the incoming tuple
+        //Emit the incoming tuple directly to the next Bolt
         collector.emit(new Values(input.getValue(0), input.getString(1), input.getValue(2), input.getLong(3)));
 
         //Emit Watermarks every 1 sec
         long currentTime = System.currentTimeMillis();
-        if (lastWatermark + 1000 < currentTime) {
-            collector.emit(new Values("waterMark", input.getString(1), 1, currentTime));
+        if (currentTime > lastWatermark + 1000 ) {
+            //Key, Value or TimeStamp fields are not used. What matters is only catching a watermark in the following Bolt instance.
+            //Becareful about the timestamp of the watermark, which will be used to output expired slices from the aggregate store
+
+            //Event time watermarks
+            collector.emit(new Values("waterMark", input.getString(1), 1,  input.getLong(3)));
+
+            //Processing time watermarks
+            //collector.emit(new Values("waterMark", input.getString(1), 1, currentTime));
             lastWatermark = currentTime;
         }
     }

@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
 
 import static de.tub.dima.scotty.core.TimeMeasure.seconds;
 
+/*
+ * @author Batuhan Tüter
+ * Driver class to start Storm Benchmarks.
+ *
+ * */
+
 public class StormBenchmarkRunner {
 
     private static String configPath;
@@ -34,15 +40,14 @@ public class StormBenchmarkRunner {
         System.out.println(gaps);
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-
+        //At the moment, this implementation does not support multiple windows, configurations and aggregation in one configuration file.
         for (List<String> windows : config.windowConfigurations) {
             for (String benchConfig : config.configurations) {
                 for (String agg : config.aggFunctions) {
                     System.out.println("\n\n\n\n\n\n\n");
 
-                    System.out.println("Start Benchmark " + benchConfig + " with windows " + config.windowConfigurations);
+                    System.out.println("Start Benchmark " + benchConfig + ", throughput " + config.throughput + " with windows " + config.windowConfigurations);
                     System.out.println("\n\n\n\n\n\n\n");
-                    // [Bucket, Naive, Slicing_Lazy, Slicing_Heap]
                     switch (benchConfig) {
                         case "Slicing": {
                             new ScottyBenchmarkJob(getAssigners(windows), seconds(config.runtime).toMilliseconds(), config.throughput, gaps);
@@ -54,15 +59,24 @@ public class StormBenchmarkRunner {
                         }
                     }
 
-                    System.out.println(ThroughputStatistics.getInstance().toString());
-
+                    //System.out.println(ThroughputStatistics.getInstance().toString());
                     resultWriter.append(benchConfig + "\t" + config.throughput + "\t" + windows + " \t" + agg + " \t" +
                             ThroughputStatistics.getInstance().mean() + "\t");
                     resultWriter.append("\n");
                     resultWriter.flush();
                     ThroughputStatistics.getInstance().clean();
 
-                    //Thread.sleep(seconds(10).toMilliseconds());
+                    /* Since the throuhgput mean is written to disk, we can kill a topology by passing topology instances to this class.
+                     * But, Storm is not functioning properly after killing a topology if another topology is being executed.
+                     *  This can only work if there is no another topology that waits to be submitted after killing the current topology.
+                     *  If there is only one topology that needs to be executed in a benchmark, it is safe to kill the topology after the mean is written to disk.
+                     *
+                     *  So far, we kill and submit new topologies manually.
+                     *  In other words, for loops execute only once.
+                     *  If you submit multiple windows, configurations or aggregations in your config file, multiple topologies will be submitted and run concurrently,
+                     *  which will drastically reduce the performance.
+                     *  If you want to submit multiple topologies at the same time, make sure each submitted topology has a different name.
+                     */
                 }
             }
         }

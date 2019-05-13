@@ -1,4 +1,4 @@
-package de.tub.dima.scotty.stormconnector;
+package de.tub.dima.scotty.stormconnector.demo;
 
 
 import org.apache.storm.task.OutputCollector;

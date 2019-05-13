@@ -11,10 +11,7 @@
  * and limitations under the License.
  */
 
-package de.tub.dima.scotty.stormconnector;
-
-import java.util.List;
-import java.util.Map;
+package de.tub.dima.scotty.stormconnector.demo;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -26,6 +23,9 @@ import org.apache.storm.tuple.Values;
 import org.apache.storm.windowing.TupleWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Computes sliding window sum

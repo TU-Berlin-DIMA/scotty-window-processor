@@ -37,6 +37,7 @@
         <module>state</module>
         <module>flink-connector</module>
         <module>storm-connector</module>
+        <module>beam-connector</module>
     </modules>
 
     <properties>

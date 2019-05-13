@@ -40,6 +40,8 @@ public class RandomIntegerSpout extends BaseRichSpout {
     private int lag = 0;
     private int sessionStep = 1;
     private boolean sessionGap = false;
+    private boolean running;
+
 
     public RandomIntegerSpout(int numKeys, int lag, boolean sessionGap) {
         this.numKeys = numKeys;

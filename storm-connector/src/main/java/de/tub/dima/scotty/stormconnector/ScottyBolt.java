@@ -1,4 +1,4 @@
-package de.tub.dima.scotty.stormconnector.demo;
+package de.tub.dima.scotty.stormconnector;
 
 import de.tub.dima.scotty.core.*;
 import de.tub.dima.scotty.core.windowFunction.*;
@@ -14,6 +14,19 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
 import java.util.*;
+
+/*
+ * @author Batuhan Tüter
+ * Scotty Window Operation connector for Apache Storm
+ * It is implemented as a BasicBolt, thay can be used in any Storm Topology
+ *
+ * Input tuples must be in the following format:
+ * <"tuple",key,value,timeStamp>
+
+ * Input watermarks must be in the following format:
+ * <"",key,value(not used),timeStamp>
+
+ * */
 
 public class ScottyBolt<Key, Value> extends BaseBasicBolt {
 
@@ -46,27 +59,26 @@ public class ScottyBolt<Key, Value> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector basicOutputCollector) {
+        //The input is a tuple
         if (tuple.getString(0).equals("tuple")) {
             Object currentKey = tuple.getValue(1);
             if (!slicingWindowOperatorMap.containsKey(currentKey)) {
                 slicingWindowOperatorMap.put((Key) currentKey, initWindowOperator());
             }
             SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
+            //We only process the Value of a tuple
             slicingWindowOperator.processElement((Value) tuple.getValue(2), tuple.getLong(3));
-        } else //WaterMark
+        }
+        //Input is a watermark
+        else
             processWatermark((Key) tuple.getValue(1), tuple.getLong(3), basicOutputCollector);
     }
 
-    private void processWatermark(Key currentKey, long ts, BasicOutputCollector basicOutputCollector) {
-        long currentWaterMark = ts;
+    private void processWatermark(Key currentKey, long timeStamp, BasicOutputCollector basicOutputCollector) {
+        //We use the timestamp field that is added to the watermark tuples
+        long currentWaterMark = timeStamp;
 
         if (currentWaterMark > this.lastWatermark) {
-            /*for (SlicingWindowOperator<Value> slicingWindowOperator : slicingWindowOperatorMap.values()) {
-                List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);
-                for (AggregateWindow<Value> aggregateWindow : aggregates) {
-                    basicOutputCollector.emit(new Values(currentKey,aggregateWindow));
-                }
-            }*/
             SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
             if (slicingWindowOperator != null) {
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);

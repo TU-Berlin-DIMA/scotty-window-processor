@@ -4,11 +4,16 @@ package benchmark;
 import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseBasicBolt;
-import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
-import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+/*
+ * This logger is copied from the FlinkBenchmarks.
+ * It counts the incoming tuples until the given log frequency.
+ * Once the frequency is reached, it calculates the amount of time that has passed to collect that number of tuples.
+ *
+ * */
 
 public class ThroughputLogger extends BaseBasicBolt {
 
@@ -19,6 +24,7 @@ public class ThroughputLogger extends BaseBasicBolt {
     private long lastLogTimeMs = -1;
     private int elementSize;
     private long logfreq;
+    private int batchCounter = 0;
 
     public ThroughputLogger(int elementSize, long logfreq) {
         this.elementSize = elementSize;
@@ -41,7 +47,7 @@ public class ThroughputLogger extends BaseBasicBolt {
                 long timeDiff = now - lastLogTimeMs;
                 long elementDiff = totalReceived - lastTotalReceived;
                 double ex = (1000 / (double) timeDiff);
-                //LOG.info("During the last {} ms, we received {} elements. That's {} elements/second/core. ",timeDiff, elementDiff, elementDiff * ex);
+                LOG.info("During the last {} ms, we received {} elements. That's {} elements/second/core. Batch {}. ",timeDiff, elementDiff, elementDiff * ex, ++batchCounter);
 
                 ThroughputStatistics.getInstance().addThrouputResult(elementDiff * ex);
                 //System.out.println(ThroughputStatistics.getInstance().toString());
@@ -50,7 +56,6 @@ public class ThroughputLogger extends BaseBasicBolt {
                 lastTotalReceived = totalReceived;
             }
         }
-        //collector.emit(new Values("tuple", input.getValue(0), input.getValue(1), input.getValue(3)));
     }
 
     @Override

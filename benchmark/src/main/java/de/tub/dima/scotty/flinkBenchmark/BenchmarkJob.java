@@ -47,10 +47,10 @@ public class BenchmarkJob {
 
 
         DataStream<Tuple4<String, Integer, Long, Long>> messageStream = env
-                .addSource(new de.tub.dima.scotty.flinkBenchmark.LoadGeneratorSource(runtime, throughput, gaps));
+                .addSource(new LoadGeneratorSource(runtime, throughput, gaps));
 
-        messageStream.flatMap(new de.tub.dima.scotty.flinkBenchmark.ThroughputLogger<>(200, throughput));
-
+        //messageStream.flatMap(new de.tub.dima.scotty.flinkBenchmark.ThroughputLogger<>(200, throughput));
+        messageStream.flatMap(new ThroughputLogger2());
 
         final SingleOutputStreamOperator<Tuple4<String, Integer, Long, Long>> timestampsAndWatermarks = messageStream
                 .assignTimestampsAndWatermarks(new TimestampsAndWatermarks());
@@ -58,7 +58,7 @@ public class BenchmarkJob {
         timestampsAndWatermarks
                 .keyBy(0)
                 .process(windowOperator);
-        //.print();
+                //.print();
 
         try {
             env.execute();

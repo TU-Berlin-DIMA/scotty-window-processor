@@ -26,7 +26,8 @@ public class FlinkBenchmarkJob {
         DataStream<Tuple4<String, Integer, Long, Long>> messageStream = env
                 .addSource(new LoadGeneratorSource(runtime, throughput, gaps));
 
-        messageStream.flatMap(new ThroughputLogger<>(200, throughput));
+        //messageStream.flatMap(new ThroughputLogger<>(200, throughput));
+        messageStream.flatMap(new ThroughputLogger2());
 
         final SingleOutputStreamOperator<Tuple4<String, Integer, Long, Long>> timestampsAndWatermarks = messageStream
                 .assignTimestampsAndWatermarks(new BenchmarkJob.TimestampsAndWatermarks());

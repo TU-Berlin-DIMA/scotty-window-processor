@@ -1,10 +1,10 @@
 {
   "name" : "tumbling_window_benchmark",
   "runtime" : 30,
-  "throughput": 1600,
+  "throughput": 2500000,
   "windowConfigurations": [
     [
-      "randomTumbling(1,1,20)"
+      "randomTumbling(1000,1,20)"
     ]
   ],
   "configurations": [

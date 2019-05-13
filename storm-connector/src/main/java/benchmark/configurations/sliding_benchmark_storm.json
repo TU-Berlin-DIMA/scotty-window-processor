@@ -1,10 +1,10 @@
 {
   "name" : "sliding_window_benchmark",
   "runtime" : 30,
-  "throughput": 1600000,
+  "throughput": 800000,
   "windowConfigurations": [
     [
-      "Sliding(60000,10000)"
+      "Sliding(30000,30000)"
     ]
   ],
   "configurations": [

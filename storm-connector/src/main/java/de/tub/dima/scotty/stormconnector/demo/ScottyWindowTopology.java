@@ -1,18 +1,15 @@
-package de.tub.dima.scotty.stormconnector;
+package de.tub.dima.scotty.stormconnector.demo;
 
 
 import de.tub.dima.scotty.core.windowType.SessionWindow;
 import de.tub.dima.scotty.core.windowType.SlidingWindow;
 import de.tub.dima.scotty.core.windowType.TumblingWindow;
 import de.tub.dima.scotty.core.windowType.WindowMeasure;
-import de.tub.dima.scotty.stormconnector.demo.PrinterBolt;
-import de.tub.dima.scotty.stormconnector.demo.RandomIntegerSpout;
-import de.tub.dima.scotty.stormconnector.demo.ScottyBolt;
+import de.tub.dima.scotty.stormconnector.ScottyBolt;
 import de.tub.dima.scotty.stormconnector.demo.windowFunctions.sumWindowFunction;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
-import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.topology.base.BaseWindowedBolt.Duration;
 import org.apache.storm.tuple.Fields;
 import org.slf4j.Logger;
@@ -30,11 +27,14 @@ public class ScottyWindowTopology {
         Config conf = new Config();
         conf.setDebug(false);
         conf.setNumWorkers(1);
+        conf.setMaxTaskParallelism(1);
+        //Disable Acking
+        conf.setNumAckers(0);
 
         int numRandomKeys = 1;
         int lag = 1;//ms
         String windowType = "sliding";
-        String topology = "scotty";
+        String topology = " ";
 
         if (topology.equals("scotty")) {
             ScottyBolt scottyBolt = new ScottyBolt<Integer, Integer>(new sumWindowFunction());
@@ -70,17 +70,15 @@ public class ScottyWindowTopology {
                     builder.setBolt("slidingsum", new SlidingWindowSumBolt()
                             .withTimestampField("ts")
                             .withWatermarkInterval(Duration.of(1000))//1 Sec Watermark
-                            .withWindow(Duration.of(1000), Duration.of(200)), numRandomKeys)
+                            .withWindow(Duration.of(5000), Duration.of(1000)), numRandomKeys)
                             .fieldsGrouping("integer", new Fields("key"));
                     builder.setBolt("printer", new PrinterBolt()).shuffleGrouping("slidingsum");
                     break;
             }
         }
 
-        //StormSubmitter.submitTopologyWithProgressBar(topoName, conf, builder.createTopology());
         cluster.submitTopology("testTopology", conf, builder.createTopology());
-        //Utils.sleep(10000);
-        //cluster.killTopology(topoName);
+        //cluster.killTopology("testTopology");
         // cluster.shutdown();
 
     }

@@ -56,6 +56,11 @@ public class LoadGeneratorSource extends BaseRichSpout {
         this.collector = spoutOutputCollector;
     }
 
+    /*
+     * Even if data is no longer generated after the given "runtime",
+     * bolt that receives tuples from this spout waits for the new data, until the topology is killed.
+     */
+
     @Override
     public void nextTuple() {
         ThroughputStatistics.getInstance().pause(false);
@@ -80,11 +85,10 @@ public class LoadGeneratorSource extends BaseRichSpout {
         }
     }
 
+    //Function is used to emit generated tuples from the Spout instance.
     private void emitValue(final Quartet<String, Integer, Long, Long> tuple) {
-
         if (tuple.getValue3() > nextGapStart) {
             ThroughputStatistics.getInstance().pause(true);
-            //System.out.println("in Gap");
             if (tuple.getValue3() > this.nextGapEnd) {
                 ThroughputStatistics.getInstance().pause(false);
                 this.currentGapIndex++;
@@ -95,13 +99,27 @@ public class LoadGeneratorSource extends BaseRichSpout {
             } else
                 return;
         }
-        //GetValue 3 for Processing Time, Get Value 2 for Event-time
-        collector.emit(new Values("tuple", tuple.getValue0(), tuple.getValue1(), tuple.getValue3()), ++msgId);
+        /*First field indicates that generated data is a "tuple" that is used to distinguish from watermark data.
+         *Second field is the key of the data
+         *Third field is the value of the data
+         *Fourt field is the timestamp that is added to the data.
+         *Last field is the custom messageID of the tuple, that is used for ACK'ing mechanism,
+         * which we enable/disable while defining the topology configurations.
+         */
+
+        //Emit data with processing time
+        //collector.emit(new Values("tuple", tuple.getValue0(), tuple.getValue1(), tuple.getValue3()), ++msgId);
+
+        //Emit data with event time
+        collector.emit(new Values("tuple", tuple.getValue0(), tuple.getValue1(), tuple.getValue2()), ++msgId);
     }
 
+    //Creates a tuple
     private Quartet<String, Integer, Long, Long> readNextTuple() throws Exception {
+        //Every data is generated with the same "key" key.
+        //Values are generated randomly
+        //We generate tuples with both event time and processing time data fields.
         return new Quartet<>("key", random.nextInt(), ++eventTime, System.currentTimeMillis());
-        //return new Quartet<>("key", ++counter, ++eventTime, System.currentTimeMillis());
     }
 
     @Override
