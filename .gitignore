@@ -5,6 +5,7 @@
 .mtj.tmp/
 *.jar
 *.war
+*.txt
 *.ear
 hs_err_pid*
 logs/

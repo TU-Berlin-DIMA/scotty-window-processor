@@ -9,7 +9,7 @@ import java.util.*;
 
 public class AggregateState<InputType> implements Serializable {
 
-    private final List<AggregateValueState<InputType,Object,Object>> aggregateValueStates;
+    private final List<AggregateValueState<InputType, Object, Object>> aggregateValueStates;
 
     public AggregateState(StateFactory stateFactory, List<AggregateFunction> windowFunctions) {
         this(stateFactory, windowFunctions, null);
@@ -23,21 +23,21 @@ public class AggregateState<InputType> implements Serializable {
     }
 
     public void addElement(InputType state) {
-        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
+        for (AggregateValueState<InputType, Object, Object> valueState : aggregateValueStates) {
             valueState.addElement(state);
         }
     }
 
-    public void removeElement(StreamRecord<InputType> toRemove){
-        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
+    public void removeElement(StreamRecord<InputType> toRemove) {
+        for (AggregateValueState<InputType, Object, Object> valueState : aggregateValueStates) {
             valueState.removeElement(toRemove);
         }
     }
 
     public void clear() {
-       for(AggregateValueState valueState: aggregateValueStates){
-           valueState.clear();
-       }
+        for (AggregateValueState valueState : aggregateValueStates) {
+            valueState.clear();
+        }
     }
 
 
@@ -53,19 +53,19 @@ public class AggregateState<InputType> implements Serializable {
         return otherAggState.aggregateValueStates.size() <= this.aggregateValueStates.size();
     }
 
-    public boolean hasValues(){
-        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
-          if(valueState.hasValue()){
-              return true;
-          }
+    public boolean hasValues() {
+        for (AggregateValueState<InputType, Object, Object> valueState : aggregateValueStates) {
+            if (valueState.hasValue()) {
+                return true;
+            }
         }
         return false;
     }
 
     public List<Object> getValues() {
         List<Object> objectList = new ArrayList<>(aggregateValueStates.size());
-        for(AggregateValueState<InputType,Object,Object> valueState: aggregateValueStates){
-            if(valueState.hasValue())
+        for (AggregateValueState<InputType, Object, Object> valueState : aggregateValueStates) {
+            if (valueState.hasValue())
                 objectList.add(valueState.getValue());
         }
         return objectList;
@@ -87,19 +87,7 @@ public class AggregateState<InputType> implements Serializable {
 
     @Override
     public String toString() {
-<<<<<<< HEAD
-        return "AggregateState{" +
-                "values=" + printValues();
-    }
-    private String printValues(){
-        String str="";
-        for(Object o :getValues()){
-            if(o!=null) str += o.toString();
-        }
-        return str;
-=======
         return aggregateValueStates.toString();
->>>>>>> upstream/master
     }
 
 }
