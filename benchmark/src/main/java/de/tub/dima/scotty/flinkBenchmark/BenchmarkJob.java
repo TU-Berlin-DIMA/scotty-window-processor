@@ -58,7 +58,7 @@ public class BenchmarkJob {
         timestampsAndWatermarks
                 .keyBy(0)
                 .process(windowOperator);
-                //.print();
+        //.print();
 
         try {
             env.execute();

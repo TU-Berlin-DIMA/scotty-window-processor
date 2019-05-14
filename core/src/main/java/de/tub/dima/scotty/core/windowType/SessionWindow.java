@@ -89,7 +89,6 @@ public class SessionWindow implements ForwardContextAware {
             for (; i < numberOfActiveWindows(); i++) {
                 ActiveWindow s = getWindow(i);
                 if (s.getStart() - gap <= position && s.getEnd() + gap >= position) {
-                    //?
                     return i;
                 } else if (s.getStart() - gap > position)
                     return i - 1;
