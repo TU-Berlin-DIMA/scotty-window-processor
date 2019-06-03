@@ -42,6 +42,30 @@ public class SessionWindowOperatorTest {
 
     }
 
+
+    @Test
+    public void inOrderTestClean() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10000));
+        slicingWindowOperator.processElement(1, 1000);
+        slicingWindowOperator.processElement(2, 19000);
+        slicingWindowOperator.processElement(3, 23000);
+        slicingWindowOperator.processElement(4, 31000);
+        slicingWindowOperator.processElement(5, 49000);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22000);
+
+        Assert.assertEquals(1, resultWindows.get(0).getAggValues().get(0));
+
+
+        resultWindows = slicingWindowOperator.processWatermark(55000);
+        Assert.assertEquals(9, resultWindows.get(0).getAggValues().get(0));
+        resultWindows = slicingWindowOperator.processWatermark(80000);
+        Assert.assertEquals(5, resultWindows.get(0).getAggValues().get(0));
+
+    }
+
+
     @Test
     public void inOrderTest2() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);

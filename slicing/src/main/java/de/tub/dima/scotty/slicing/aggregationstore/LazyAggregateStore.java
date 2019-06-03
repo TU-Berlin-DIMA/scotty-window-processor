@@ -136,7 +136,7 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
 
     @Override
     public void removeSlices(final long maxTimestamp) {
-        final int index = this.findSliceIndexByTimestamp(maxTimestamp - 1);
+        final int index = this.findSliceIndexByTimestamp(maxTimestamp);
 
         if (index <= 0)
             return;

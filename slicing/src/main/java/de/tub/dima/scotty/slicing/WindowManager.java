@@ -79,13 +79,16 @@ public class WindowManager {
     }
 
     public void clearAfterWatermark(long currentWatermark) {
-        long maxDelay = maxFixedWindowSize;
+
+        long firstActiveWindowStart = currentWatermark;
         for (WindowContext<?> context : contextAwareWindows) {
            for(WindowContext.ActiveWindow window : context.getActiveWindows()){
-               maxDelay = Math.max(maxDelay, window.getStart());
+               firstActiveWindowStart = Math.min(firstActiveWindowStart, window.getStart());
            }
         }
-        long removeFromTimestamp = currentWatermark - maxDelay;
+
+        long maxDelay =  currentWatermark - maxFixedWindowSize;
+        long removeFromTimestamp = Math.min(maxDelay, firstActiveWindowStart);
 
         this.aggregationStore.removeSlices(removeFromTimestamp);
     }
