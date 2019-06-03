@@ -144,8 +144,8 @@ public class BenchmarkRunner {
             Random random = new Random(10);
             Collection<Window> resultList = new ArrayList<>();
             for (int i = 0; i < WINDOW_NR; i++) {
-                long WINDOW_SIZE = (long) (WINDOW_MIN_SIZE + random.nextDouble() * (WINDOW_MAX_SIZE - WINDOW_MIN_SIZE));
-                resultList.add(new TumblingWindow(WindowMeasure.Time, TimeMeasure.of(WINDOW_SIZE, TimeUnit.SECONDS).toMilliseconds()));
+                double WINDOW_SIZE = (WINDOW_MIN_SIZE + random.nextDouble() * (WINDOW_MAX_SIZE - WINDOW_MIN_SIZE));
+                resultList.add(new TumblingWindow(WindowMeasure.Time, TimeMeasure.of((long)(WINDOW_SIZE*1000), TimeUnit.MILLISECONDS).toMilliseconds()));
             }
             return resultList;
         }
@@ -164,7 +164,7 @@ public class BenchmarkRunner {
                 double WINDOW_SIZE = WINDOW_MIN_SIZE + random.nextDouble() * (WINDOW_MAX_SIZE - WINDOW_MIN_SIZE);
                 //int WINDOW_SIZE = random.nextInt(WINDOW_MAX_SIZE - WINDOW_MIN_SIZE) + WINDOW_MIN_SIZE;
 
-                //resultList.add(CountWindowsAssigner.of((int) WINDOW_SIZE));
+                resultList.add(new TumblingWindow(WindowMeasure.Count,(int) WINDOW_SIZE));
             }
             return resultList;
         }
