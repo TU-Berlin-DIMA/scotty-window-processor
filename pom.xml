@@ -9,7 +9,7 @@
     <groupId>de.tub.dima.scotty</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.3</version>
+    <version>0.4</version>
 
     <name>Scotty Window Processor</name>
     <url>https://github.com/TU-Berlin-DIMA/scotty-window-processor</url>
@@ -49,7 +49,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Unique entry point for version number management -->
-        <global.version>0.1-SNAPSHOT</global.version>
+        <global.version>0.4</global.version>
 
         <generated.docs.dir>./docs/_includes/generated</generated.docs.dir>
     </properties>
