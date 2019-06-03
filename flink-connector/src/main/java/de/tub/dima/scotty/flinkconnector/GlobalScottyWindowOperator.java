@@ -6,6 +6,7 @@ import de.tub.dima.scotty.core.windowType.*;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.state.memory.*;
 import de.tub.dima.scotty.core.*;
+import org.apache.flink.api.common.time.Time;
 import org.apache.flink.configuration.*;
 import org.apache.flink.streaming.api.functions.*;
 import org.apache.flink.util.*;
@@ -21,6 +22,7 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
 
     private final AggregateFunction<InputType,?, FinalAggregateType> windowFunction;
     private final List<Window> windows;
+    private long allowedLateness = 1;
 
     public GlobalScottyWindowOperator(AggregateFunction<InputType, ?, FinalAggregateType> windowFunction) {
         this.windowFunction = windowFunction;
@@ -41,6 +43,7 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
             slicingWindowOperator.addWindowAssigner(window);
         }
         slicingWindowOperator.addAggregation(windowFunction);
+        slicingWindowOperator.setMaxLateness(allowedLateness);
         return slicingWindowOperator;
     }
 
@@ -65,8 +68,14 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
      * For example {@link SlidingWindow} or {@link TumblingWindow}
      * @param window the new window definition
      */
-    public void addWindow(Window window) {
+    public GlobalScottyWindowOperator addWindow(Window window) {
         windows.add(window);
+        return this;
     }
 
+
+    public GlobalScottyWindowOperator allowedLateness(Time time){
+        this.allowedLateness = time.toMilliseconds();
+        return this;
+    }
 }

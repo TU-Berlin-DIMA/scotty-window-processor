@@ -62,5 +62,8 @@ public class SlicingWindowOperator<InputType> implements WindowOperator<InputTyp
         windowManager.addAggregation(windowFunction);
     }
 
-
+    @Override
+    public void setMaxLateness(long maxLateness) {
+        windowManager.setMaxLateness(maxLateness);
+    }
 }

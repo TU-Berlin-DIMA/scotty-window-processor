@@ -187,6 +187,10 @@ public class WindowManager {
         currentCount++;
     }
 
+    public void setMaxLateness(long maxLateness) {
+        this.maxLateness = maxLateness;
+    }
+
     public class AggregationWindowCollector implements WindowCollector, Iterable<AggregateWindow> {
 
         private final List<AggregateWindow> aggregationStores;

@@ -29,5 +29,12 @@ public interface WindowOperator<InputType> extends Serializable {
      */
     <OutputType> void addAggregation(AggregateFunction<InputType, ?, OutputType> windowFunction);
 
+    /**
+     * Set the max lateness for the window operator.
+     * LastWatermark - maxLateness is the point in time where slices get garbage collected and no further late elements are processed.
+     * @param maxLateness
+     */
+    void setMaxLateness(long maxLateness);
+
 
 }
