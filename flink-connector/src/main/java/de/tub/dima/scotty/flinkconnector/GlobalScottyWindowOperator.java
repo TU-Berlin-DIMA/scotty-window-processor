@@ -50,9 +50,9 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
     @Override
     public void processElement(InputType value, Context ctx, Collector<AggregateWindow<FinalAggregateType>> out) throws Exception {
 
-        this.slicingWindowOperator.processElement(value, ctx.timestamp());
+        this.slicingWindowOperator.processElement(value, getTimestamp(ctx));
 
-        long currentWaterMark = ctx.timerService().currentWatermark();
+        long currentWaterMark = ctx.timerService().currentWatermark()<0?getTimestamp(ctx):ctx.timerService().currentWatermark();
 
         if (currentWaterMark > this.lastWatermark) {
             List<AggregateWindow> aggregates = this.slicingWindowOperator.processWatermark(currentWaterMark);
@@ -61,6 +61,10 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
             }
             this.lastWatermark = currentWaterMark;
         }
+    }
+
+    private long getTimestamp(Context context){
+        return context.timestamp()!=null?context.timestamp():context.timerService().currentProcessingTime();
     }
 
     /**

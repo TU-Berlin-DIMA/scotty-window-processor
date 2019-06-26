@@ -9,6 +9,7 @@ import de.tub.dima.scotty.core.*;
 import org.apache.flink.api.common.time.Time;
 import org.apache.flink.configuration.*;
 import org.apache.flink.streaming.api.functions.*;
+import org.apache.flink.streaming.api.operators.StreamingRuntimeContext;
 import org.apache.flink.util.*;
 
 import java.util.*;
@@ -58,15 +59,19 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
             slicingWindowOperatorMap.put(currentKey, initWindowOperator());
         }
         SlicingWindowOperator<InputType> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
-        slicingWindowOperator.processElement(value, ctx.timestamp());
-
+        slicingWindowOperator.processElement(value, getTimestamp(ctx));
         processWatermark(ctx, out);
 
 
     }
 
+    private long getTimestamp(Context context){
+        return context.timestamp()!=null?context.timestamp():context.timerService().currentProcessingTime();
+    }
+
     private void processWatermark(Context ctx, Collector<AggregateWindow<FinalAggregateType>> out) {
-        long currentWaterMark = ctx.timerService().currentWatermark();
+
+        long currentWaterMark = ctx.timerService().currentWatermark()<0?getTimestamp(ctx):ctx.timerService().currentWatermark();
 
         if (currentWaterMark > this.lastWatermark) {
             for (SlicingWindowOperator<InputType> slicingWindowOperator : this.slicingWindowOperatorMap.values()) {
