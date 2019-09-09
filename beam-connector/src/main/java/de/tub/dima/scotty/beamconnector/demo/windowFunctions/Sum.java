@@ -1,11 +1,11 @@
-package de.tub.dima.scotty.beamconnector.demo.windowFunctions.scotty;
+package de.tub.dima.scotty.beamconnector.demo.windowFunctions;
 
 import de.tub.dima.scotty.core.windowFunction.InvertibleReduceAggregateFunction;
 import org.apache.beam.sdk.values.KV;
 
 import java.io.Serializable;
 
-public class SumScotty implements InvertibleReduceAggregateFunction<KV<Integer, Integer>>, Serializable {
+public class Sum implements InvertibleReduceAggregateFunction<KV<Integer, Integer>>, Serializable {
 
     @Override
     public KV<Integer, Integer> invert( KV<Integer, Integer> currentAggregate,  KV<Integer, Integer> toRemove) {

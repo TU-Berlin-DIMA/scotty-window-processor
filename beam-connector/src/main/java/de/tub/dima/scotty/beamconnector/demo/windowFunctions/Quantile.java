@@ -1,4 +1,4 @@
-package de.tub.dima.scotty.beamconnector.demo.windowFunctions.scotty;
+package de.tub.dima.scotty.beamconnector.demo.windowFunctions;
 
 import de.tub.dima.scotty.beamconnector.demo.windowFunctions.QuantileTreeMap;
 import de.tub.dima.scotty.core.windowFunction.AggregateFunction;
@@ -7,14 +7,14 @@ import org.apache.beam.sdk.values.KV;
 
 import java.io.Serializable;
 
-public class QuantileScotty implements AggregateFunction<
+public class Quantile implements AggregateFunction<
         KV<Integer, Integer>,
         KV<Integer, QuantileTreeMap>,
         KV<Integer,Integer>>,
         CloneablePartialStateFunction<KV<Integer,QuantileTreeMap>>, Serializable {
     private final double quantile;
 
-    public QuantileScotty(double quantile) {
+    public Quantile(double quantile) {
         this.quantile = quantile;
     }
 
