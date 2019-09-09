@@ -1,13 +1,13 @@
-package de.tub.dima.scotty.stormconnector.demo.windowFunctions.scotty;
+package de.tub.dima.scotty.stormconnector.demo.windowFunctions;
 
 import de.tub.dima.scotty.core.windowFunction.AggregateFunction;
 import de.tub.dima.scotty.core.windowFunction.CloneablePartialStateFunction;
 import de.tub.dima.scotty.stormconnector.demo.windowFunctions.QuantileTreeMap;
 
-public class QuantileScotty implements AggregateFunction<Integer, QuantileTreeMap, Integer>, CloneablePartialStateFunction<QuantileTreeMap> {
+public class Quantile implements AggregateFunction<Integer, QuantileTreeMap, Integer>, CloneablePartialStateFunction<QuantileTreeMap> {
     private final double quantile;
 
-    public QuantileScotty(double quantile) {
+    public Quantile(double quantile) {
         this.quantile = quantile;
     }
 

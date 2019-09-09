@@ -1,8 +1,8 @@
-package de.tub.dima.scotty.stormconnector.demo.windowFunctions.scotty;
+package de.tub.dima.scotty.stormconnector.demo.windowFunctions;
 
 import de.tub.dima.scotty.core.windowFunction.ReduceAggregateFunction;
 
-public class MinScotty implements ReduceAggregateFunction<Integer> {
+public class Min implements ReduceAggregateFunction<Integer> {
 
     @Override
     public Integer combine(Integer partialAggregate1, Integer partialAggregate2) {

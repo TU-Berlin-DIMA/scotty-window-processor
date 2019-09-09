@@ -1,8 +1,8 @@
-package de.tub.dima.scotty.stormconnector.demo.windowFunctions.scotty;
+package de.tub.dima.scotty.stormconnector.demo.windowFunctions;
 
 import de.tub.dima.scotty.core.windowFunction.InvertibleReduceAggregateFunction;
 
-public class CountScotty implements InvertibleReduceAggregateFunction<Integer> {
+public class Count implements InvertibleReduceAggregateFunction<Integer> {
 
     @Override
     public Integer lift(Integer inputTuple) {

@@ -16,16 +16,16 @@ public class DataGeneratorSpout extends BaseRichSpout {
     private static final Logger LOG = LoggerFactory.getLogger(DataGeneratorSpout.class);
     private SpoutOutputCollector collector;
     private long msgId = 0;
-    private int incrVal = 0;
     private int numberOfKeys;
     private long eventTime = -1;
     private Random generator;
+    private int value=0;
     private long throughputLimit;
 
     public DataGeneratorSpout() {
         this.numberOfKeys = 1;
         this.generator = new Random();
-        this.throughputLimit = 10000;
+        this.throughputLimit = 1000;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DataGeneratorSpout extends BaseRichSpout {
         if (throughputLimit != 0) {
             long startTs = System.currentTimeMillis();
             for (int i = 0; i < throughputLimit; i++) {
-                    collector.emit(new Values(generator.nextInt(numberOfKeys), generator.nextInt(), ++eventTime), ++msgId);
+                    collector.emit(new Values(generator.nextInt(numberOfKeys), ++value, ++eventTime), ++msgId);
             }
             while (System.currentTimeMillis() < startTs + 1000) {
                 // active waiting
@@ -46,7 +46,7 @@ public class DataGeneratorSpout extends BaseRichSpout {
         }
         else {
             while (true) {
-                    collector.emit(new Values(generator.nextInt(numberOfKeys), generator.nextInt(), ++eventTime), ++msgId);
+                    collector.emit(new Values(generator.nextInt(numberOfKeys), ++value, ++eventTime), ++msgId);
             }
         }
     }
