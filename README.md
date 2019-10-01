@@ -29,10 +29,7 @@ new KeyedScottyWindowOperator<>(new SumWindowFunction());
 // Add multiple windows to the same operator
 windowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
 windowOperator.addWindow(new SlidingWindow(WindowMeasure.Time, 1000, 5000));
-windowOperator.addWindow(new SessionWindow(1000));
-
-// Add count based window
-windowOperator.addWindow(new TumblingWindow(WindowMeasure.Count, 1000))
+windowOperator.addWindow(new SessionWindow(WindowMeasure.Time, 1000));
 
 // Add operator to Flink job
 stream.keyBy(0)
@@ -78,7 +75,7 @@ Then you can use the library in your maven project.
 <dependency> 
  <groupId>de.tub.dima.scotty</groupId>
  <artifactId>flink-connector</artifactId>
- <version>0.3</version>
+ <version>0.4</version>
 </dependency>
 ```
 
