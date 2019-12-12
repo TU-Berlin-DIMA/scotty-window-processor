@@ -36,6 +36,7 @@
         <module>benchmark</module>
         <module>state</module>
         <module>flink-connector</module>
+        <module>samza-connector</module>
     </modules>
 
     <properties>
