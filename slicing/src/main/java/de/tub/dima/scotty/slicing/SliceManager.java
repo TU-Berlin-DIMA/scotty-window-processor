@@ -1,5 +1,6 @@
 package de.tub.dima.scotty.slicing;
 
+import de.tub.dima.scotty.core.windowType.PunctuationWindow;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.*;
@@ -11,6 +12,7 @@ public class SliceManager<InputType> {
     private final SliceFactory<InputType, ?> sliceFactory;
     private final AggregationStore<InputType> aggregationStore;
     private final WindowManager windowManager;
+    public boolean split = false;
 
     public SliceManager(final SliceFactory sliceFactory, final AggregationStore<InputType> aggregationStore, final WindowManager windowManager) {
         this.sliceFactory = sliceFactory;
@@ -83,6 +85,26 @@ public class SliceManager<InputType> {
                     nextSlice.prependElement(lastElement);
                 }
             }
+
+            /*added for Punctuation Window*/
+            for (WindowContext windowContext : this.windowManager.getContextAwareWindows()) {
+                if(windowContext instanceof PunctuationWindow.PunctuationContext && split){
+                    boolean stop = false;
+                    StreamRecord<InputType> currElement = new StreamRecord<>(ts, element);
+                    LazySlice<InputType, ?> lazySlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice-1);
+                    lazySlice.addElement(element,ts);
+                    while (!stop){
+                        StreamRecord<InputType> lastElement = lazySlice.dropLastElement();
+                        if(currElement.compareTo(lastElement) !=0){
+                            LazySlice<InputType, ?> nextSlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice);
+                            nextSlice.prependElement(lastElement);
+                        }else{
+                            split = false;
+                            stop = true;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -138,6 +160,7 @@ public class SliceManager<InputType> {
     }
 
     public void splitSlice(int sliceIndex, long timestamp) {
+        split = true;
         Slice sliceA = this.aggregationStore.getSlice(sliceIndex);
         // TODO find count for left and right
         Slice sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());

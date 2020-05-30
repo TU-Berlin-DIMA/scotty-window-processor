@@ -1,4 +1,4 @@
-package de.tub.dima.scotty.core.windowType;
+package de.tub.dima.scotty.slicing.aggregationstore.test.windowTest;
 
 import de.tub.dima.scotty.core.windowFunction.InvertibleReduceAggregateFunction;
 import org.apache.flink.api.java.tuple.Tuple2;

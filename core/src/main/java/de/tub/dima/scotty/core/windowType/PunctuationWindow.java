@@ -4,8 +4,6 @@ import de.tub.dima.scotty.core.WindowCollector;
 import de.tub.dima.scotty.core.windowType.windowContext.WindowContext;
 import org.apache.flink.api.java.tuple.Tuple;
 
-import java.util.ArrayList;
-
 public class PunctuationWindow implements ForwardContextFree {
 
     private final WindowMeasure measure;
@@ -114,10 +112,10 @@ public class PunctuationWindow implements ForwardContextFree {
             return null;
         }
 
-        @Override
+        /*@Override
         public ActiveWindow updateContextWindows(Object element, long ts, ArrayList<Long> listOfTs) {
             return null;
-        }
+        }*/
 
         @Override
         public long assignNextWindowStart(long position) {

@@ -3,7 +3,6 @@ package de.tub.dima.scotty.slicing.aggregationstore.test.windowTest;
 import de.tub.dima.scotty.core.AggregateWindow;
 import de.tub.dima.scotty.core.windowFunction.ReduceAggregateFunction;
 import de.tub.dima.scotty.core.windowType.PunctuationWindow;
-import de.tub.dima.scotty.core.windowType.WindowMeasure;
 import de.tub.dima.scotty.slicing.SlicingWindowOperator;
 import de.tub.dima.scotty.state.memory.MemoryStateFactory;
 import org.junit.Before;
