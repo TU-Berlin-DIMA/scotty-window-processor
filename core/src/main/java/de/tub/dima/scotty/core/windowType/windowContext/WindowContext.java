@@ -57,6 +57,11 @@ public abstract class WindowContext<Tuple> implements Serializable {
         window.setStart(position);
     }
 
+    public void shiftStartDontModify(ActiveWindow window, long position) { // does not modify the start edge
+        //modifiedWindowEdges.add(new ShiftModification(window.start, position));
+        window.setStart(position);
+    }
+
     public void shiftEnd(ActiveWindow window, long position) {
         //modifiedWindowEdges.add(new ShiftModification(window.end, position));
         window.setEnd(position);
@@ -70,6 +75,12 @@ public abstract class WindowContext<Tuple> implements Serializable {
         return updateContext(tuple, position);
     };
 
+    public abstract ActiveWindow updateContextWindows(Tuple element, long ts, ArrayList<Long> listOfTs); //For out-of-order processing
+
+    public ActiveWindow updateContextWindows(Tuple element, long ts, ArrayList<Long> listOfTs, Set<WindowModifications> windowModifications) {
+        this.modifiedWindowEdges = windowModifications;
+        return updateContextWindows(element, ts, listOfTs);
+    }
     public abstract long assignNextWindowStart(long position);
 
     public abstract void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark);
