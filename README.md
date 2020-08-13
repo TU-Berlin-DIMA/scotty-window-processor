@@ -12,6 +12,8 @@ This repository provides Scotty, a framework for efficient window aggregations f
 - Connector for [Apache Flink](https://flink.apache.org/).
 - Connector for [Apache Storm](https://storm.apache.org/).
 - Connector for [Apache Beam](https://beam.apache.org/).
+- Connector for [Apache Kafka](https://kafka.apache.org/).
+- Connector for [Apache Spark](https://spark.apache.org/).
 
 ### Resources:
  - [Paper: Efficient Window Aggregation with General Stream Slicing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-efficient-window-aggregation-with-general-stream-slicing-edbt-2019.pdf) (EDBT 2019, Best Paper)
