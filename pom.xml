@@ -38,6 +38,7 @@
         <module>flink-connector</module>
         <module>samza-connector</module>
         <module>spark-connector</module>
+        <module>kafkaStreams-connector</module>
     </modules>
 
     <properties>
