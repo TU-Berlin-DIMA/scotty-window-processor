@@ -37,6 +37,7 @@
         <module>state</module>
         <module>flink-connector</module>
         <module>samza-connector</module>
+        <module>kafkaStreams-connector</module>
     </modules>
 
     <properties>
