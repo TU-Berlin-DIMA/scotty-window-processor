@@ -73,7 +73,7 @@ public class WindowManager {
             this.aggregationStore.aggregate(windows, minTs, maxTs, minCount, maxCount);
         }
         this.lastWatermark = watermarkTs;
-        this.lastCount = currentCount - 5;
+        this.lastCount = currentCount;
         clearAfterWatermark(watermarkTs - maxLateness);
         return windows.aggregationStores;
     }
@@ -108,7 +108,7 @@ public class WindowManager {
             else if (window.getWindowMeasure() == Count) {
                 int sliceIndex = this.aggregationStore.findSliceIndexByTimestamp(watermarkTs);
                 Slice slice = this.aggregationStore.getSlice(sliceIndex);
-                if (slice.getTLast() >= watermarkTs)
+                if (slice.getTLast() >= watermarkTs && sliceIndex > 0)
                     slice = this.aggregationStore.getSlice(sliceIndex - 1);
                 long cend = slice.getCLast();
                 window.triggerWindows(windowCollector, lastCount, cend + 1);
