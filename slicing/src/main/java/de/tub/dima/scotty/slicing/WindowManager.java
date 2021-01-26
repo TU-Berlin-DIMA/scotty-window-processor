@@ -30,6 +30,7 @@ public class WindowManager {
     private boolean hasTimeMeasure;
     private long currentCount = 0;
     private long lastCount = 0;
+    private boolean isSessionWindowCase;
 
     public WindowManager(StateFactory stateFactory, AggregationStore aggregationStore) {
         this.stateFactory = stateFactory;
@@ -124,6 +125,13 @@ public class WindowManager {
             hasFixedWindows = true;
         }
         if (window instanceof ForwardContextAware) {
+
+            if(window instanceof SessionWindow && (!hasContextAwareWindows || isSessionWindowCase)){
+                isSessionWindowCase = true;
+            } else {
+                isSessionWindowCase = false;
+            }
+
             hasContextAwareWindows = true;
             contextAwareWindows.add(((ForwardContextAware) window).createContext());
         }
@@ -178,6 +186,8 @@ public class WindowManager {
     public boolean hasTimeMeasure() {
         return hasTimeMeasure;
     }
+
+    public boolean isSessionWindowCase() {return isSessionWindowCase; }
 
     public long getCurrentCount() {
         return currentCount;
