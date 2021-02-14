@@ -39,6 +39,9 @@
         <module>samza-connector</module>
         <module>spark-connector</module>
         <module>kafkaStreams-connector</module>
+        <module>beam-connector</module>
+        <module>storm-connector</module>
+        <module>demo</module>
     </modules>
 
     <properties>

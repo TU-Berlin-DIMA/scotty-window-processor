@@ -6,7 +6,7 @@ de.tub.dima.scotty.flinkBenchmark
 de.tub.dima.scotty.flinkBenchmark.aggregations
 de.tub.dima.scotty.flinkconnector
 de.tub.dima.scotty.flinkconnector.demo
-de.tub.dima.scotty.flinkconnector.demo.windowFunctions
+de.tub.dima.scotty.demo.flink.windowFunctions
 de.tub.dima.scotty.microbenchmark
 de.tub.dima.scotty.slicing
 de.tub.dima.scotty.slicing.aggregationstore
