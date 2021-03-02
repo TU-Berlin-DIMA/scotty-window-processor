@@ -48,8 +48,8 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/SumWindowFunction.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/SumWindowFunction.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html" target="_top">Frames</a></li>
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.flinkconnector.demo.windowFunctions</div>
+<div class="subTitle">de.tub.dima.scotty.demo.flink.windowFunctions</div>
 <h2 title="Class QuantileWindowFunction" class="title">Class QuantileWindowFunction</h2>
 </div>
 <div class="contentContainer">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>de.tub.dima.scotty.flinkconnector.demo.windowFunctions.QuantileWindowFunction</li>
+<li>de.tub.dima.scotty.demo.flink.windowFunctions.QuantileWindowFunction</li>
 </ul>
 </li>
 </ul>
@@ -108,16 +108,16 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;, java.io.Serializable</dd>
+<dd><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;, java.io.Serializable</dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">QuantileWindowFunction</span>
 extends java.lang.Object
-implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</pre>
+implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../../serialized-form.html#de.tub.dima.scotty.flinkconnector.demo.windowFunctions.QuantileWindowFunction">Serialized Form</a></dd>
+<dd><a href="../../../../../../../serialized-form.html#de.tub.dima.scotty.demo.flink.windowFunctions.QuantileWindowFunction">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -174,21 +174,21 @@ implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html#combine-org.apache.flink.api.java.tuple.Tuple2-org.apache.flink.api.java.tuple.Tuple2-">combine</a></span>(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate1,
-       org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate2)</code>
+<td class="colFirst"><code>org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html#combine-org.apache.flink.api.java.tuple.Tuple2-org.apache.flink.api.java.tuple.Tuple2-">combine</a></span>(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate1,
+       org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate2)</code>
 <div class="block">Computes the combined aggregate from partial aggregates.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;</code></td>
+<td class="colFirst"><code>org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html#lift-org.apache.flink.api.java.tuple.Tuple2-">lift</a></span>(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;inputTuple)</code>
 <div class="block">Transforms a tuple to a partial aggregate.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html#lower-org.apache.flink.api.java.tuple.Tuple2-">lower</a></span>(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;aggregate)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html#lower-org.apache.flink.api.java.tuple.Tuple2-">lower</a></span>(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;aggregate)</code>
 <div class="block">Transforms a partial aggregate to a final aggregate.</div>
 </td>
 </tr>
@@ -254,7 +254,7 @@ implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/
 <ul class="blockList">
 <li class="blockList">
 <h4>lift</h4>
-<pre>public&nbsp;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;lift(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;inputTuple)</pre>
+<pre>public&nbsp;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;lift(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;inputTuple)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#lift-InputType-">AggregateFunction</a></code></span></div>
 <div class="block">Transforms a tuple to a partial aggregate.
  For example, consider an average computation. If a tuple ⟨p,v⟩
@@ -263,7 +263,7 @@ implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/
  that one tuple.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#lift-InputType-">lift</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</code></dd>
+<dd><code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#lift-InputType-">lift</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>inputTuple</code> - input Tuple</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -277,14 +277,14 @@ implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/
 <ul class="blockList">
 <li class="blockList">
 <h4>lower</h4>
-<pre>public&nbsp;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;lower(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;aggregate)</pre>
+<pre>public&nbsp;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&nbsp;lower(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;aggregate)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#lower-PartialAggregateType-">AggregateFunction</a></code></span></div>
 <div class="block">Transforms a partial aggregate to a final aggregate.
  In our example, the lower function computes the average from sum and count:
  ⟨sum, count⟩ 7→ sum/count.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#lower-PartialAggregateType-">lower</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</code></dd>
+<dd><code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#lower-PartialAggregateType-">lower</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>final Aggregate</dd>
 </dl>
@@ -296,14 +296,14 @@ implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/
 <ul class="blockListLast">
 <li class="blockList">
 <h4>combine</h4>
-<pre>public&nbsp;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;combine(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate1,
-                                                                                         org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate2)</pre>
+<pre>public&nbsp;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;combine(org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate1,
+                                                                                         org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;&nbsp;partialAggregate2)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#combine-PartialAggregateType-PartialAggregateType-">AggregateFunction</a></code></span></div>
 <div class="block">Computes the combined aggregate from partial aggregates.
  Each incremental aggregation step results in one call of the combine function.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#combine-PartialAggregateType-PartialAggregateType-">combine</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</code></dd>
+<dd><code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html#combine-PartialAggregateType-PartialAggregateType-">combine</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,<a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions">QuantileTreeMap</a>&gt;,org.apache.flink.api.java.tuple.Tuple2&lt;java.lang.Integer,java.lang.Integer&gt;&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>combined PartialAggregate</dd>
 </dl>
@@ -336,8 +336,8 @@ implements <a href="../../../../../../../de/tub/dima/scotty/core/windowFunction/
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/SumWindowFunction.html" title="class in de.tub.dima.scotty.flinkconnector.demo.windowFunctions"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileTreeMap.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../de/tub/dima/scotty/flinkconnector/demo/windowFunctions/SumWindowFunction.html" title="class in de.tub.dima.scotty.demo.flink.windowFunctions"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?de/tub/dima/scotty/flinkconnector/demo/windowFunctions/QuantileWindowFunction.html" target="_top">Frames</a></li>

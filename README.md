@@ -38,6 +38,8 @@ stream.keyBy(0)
       .process(windowOperator)
 ```
 
+More examples for Flink as well as demos for the other systems are provided in the [demo folder](demo).
+
 ### Benchmark:  
 
 
