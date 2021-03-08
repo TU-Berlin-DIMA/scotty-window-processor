@@ -96,4 +96,34 @@ public class PunctuationWindowTupleTest {
         resultWindows = slicingWindowOperator.processWatermark(55);
         WindowAssert.assertEquals(resultWindows.get(0), 30,51,new Tuple2<>(1,5));
     }
+
+    @Test
+    public void twoWindowsTest() {
+        final AggregateFunction<Tuple2<Integer, Integer>, ?, Tuple2<Integer, Integer>> windowFunction = new SumWindowFunctionTest();
+        slicingWindowOperator.addWindowFunction(windowFunction);
+
+        Tuple2 p = new Tuple2(1, 0);
+        Tuple2 p2 = new Tuple2("123", 0);
+        slicingWindowOperator.addWindowAssigner(new PunctuationWindow(p));
+        slicingWindowOperator.addWindowAssigner(new PunctuationWindow(p2));
+
+        Tuple2<Integer,Integer> t = new Tuple2<>(1,0);
+        slicingWindowOperator.processElement(new Tuple2<>(1,1), 1);
+        slicingWindowOperator.processElement(t, 10);
+        slicingWindowOperator.processElement(new Tuple2<>(1,2), 19);
+        slicingWindowOperator.processElement(new Tuple2("123", 0), 30);
+        slicingWindowOperator.processElement(new Tuple2<>(1,3), 23); //out-of-order tuple
+        slicingWindowOperator.processElement(new Tuple2<>(1,5), 49);
+        slicingWindowOperator.processElement(t, 51);
+        slicingWindowOperator.processElement(new Tuple2("123", 0), 51);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(31);
+        WindowAssert.assertEquals(resultWindows.get(0), 1,10,new Tuple2<>(1,1));
+        WindowAssert.assertEquals(resultWindows.get(1), 1,30,new Tuple2<>(1,6));
+
+        resultWindows = slicingWindowOperator.processWatermark(55);
+        WindowAssert.assertEquals(resultWindows.get(0), 10,51,new Tuple2<>(1,10));
+        WindowAssert.assertEquals(resultWindows.get(1), 30,51,new Tuple2<>(1,5));
+    }
+
 }
