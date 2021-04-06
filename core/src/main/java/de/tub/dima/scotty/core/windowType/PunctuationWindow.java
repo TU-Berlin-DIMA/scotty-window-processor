@@ -17,7 +17,6 @@ public class PunctuationWindow implements ForwardContextFree {
      * and de.tub.dima.scotty.slicing.aggregationstore.test.windowTest.PunctuationWindowTupleTest
      * for examples for punctuations
      */
-
     public PunctuationWindow(Object punctuation) {
         this.measure = WindowMeasure.Time;
         this.punctuation = punctuation;
