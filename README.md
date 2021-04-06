@@ -20,6 +20,9 @@ This repository provides Scotty, a framework for efficient window aggregations f
  - [Paper: Scotty: Efficient Window Aggregation for out-of-order Stream Processing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-scotty-icde-2018.pdf) (ICDE 2018)
  - [Presentations Slides FlinkForward 2018](https://www.slideshare.net/powibol/flink-forward-2018-efficient-window-aggregation-with-stream-slicing)
  - [API Documentation](docs)
+ - [Paper: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf) (EDBT 2020)
+ - [Repository: Disco: Stream Processing Engine for Distributed Window Aggregation](https://github.com/hpides/disco)
+ - [Repository: Scotty Fork including Disco](https://github.com/lawben/scotty-window-processor)
 
 ### Flink Integration Example:
 
