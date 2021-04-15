@@ -20,7 +20,8 @@ This repository provides Scotty, a framework for efficient window aggregations f
  - [Paper: Scotty: Efficient Window Aggregation for out-of-order Stream Processing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-scotty-icde-2018.pdf) (ICDE 2018)
  - [Presentations Slides FlinkForward 2018](https://www.slideshare.net/powibol/flink-forward-2018-efficient-window-aggregation-with-stream-slicing)
  - [API Documentation](docs)
- - [Paper: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf) (EDBT 2020)
+ - [Paper: Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675) (ACM TODS 2021)
+ - [Paper: Benson et al.: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf) (EDBT 2020)
  - [Repository: Disco: Stream Processing Engine for Distributed Window Aggregation](https://github.com/hpides/disco)
  - [Repository: Scotty Fork including Disco](https://github.com/lawben/scotty-window-processor)
 
@@ -86,14 +87,14 @@ Then you can use the library in your maven project.
 </dependency>
 ```
 
-### Efficient Window Aggregation with General Stream Sliching at EDBT 2019
+### Efficient Window Aggregation with General Stream Slicing at EDBT 2019
 General Stream Slicing received the Best Paper Award at the [22nd International Conference on Extending Database Technology](http://edbticdt2019.inesc-id.pt/?awards_bp_edbt) in March 2019.  
 
 **Abstract:**  
 Window aggregation is a core operation in data stream processing. Existing aggregation techniques focus on reducing latency, eliminating redundant computations, and minimizing memory usage. However, each technique operates under different assumptions with respect to workload characteristics such as properties of aggregation functions (e.g., invertible, associative), window types (e.g., sliding, sessions), windowing measures (e.g., time- or countbased), and stream (dis)order. Violating the assumptions of a technique can deem it unusable or drastically reduce its performance.
 In this paper, we present the first general stream slicing technique for window aggregation. General stream slicing automatically adapts to workload characteristics to improve performance without sacrificing its general applicability. As a prerequisite, we identify workload characteristics which affect the performance and applicability of aggregation techniques. Our experiments show that general stream slicing outperforms alternative concepts by up to one order of magnitude.
 
-- Paper: [Efficient Window Aggregation with General Stream Sliching](http://www.user.tu-berlin.de/powibol/assets/publications/traub-efficient-window-aggregation-with-general-stream-slicing-edbt-2019.pdf)
+- Paper: [Efficient Window Aggregation with General Stream Slicing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-efficient-window-aggregation-with-general-stream-slicing-edbt-2019.pdf)
 
 - BibTeX citation:
 ```
@@ -149,3 +150,67 @@ solutions.
 ```
 
 Acknoledgements: This work was supported by the EU projects Proteus (687691) and Streamline (688191), DFG Stratosphere (606902), and the German Ministry for Education and Research as BBDC (01IS14013A) and Software Campus (01IS12056).
+
+### Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems at ACM TODS 2021
+
+**Abstract:**
+Window aggregation is a core operation in data stream processing. Existing aggregation techniques focus on
+reducing latency, eliminating redundant computations, or minimizing memory usage. However, each technique 
+operates under different assumptions with respect to workload characteristics, such as properties of
+aggregation functions (e.g., invertible, associative), window types (e.g., sliding, sessions), windowing measures 
+(e.g., time- or count-based), and stream (dis)order. In this article, we present Scotty, an efficient and
+general open-source operator for sliding-window aggregation in stream processing systems, such as Apache
+Flink, Apache Beam, Apache Samza, Apache Kafka, Apache Spark, and Apache Storm. One can easily extend
+Scotty with user-defined aggregation functions and window types. Scotty implements the concept of general
+stream slicing and derives workload characteristics from aggregation queries to improve performance without 
+sacrificing its general applicability. We provide an in-depth view on the algorithms of the general stream
+slicing approach. Our experiments show that Scotty outperforms alternative solutions
+
+-Paper: [Paper: Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675)
+
+-BibTex Citation:
+```
+@article{traub2021scotty,
+  title={Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems},
+  author={Traub, Jonas and Grulich, Philipp Marian and Cu{\'e}llar, Alejandro Rodr{\'\i}guez and Bre{\ss}, Sebastian and Katsifodimos, Asterios and Rabl, Tilmann and Markl, Volker},
+  journal={ACM Transactions on Database Systems (TODS)},
+  volume={46},
+  year={2021},
+  publisher={ACM New York, NY, USA}
+}
+```
+
+### Benson at al.: Disco: : Efficient Distributed Window Aggregation
+
+**Abstract:**
+Many business applications benefit from fast analysis of online
+data streams. Modern stream processing engines (SPEs) provide
+complex window types and user-defined aggregation functions to
+analyze streams. While SPEs run in central data centers, wireless
+sensors networks (WSNs) perform distributed aggregations close
+to the data sources, which is beneficial especially in modern IoT
+setups. However, WSNs support only basic aggregations and windows. 
+To bridge the gap between complex central aggregations
+and simple distributed analysis, we propose Disco, a distributed
+complex window aggregation approach. Disco processes complex
+window types on multiple independent nodes while efficiently
+aggregating incoming data streams. Our evaluation shows that
+Disco’s throughput scales linearly with the number of nodes
+and that Disco already outperforms a centralized solution in a
+two-node setup. Furthermore, Disco reduces the network cost
+significantly compared to the centralized approach. 
+Disco’s treelike topology handles thousands of nodes per level and 
+scales to support future data-intensive streaming applications.
+
+-Paper: [Paper: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf)
+
+-BibTex Citation:
+```
+@inproceedings{benson2020disco,
+  title={Disco: Efficient Distributed Window Aggregation.},
+  author={Benson, Lawrence and Grulich, Philipp M and Zeuch, Steffen and Markl, Volker and Rabl, Tilmann},
+  booktitle={EDBT},
+  volume={20},
+  year={2020}
+}
+```
