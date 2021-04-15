@@ -153,7 +153,7 @@ Acknoledgements: This work was supported by the EU projects Proteus (687691) and
 
 ### Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems at ACM TODS 2021
 
-**Abstract:**
+**Abstract:**  
 Window aggregation is a core operation in data stream processing. Existing aggregation techniques focus on
 reducing latency, eliminating redundant computations, or minimizing memory usage. However, each technique 
 operates under different assumptions with respect to workload characteristics, such as properties of
@@ -166,9 +166,9 @@ stream slicing and derives workload characteristics from aggregation queries to 
 sacrificing its general applicability. We provide an in-depth view on the algorithms of the general stream
 slicing approach. Our experiments show that Scotty outperforms alternative solutions
 
--Paper: [Paper: Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675)
+- Paper: [Paper: Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675)
 
--BibTex Citation:
+- BibTex Citation:
 ```
 @article{traub2021scotty,
   title={Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems},
@@ -180,9 +180,9 @@ slicing approach. Our experiments show that Scotty outperforms alternative solut
 }
 ```
 
-### Benson at al.: Disco: : Efficient Distributed Window Aggregation
+### Benson et al.: Disco: : Efficient Distributed Window Aggregation
 
-**Abstract:**
+**Abstract:**  
 Many business applications benefit from fast analysis of online
 data streams. Modern stream processing engines (SPEs) provide
 complex window types and user-defined aggregation functions to
@@ -202,9 +202,9 @@ significantly compared to the centralized approach.
 Disco’s treelike topology handles thousands of nodes per level and 
 scales to support future data-intensive streaming applications.
 
--Paper: [Paper: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf)
+- Paper: [Paper: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf)
 
--BibTex Citation:
+- BibTex Citation:
 ```
 @inproceedings{benson2020disco,
   title={Disco: Efficient Distributed Window Aggregation.},
