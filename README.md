@@ -6,7 +6,7 @@ This repository provides Scotty, a framework for efficient window aggregations f
 - High performance window aggregation with stream slicing. 
 - Scales to thousands of concurrent windows. 
 - Support for Tumbling, Sliding, and Session Windows.
-- Initial support for Count based windows.
+- Initial support for Count-based windows.
 - Out-of-order processing.
 - Aggregate Sharing among all concurrent windows.
 - Connector for [Apache Flink](https://flink.apache.org/).
@@ -149,7 +149,7 @@ solutions.
 }
 ```
 
-Acknoledgements: This work was supported by the EU projects Proteus (687691) and Streamline (688191), DFG Stratosphere (606902), and the German Ministry for Education and Research as BBDC (01IS14013A) and Software Campus (01IS12056).
+Acknowledgements: This work was supported by the EU projects Proteus (687691) and Streamline (688191), DFG Stratosphere (606902), and the German Ministry for Education and Research as BBDC (01IS14013A) and Software Campus (01IS12056).
 
 ### Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems at ACM TODS 2021
 
@@ -166,9 +166,9 @@ stream slicing and derives workload characteristics from aggregation queries to 
 sacrificing its general applicability. We provide an in-depth view on the algorithms of the general stream
 slicing approach. Our experiments show that Scotty outperforms alternative solutions
 
-- Paper: [Paper: Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675)
+- Paper: [Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675)
 
-- BibTex Citation:
+- BibTeX Citation:
 ```
 @article{traub2021scotty,
   title={Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems},
@@ -180,7 +180,10 @@ slicing approach. Our experiments show that Scotty outperforms alternative solut
 }
 ```
 
-### Benson et al.: Disco: : Efficient Distributed Window Aggregation
+Acknowledgements: This work was supported by the German Ministry for Education and Research as BIFOLD (01IS18025A
+                  and 01IS18037A), SFB 1404 FONDA, and the EU Horizon 2020 Opertus Mundi project (870228).
+
+### Benson et al.: Disco: Efficient Distributed Window Aggregation
 
 **Abstract:**  
 Many business applications benefit from fast analysis of online
@@ -202,9 +205,9 @@ significantly compared to the centralized approach.
 Disco’s treelike topology handles thousands of nodes per level and 
 scales to support future data-intensive streaming applications.
 
-- Paper: [Paper: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf)
+- Paper: [Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf)
 
-- BibTex Citation:
+- BibTeX Citation:
 ```
 @inproceedings{benson2020disco,
   title={Disco: Efficient Distributed Window Aggregation.},
