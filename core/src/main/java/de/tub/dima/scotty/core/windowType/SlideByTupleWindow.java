@@ -4,6 +4,7 @@ import de.tub.dima.scotty.core.WindowCollector;
 import de.tub.dima.scotty.core.windowType.windowContext.WindowContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SlideByTupleWindow implements ForwardContextAware {
 
@@ -13,7 +14,8 @@ public class SlideByTupleWindow implements ForwardContextAware {
     private final boolean outOfOrder;
 
     /**
-     * @param size size of the SlideByTuple window
+     * the measure of the Slide-by-tuple Window is time
+     * @param size size of the SlideByTuple window in time
      * @param slide window slide step in tuple counts
      */
     public SlideByTupleWindow(long size, long slide, boolean outOfOrder){
@@ -45,79 +47,88 @@ public class SlideByTupleWindow implements ForwardContextAware {
 
         private long nextStart = 0; //start count of next window
         private long count = 0; //tuple-counter
+        private ArrayList<Long> timestamps = new ArrayList<Long>(); //holds timestamps of tuples for out-of-order processing
 
         @Override
         public ActiveWindow updateContext(Object tuple, long position){
-            //processes in-order tuples
+
             if (hasActiveWindows()) {
                 //append first window
                 addNewWindow(0, position, position + size);
                 count++;
                 nextStart += getSlide();
+                timestamps.add(position);
                 return getWindow(0);
             }
 
-            int windowIndex = getWindowIndex(position);
+            if (position >= timestamps.get(timestamps.size() -1)) {
+                //processes in-order tuples
+                timestamps.add(position);
+                int windowIndex = getWindowIndex(position);
 
-            if (windowIndex == -1) {
-                addNewWindow(0, position, position + size);
-                count++;
-                nextStart += getSlide();
-            } else {
-                if (count == nextStart) { //new window starts
+                if (windowIndex == -1) {
+                    addNewWindow(0, position, position + size);
                     count++;
                     nextStart += getSlide();
-                    return addNewWindow(windowIndex + 1, position, position + size);
+
                 } else {
-                    ActiveWindow w = getWindow(windowIndex);
-                    if (w.getEnd() > position) { //append to active window
+                    if (count == nextStart) { //new window starts
                         count++;
-                        return w;
-                    } else{
+                        nextStart += getSlide();
+                        return addNewWindow(windowIndex + 1, position, position + size);
+
+                    } else {
+                        ActiveWindow w = getWindow(windowIndex);
+                        if (w.getEnd() > position) { //append to active window
+                            count++;
+                            return w;
+                        } else {
                         /* Tuple, which does not belong to current window and where count != nextStart,
                         does not get included in any window instance */
-                        count++;
+                            count++;
+                        }
                     }
                 }
-            }
-            return null;
-        }
+            } else {
+                //processes out-of-order tuples
 
-        @Override
-        public ActiveWindow updateContextWindows(Object tuple, long position, ArrayList listOfTs){
-            //processes out-of-order tuples
-            int windowIndex = getWindowIndex(position);
-            if(windowIndex+1 <= (numberOfActiveWindows()-1)){
-                //windows after the tuple exist, they have to be shifted
-                //beginning from the next window, to which the tuples does not belong
-                for(int i = windowIndex+1; i <= (numberOfActiveWindows()-1); i++){
-                    ActiveWindow w = getWindow(i);
-                    int index = listOfTs.indexOf(w.getStart());
-                    long timestampBefore = (long) listOfTs.get(index-1);
+                timestamps.add(position);
+                Collections.sort(timestamps);
 
-                    if(position == timestampBefore){ //start of window has to be shifted to current tuple
-                        // shift start and modify slice, otherwise insertion into wrong slice
-                        shiftStart(w,timestampBefore);
-                    }else{
-                        // shift start and dont mofify slice, simple insertion into existing slice possible
-                        shiftStartDontModify(w,timestampBefore);
+                int windowIndex = getWindowIndex(position);
+                if (windowIndex+1 <= (numberOfActiveWindows()-1)) {
+                    //windows after the tuple exist, they have to be shifted
+                    //beginning from the next window, to which the tuples does not belong
+                    for(int i = windowIndex+1; i <= (numberOfActiveWindows()-1); i++){
+                        ActiveWindow w = getWindow(i);
+                        int index = timestamps.indexOf(w.getStart());
+                        long timestampBefore = (long) timestamps.get(index-1);
+
+                        if(position == timestampBefore){ //start of window has to be shifted to current tuple
+                            // shift start and modify slice, otherwise insertion into wrong slice
+                            shiftStart(w,timestampBefore);
+                        }else{
+                            // shift start and dont mofify slice, simple insertion into existing slice possible
+                            shiftStartDontModify(w,timestampBefore);
+                        }
+                        shiftEnd(w,timestampBefore+size);
                     }
-                    shiftEnd(w,timestampBefore+size);
-                }
-                count++;
-                return null;
-            }else{
-                //no subsequent windows exist, out-of-order tuple may starts a new window
-                long lateCount = listOfTs.indexOf(position); //count of current tuple
-                long windowStart = getWindow(windowIndex).getStart();
-                int indexOfStart = listOfTs.indexOf(windowStart); //tuple count on position of start of last window
-                long lateNextStart = indexOfStart + getSlide(); //tuple count of next start
+                    count++;
+                    return null;
 
-                if(lateCount==lateNextStart){ // tuple starts a new window
-                    nextStart += getSlide(); //update next start
-                    addNewWindow(windowIndex + 1, position, position + size);
+                } else {
+                    //no subsequent windows exist, out-of-order tuple may starts a new window
+                    long lateCount = timestamps.indexOf(position); //count of current tuple
+                    long windowStart = getWindow(windowIndex).getStart();
+                    int indexOfStart = timestamps.indexOf(windowStart); //tuple count on position of start of last window
+                    long lateNextStart = indexOfStart + getSlide(); //tuple count of next start
+
+                    if (lateCount==lateNextStart) { // tuple starts a new window
+                        nextStart += getSlide(); //update next start
+                        addNewWindow(windowIndex + 1, position, position + size);
+                    }
+                    count++;
                 }
-                count++;
             }
             return null;
         }
