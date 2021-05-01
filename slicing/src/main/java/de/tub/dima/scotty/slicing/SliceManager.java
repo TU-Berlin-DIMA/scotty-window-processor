@@ -12,7 +12,6 @@ public class SliceManager<InputType> {
     private final SliceFactory<InputType, ?> sliceFactory;
     private final AggregationStore<InputType> aggregationStore;
     private final WindowManager windowManager;
-    public ArrayList listOfTs = new ArrayList();
 
     public SliceManager(final SliceFactory sliceFactory, final AggregationStore<InputType> aggregationStore, final WindowManager windowManager) {
         this.sliceFactory = sliceFactory;
@@ -53,7 +52,6 @@ public class SliceManager<InputType> {
         }
 
         final Slice currentSlice = this.aggregationStore.getCurrentSlice();
-        listOfTs.add(ts);
 
         // is element in order?
         if (ts >= currentSlice.getTLast()) {
@@ -69,12 +67,7 @@ public class SliceManager<InputType> {
 
             for (WindowContext<InputType> windowContext : this.windowManager.getContextAwareWindows()) {
                 Set<WindowModifications> windowModifications = new HashSet<>();
-                if (!(windowContext instanceof SlideByTupleWindow.SlideByTupleContext)){
-                    WindowContext.ActiveWindow assignedWindow = windowContext.updateContext(element, ts, windowModifications);
-                }else {
-                    Collections.sort(listOfTs); // for out-of-order processing of Slide-By-Tuple Windows
-                    WindowContext.ActiveWindow assignedWindow = windowContext.updateContextWindows(element, ts, listOfTs, windowModifications);
-                }
+                WindowContext.ActiveWindow assignedWindow = windowContext.updateContext(element, ts, windowModifications);
                 checkSliceEdges(windowModifications);
             }
 

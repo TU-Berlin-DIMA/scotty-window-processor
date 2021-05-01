@@ -75,12 +75,6 @@ public abstract class WindowContext<Tuple> implements Serializable {
         return updateContext(tuple, position);
     };
 
-    public abstract ActiveWindow updateContextWindows(Tuple element, long ts, ArrayList<Long> listOfTs); //For out-of-order processing
-
-    public ActiveWindow updateContextWindows(Tuple element, long ts, ArrayList<Long> listOfTs, Set<WindowModifications> windowModifications) {
-        this.modifiedWindowEdges = windowModifications;
-        return updateContextWindows(element, ts, listOfTs);
-    }
     public abstract long assignNextWindowStart(long position);
 
     public abstract void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark);
