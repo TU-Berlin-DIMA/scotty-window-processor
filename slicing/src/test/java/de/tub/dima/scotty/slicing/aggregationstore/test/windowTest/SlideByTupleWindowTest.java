@@ -24,7 +24,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void inOrderSlide1() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 1, false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 1));
 
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
@@ -51,7 +51,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void inOrderSlide2() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2, false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
 
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
@@ -74,7 +74,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void inOrderTest() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5, false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5));
 
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 2);
@@ -111,7 +111,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void inOrderTestOutlier() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2, false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
 
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
@@ -133,8 +133,8 @@ public class SlideByTupleWindowTest {
     public void inOrderTwoWindowsSize() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         //windows with different sizes
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2, false));
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(20, 2, false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(20, 2));
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
         slicingWindowOperator.processElement(1, 6);
@@ -161,8 +161,8 @@ public class SlideByTupleWindowTest {
     public void inOrderTwoWindowsSlide() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         //windows with different slides
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2,false));
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 3, false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 3));
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
         slicingWindowOperator.processElement(1, 6);
@@ -187,8 +187,8 @@ public class SlideByTupleWindowTest {
     public void inOrderTwoWindowsTest2() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         //windows with different size and slide
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2,false));
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(20, 5,false));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(20, 5));
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
         slicingWindowOperator.processElement(1, 6);
@@ -211,7 +211,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void outOfOrderTest() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2,true));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
         slicingWindowOperator.processElement(1, 8);
@@ -230,7 +230,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void outOfOrderTest2() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2,true));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 3);
         slicingWindowOperator.processElement(1, 8);
@@ -254,7 +254,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void outOfOrderTest3() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5, true));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5));
 
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 2);
@@ -292,7 +292,7 @@ public class SlideByTupleWindowTest {
     @Test
     public void outOfOrderTest4() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5, true));
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5));
 
         slicingWindowOperator.processElement(1, 1);
         slicingWindowOperator.processElement(1, 2);
@@ -328,5 +328,53 @@ public class SlideByTupleWindowTest {
         WindowAssert.assertEquals(resultWindows.get(2),13, 23, 8);
         WindowAssert.assertEquals(resultWindows.get(3),19, 29, 6);
         WindowAssert.assertEquals(resultWindows.get(4),27, 37, 2);
+    }
+
+    @Test
+    public void outOfOrderTest5() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 1));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 2);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 8);
+        slicingWindowOperator.processElement(1, 9);
+        slicingWindowOperator.processElement(1, 10);
+        slicingWindowOperator.processElement(1, 12);
+        slicingWindowOperator.processElement(1, 13);
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(1, 16);
+        slicingWindowOperator.processElement(1, 18);
+        slicingWindowOperator.processElement(1, 19);
+        slicingWindowOperator.processElement(1, 21);
+        slicingWindowOperator.processElement(1, 22);
+        slicingWindowOperator.processElement(1, 24);
+
+        //out-of-order tuple
+        slicingWindowOperator.processElement(1, 17);
+
+        slicingWindowOperator.processElement(1, 25);
+
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
+
+        WindowAssert.assertEquals(resultWindows.get(0),1, 11, 6);
+        WindowAssert.assertEquals(resultWindows.get(1),2, 12, 5);
+        WindowAssert.assertEquals(resultWindows.get(2),3, 13, 5);
+        WindowAssert.assertEquals(resultWindows.get(3),8, 18, 8); //
+        WindowAssert.assertEquals(resultWindows.get(4),9, 19, 8); //
+        WindowAssert.assertEquals(resultWindows.get(5),10, 20, 8); //
+        WindowAssert.assertEquals(resultWindows.get(6),12, 22, 8); //
+        WindowAssert.assertEquals(resultWindows.get(7),13, 23, 8);
+        WindowAssert.assertEquals(resultWindows.get(8),14, 24, 7);
+        WindowAssert.assertEquals(resultWindows.get(9),16, 26, 8);
+        WindowAssert.assertEquals(resultWindows.get(10),17, 27, 7);
+        WindowAssert.assertEquals(resultWindows.get(11),18, 28, 6); //
+        WindowAssert.assertEquals(resultWindows.get(12),19, 29, 5);
+        WindowAssert.assertEquals(resultWindows.get(13),21, 31, 4);
+        WindowAssert.assertEquals(resultWindows.get(14),22, 32, 3);
+        WindowAssert.assertEquals(resultWindows.get(15),24, 34, 2);
+        WindowAssert.assertEquals(resultWindows.get(16),25, 35, 1);
     }
 }

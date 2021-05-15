@@ -11,18 +11,16 @@ public class SlideByTupleWindow implements ForwardContextAware {
     private final WindowMeasure measure;
     private final long size;
     private final long slide;
-    private final boolean outOfOrder;
 
     /**
      * the measure of the Slide-by-tuple Window is time
      * @param size size of the SlideByTuple window in time
      * @param slide window slide step in tuple counts
      */
-    public SlideByTupleWindow(long size, long slide, boolean outOfOrder){
+    public SlideByTupleWindow(long size, long slide){
         this.measure = WindowMeasure.Time;
         this.size = size;
         this.slide = slide;
-        this.outOfOrder = outOfOrder;
     }
 
     public long getSize() {
@@ -96,6 +94,13 @@ public class SlideByTupleWindow implements ForwardContextAware {
                 Collections.sort(timestamps);
 
                 int windowIndex = getWindowIndex(position);
+
+                if(slide == 1){ // slide == 1: add new window for every new tuple
+                    count ++;
+                    nextStart += getSlide();
+                    return addNewWindow(windowIndex+1, position, position + getSize());
+                }
+
                 if (windowIndex+1 <= (numberOfActiveWindows()-1)) {
                     //windows after the tuple exist, they have to be shifted
                     //beginning from the next window, to which the tuples does not belong
@@ -105,19 +110,22 @@ public class SlideByTupleWindow implements ForwardContextAware {
                         long timestampBefore = (long) timestamps.get(index-1);
 
                         if(position == timestampBefore){ //start of window has to be shifted to current tuple
-                            // shift start and modify slice, otherwise insertion into wrong slice
+                            // shift start of window and modify slice start, otherwise insertion into wrong slice
                             shiftStart(w,timestampBefore);
                         }else{
-                            // shift start and dont mofify slice, simple insertion into existing slice possible
+                            // shift start of window, split slice if necessary
                             shiftStartDontModify(w,timestampBefore);
+                            splitSlice(timestampBefore);
                         }
-                        shiftEnd(w,timestampBefore+size);
+
+                        shiftEnd(w, timestampBefore + size);
+                        splitSlice(timestampBefore+size);
                     }
                     count++;
                     return null;
 
                 } else {
-                    //no subsequent windows exist, out-of-order tuple may starts a new window
+                    //no subsequent windows exist, out-of-order tuple may start a new window
                     long lateCount = timestamps.indexOf(position); //count of current tuple
                     long windowStart = getWindow(windowIndex).getStart();
                     int indexOfStart = timestamps.indexOf(windowStart); //tuple count on position of start of last window
@@ -147,7 +155,7 @@ public class SlideByTupleWindow implements ForwardContextAware {
 
         @Override
         public long assignNextWindowStart(long position) {
-            if(slide > 1 && !outOfOrder) {
+            if (slide > 1) {
                 if (count == nextStart) {
                     // new Window starts, append new Slice
                     return position;
@@ -171,7 +179,7 @@ public class SlideByTupleWindow implements ForwardContextAware {
                         }
                     }
                 }
-            }else { //append one slice for each tuple for out-of-order streams or slide == 1
+            } else { //append one slice for each tuple for slide == 1
                 return position;
             }
         }
