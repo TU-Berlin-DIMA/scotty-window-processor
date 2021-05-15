@@ -145,5 +145,17 @@ public class SliceManager<InputType> {
         sliceA.setTEnd(timestamp);
         sliceA.setType(new Slice.Flexible());
         this.aggregationStore.addSlice(sliceIndex + 1, sliceB);
+
+        //move records to new slice
+        if (sliceA instanceof LazySlice) {
+            while (true){
+                if(((LazySlice<InputType, ?>)sliceA).getTLast() >= timestamp){
+                    StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)sliceA).dropLastElement();
+                    ((LazySlice<InputType, ?>)sliceB).prependElement(lastElement);
+                }else{
+                    break;
+                }
+            }
+        }
     }
 }
