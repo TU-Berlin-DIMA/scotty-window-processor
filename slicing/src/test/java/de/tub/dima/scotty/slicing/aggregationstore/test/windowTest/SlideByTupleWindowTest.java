@@ -333,6 +333,47 @@ public class SlideByTupleWindowTest {
     @Test
     public void outOfOrderTest5() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 5));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 2);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 4);
+        // same timestamp twice
+        slicingWindowOperator.processElement(1, 5);
+        slicingWindowOperator.processElement(1, 5); //start of new window
+        slicingWindowOperator.processElement(1, 8);
+        slicingWindowOperator.processElement(1, 9);
+        slicingWindowOperator.processElement(1, 10);
+        slicingWindowOperator.processElement(1, 12);
+        slicingWindowOperator.processElement(1, 13); //start of window
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(1, 16);
+        // same timestamp twice
+        slicingWindowOperator.processElement(1, 17);
+        slicingWindowOperator.processElement(1, 17);
+        slicingWindowOperator.processElement(1, 19); //start of new window
+        slicingWindowOperator.processElement(1, 21);
+        slicingWindowOperator.processElement(1, 24);
+        slicingWindowOperator.processElement(1, 25); // start of new window after out-of-order tuples arrive
+        slicingWindowOperator.processElement(1, 21); // out of order tuple with existing timestamp
+        slicingWindowOperator.processElement(1, 22); // out of order tuple
+        slicingWindowOperator.processElement(1, 27);
+        slicingWindowOperator.processElement(1, 30);
+
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
+
+        WindowAssert.assertEquals(resultWindows.get(0),1, 11, 9);
+        WindowAssert.assertEquals(resultWindows.get(1),5, 15, 7);
+        WindowAssert.assertEquals(resultWindows.get(2),13, 23, 9);
+        WindowAssert.assertEquals(resultWindows.get(3),19, 29, 7);
+        WindowAssert.assertEquals(resultWindows.get(4),25, 35, 3);
+    }
+
+    @Test
+    public void outOfOrderTestSlide1() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 1));
 
         slicingWindowOperator.processElement(1, 1);
@@ -362,15 +403,15 @@ public class SlideByTupleWindowTest {
         WindowAssert.assertEquals(resultWindows.get(0),1, 11, 6);
         WindowAssert.assertEquals(resultWindows.get(1),2, 12, 5);
         WindowAssert.assertEquals(resultWindows.get(2),3, 13, 5);
-        WindowAssert.assertEquals(resultWindows.get(3),8, 18, 8); //
-        WindowAssert.assertEquals(resultWindows.get(4),9, 19, 8); //
-        WindowAssert.assertEquals(resultWindows.get(5),10, 20, 8); //
-        WindowAssert.assertEquals(resultWindows.get(6),12, 22, 8); //
+        WindowAssert.assertEquals(resultWindows.get(3),8, 18, 8);
+        WindowAssert.assertEquals(resultWindows.get(4),9, 19, 8);
+        WindowAssert.assertEquals(resultWindows.get(5),10, 20, 8);
+        WindowAssert.assertEquals(resultWindows.get(6),12, 22, 8);
         WindowAssert.assertEquals(resultWindows.get(7),13, 23, 8);
         WindowAssert.assertEquals(resultWindows.get(8),14, 24, 7);
         WindowAssert.assertEquals(resultWindows.get(9),16, 26, 8);
         WindowAssert.assertEquals(resultWindows.get(10),17, 27, 7);
-        WindowAssert.assertEquals(resultWindows.get(11),18, 28, 6); //
+        WindowAssert.assertEquals(resultWindows.get(11),18, 28, 6);
         WindowAssert.assertEquals(resultWindows.get(12),19, 29, 5);
         WindowAssert.assertEquals(resultWindows.get(13),21, 31, 4);
         WindowAssert.assertEquals(resultWindows.get(14),22, 32, 3);

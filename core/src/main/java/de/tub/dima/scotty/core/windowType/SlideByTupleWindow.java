@@ -74,7 +74,6 @@ public class SlideByTupleWindow implements ForwardContextAware {
                         count++;
                         nextStart += getSlide();
                         return addNewWindow(windowIndex + 1, position, position + size);
-
                     } else {
                         ActiveWindow w = getWindow(windowIndex);
                         if (w.getEnd() > position) { //append to active window
@@ -89,56 +88,62 @@ public class SlideByTupleWindow implements ForwardContextAware {
                 }
             } else {
                 //processes out-of-order tuples
-
                 timestamps.add(position);
                 Collections.sort(timestamps);
-
+                count++;
                 int windowIndex = getWindowIndex(position);
 
                 if(slide == 1){ // slide == 1: add new window for every new tuple
-                    count ++;
                     nextStart += getSlide();
                     return addNewWindow(windowIndex+1, position, position + getSize());
                 }
 
                 if (windowIndex+1 <= (numberOfActiveWindows()-1)) {
-                    //windows after the tuple exist, they have to be shifted
-                    //beginning from the next window, to which the tuples does not belong
-                    for(int i = windowIndex+1; i <= (numberOfActiveWindows()-1); i++){
-                        ActiveWindow w = getWindow(i);
-                        int index = timestamps.indexOf(w.getStart());
-                        long timestampBefore = (long) timestamps.get(index-1);
-
-                        if(position == timestampBefore){ //start of window has to be shifted to current tuple
-                            // shift start of window and modify slice start, otherwise insertion into wrong slice
-                            shiftStart(w,timestampBefore);
-                        }else{
-                            // shift start of window, split slice if necessary
-                            shiftStartDontModify(w,timestampBefore);
-                            splitSlice(timestampBefore);
-                        }
-
-                        shiftEnd(w, timestampBefore + size);
-                        splitSlice(timestampBefore+size);
-                    }
-                    count++;
+                    //subsequent windows have to be shifted, beginning from the next window, to which the tuples does not belong
+                    shiftWindows(position, windowIndex);
                     return null;
 
                 } else {
-                    //no subsequent windows exist, out-of-order tuple may start a new window
-                    long lateCount = timestamps.indexOf(position); //count of current tuple
-                    long windowStart = getWindow(windowIndex).getStart();
-                    int indexOfStart = timestamps.indexOf(windowStart); //tuple count on position of start of last window
-                    long lateNextStart = indexOfStart + getSlide(); //tuple count of next start
-
-                    if (lateCount==lateNextStart) { // tuple starts a new window
-                        nextStart += getSlide(); //update next start
-                        addNewWindow(windowIndex + 1, position, position + size);
+                    //no subsequent windows exist, current tuple or some tuple before may start a new window
+                    if (timestamps.size()-1 == nextStart){
+                        // tuple that arrived before starts new window because of changed count
+                        long positionOfNewWindow = timestamps.get((int)nextStart);
+                        nextStart += getSlide();
+                        return addNewWindow(windowIndex + 1, positionOfNewWindow, positionOfNewWindow + size);
+                    } else if (timestamps.lastIndexOf(position) == nextStart) { // get count of current tuple
+                        // current tuple starts a new window
+                        nextStart += getSlide();
+                        return addNewWindow(windowIndex + 1, position, position + size);
                     }
-                    count++;
                 }
             }
             return null;
+        }
+
+        /**
+         * shifts all windows after the out-of-order tuple
+         * @param position of the out-of-order tuple
+         * @param windowIndex of the window the tuple belongs to
+         */
+        private void shiftWindows(long position, int windowIndex){
+
+            for(int i = windowIndex+1; i <= (numberOfActiveWindows()-1); i++){
+                ActiveWindow w = getWindow(i);
+                int index = timestamps.indexOf(w.getStart());
+                long timestampBefore = timestamps.get(index-1);
+
+                if(position == timestampBefore){ //start of window has to be shifted to current tuple
+                    // shift start of window and modify slice start, otherwise insertion into wrong slice
+                    shiftStart(w,timestampBefore);
+                }else{
+                    // shift start of window, split slice if necessary
+                    shiftStartDontModifySlice(w,timestampBefore);
+                    splitSlice(timestampBefore);
+                }
+
+                shiftEnd(w, timestampBefore + size);
+                splitSlice(timestampBefore + size);
+            }
         }
 
         public int getWindowIndex(long position) {
