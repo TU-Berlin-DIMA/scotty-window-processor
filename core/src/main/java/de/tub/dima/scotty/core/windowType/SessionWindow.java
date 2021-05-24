@@ -117,11 +117,6 @@ public class SessionWindow implements ForwardContextAware {
             }
         }
 
-        @Override
-        public ActiveWindow updateContextWindows(Object element, long ts, ArrayList<Long> listOfTs) {
-            return null;
-        }
-
     }
 
     @Override
