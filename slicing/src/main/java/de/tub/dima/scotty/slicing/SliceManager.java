@@ -148,13 +148,9 @@ public class SliceManager<InputType> {
 
         //move records to new slice
         if (sliceA instanceof LazySlice) {
-            while (true){
-                if(((LazySlice<InputType, ?>)sliceA).getTLast() >= timestamp){
-                    StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)sliceA).dropLastElement();
-                    ((LazySlice<InputType, ?>)sliceB).prependElement(lastElement);
-                }else{
-                    break;
-                }
+            while (((LazySlice<InputType, ?>)sliceA).getTLast() >= timestamp){
+                StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)sliceA).dropLastElement();
+                ((LazySlice<InputType, ?>)sliceB).prependElement(lastElement);
             }
         }
     }
