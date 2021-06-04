@@ -311,13 +311,13 @@ public class SlideByTupleWindowTest {
         slicingWindowOperator.processElement(1, 24); //count=4 before out of order tuples -> no new window starts before out-of-order tuples arrive
 
         //out-of-order tuples
-        slicingWindowOperator.processElement(1, 17); //count=3 if in-order after 16
-        slicingWindowOperator.processElement(1, 18);
-        slicingWindowOperator.processElement(1, 19); //count=5 -> start of new window instead of shift
-        slicingWindowOperator.processElement(1, 21); //count=6
+        slicingWindowOperator.processElement(1, 17); //count=3 if in-order after 16, starts new window at ts 24
+        slicingWindowOperator.processElement(1, 18); //shifts window start from 24 to 22
+        slicingWindowOperator.processElement(1, 19); //count=5 -> shift window to this position
+        slicingWindowOperator.processElement(1, 21); //simple insert into window
 
         slicingWindowOperator.processElement(1, 25);
-        slicingWindowOperator.processElement(1, 27);
+        slicingWindowOperator.processElement(1, 27); //starts new window
         slicingWindowOperator.processElement(1, 30);
 
 
@@ -361,7 +361,6 @@ public class SlideByTupleWindowTest {
         slicingWindowOperator.processElement(1, 27);
         slicingWindowOperator.processElement(1, 30);
 
-
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
 
         WindowAssert.assertEquals(resultWindows.get(0),1, 11, 9);
@@ -369,6 +368,53 @@ public class SlideByTupleWindowTest {
         WindowAssert.assertEquals(resultWindows.get(2),13, 23, 9);
         WindowAssert.assertEquals(resultWindows.get(3),19, 29, 7);
         WindowAssert.assertEquals(resultWindows.get(4),25, 35, 3);
+    }
+
+    @Test
+    public void outOfOrderTest6() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 3));
+
+        slicingWindowOperator.processElement(1, 1); //start of window
+        slicingWindowOperator.processElement(1, 2);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 4); //start of window
+        slicingWindowOperator.processElement(1, 5);
+        slicingWindowOperator.processElement(1, 6);
+        slicingWindowOperator.processElement(1, 8); //start of window
+        slicingWindowOperator.processElement(1, 9);
+        slicingWindowOperator.processElement(1, 10);
+        slicingWindowOperator.processElement(1, 12); //start of window
+        slicingWindowOperator.processElement(1, 13);
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(1, 16); //start of window
+        slicingWindowOperator.processElement(1, 17);
+        slicingWindowOperator.processElement(1, 18);
+        slicingWindowOperator.processElement(1, 19); //start of window
+        slicingWindowOperator.processElement(1, 21);
+        slicingWindowOperator.processElement(1, 22);
+        slicingWindowOperator.processElement(1, 24); //start of window
+        slicingWindowOperator.processElement(1, 25);
+        slicingWindowOperator.processElement(1, 27);
+        slicingWindowOperator.processElement(1, 30);
+        slicingWindowOperator.processElement(1, 31);
+        slicingWindowOperator.processElement(1, 32);
+        slicingWindowOperator.processElement(1, 34);
+        slicingWindowOperator.processElement(1, 35);
+        slicingWindowOperator.processElement(1, 37);
+        slicingWindowOperator.processElement(1, 38);
+        slicingWindowOperator.processElement(1, 39);
+        slicingWindowOperator.processElement(1, 40);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(41);
+
+        WindowAssert.assertEquals(resultWindows.get(0),1, 11, 9);
+        WindowAssert.assertEquals(resultWindows.get(1),4, 14, 8);
+        WindowAssert.assertEquals(resultWindows.get(2),8, 18, 8);
+        WindowAssert.assertEquals(resultWindows.get(3),12, 22, 8);
+        WindowAssert.assertEquals(resultWindows.get(4),16, 26, 8);
+        WindowAssert.assertEquals(resultWindows.get(5),19, 29, 6);
+        WindowAssert.assertEquals(resultWindows.get(6),24, 34, 6);
     }
 
     @Test
