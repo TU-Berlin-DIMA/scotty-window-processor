@@ -103,6 +103,26 @@ public class SliceManager<InputType> {
                     Slice nextSlice = this.aggregationStore.getSlice(sliceIndex + 1);
                     currentSlice.setTEnd(post);
                     nextSlice.setTStart(post);
+
+                    if(post < pre){
+                        // move tuples to nextSlice
+                        if (currentSlice instanceof LazySlice) {
+                            LazySlice<InputType, ?> lazyCurrentSlice = (LazySlice<InputType, ?>)currentSlice;
+                            while ((lazyCurrentSlice.getTFirst() < lazyCurrentSlice.getTLast()) && (lazyCurrentSlice.getTLast() >= post)){
+                                StreamRecord<InputType> lastElement = lazyCurrentSlice.dropLastElement();
+                                ((LazySlice<InputType, ?>)nextSlice).prependElement(lastElement);
+                            }
+                        }
+                    } else {
+                        // move tuples to currentSlice
+                        if (currentSlice instanceof LazySlice) {
+                            LazySlice<InputType, ?> lazyNextSlice = (LazySlice<InputType, ?>)nextSlice;
+                            while ((lazyNextSlice.getTFirst() < lazyNextSlice.getTLast()) && (lazyNextSlice.getTFirst() < post)){
+                                StreamRecord<InputType> lastElement = lazyNextSlice.dropFirstElement();
+                                ((LazySlice<InputType, ?>)currentSlice).prependElement(lastElement);
+                            }
+                        }
+                    }
                 }
                 else{
                     if(sliceType instanceof Slice.Flexible)
@@ -144,5 +164,13 @@ public class SliceManager<InputType> {
         sliceA.setTEnd(timestamp);
         sliceA.setType(new Slice.Flexible());
         this.aggregationStore.addSlice(sliceIndex + 1, sliceB);
+
+        //move records to new slice
+        if (sliceA instanceof LazySlice) {
+            while (((LazySlice<InputType, ?>)sliceA).getTLast() >= timestamp){
+                StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)sliceA).dropLastElement();
+                ((LazySlice<InputType, ?>)sliceB).prependElement(lastElement);
+            }
+        }
     }
 }

@@ -41,6 +41,15 @@ public class LazySlice<InputType, ValueType> extends AbstractSlice<InputType, Va
         return dropRecord;
     }
 
+    public StreamRecord<InputType> dropFirstElement() {
+        StreamRecord<InputType> dropRecord = records.dropFrist();
+        StreamRecord<InputType> currentFirst = records.getFirst();
+        this.setCLast(this.getCLast()-1);
+        this.setTFirst(currentFirst.ts);
+        this.state.removeElement(dropRecord);
+        return dropRecord;
+    }
+
     @Override
     public AggregateState getAggState() {
         return state;
