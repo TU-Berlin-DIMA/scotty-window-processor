@@ -139,6 +139,14 @@ public class SliceManager<InputType> {
                     Slice currentSlice = this.aggregationStore.getSlice(sliceIndex);
                     Slice.Type sliceType = currentSlice.getType();
                     if(sliceType.isMovable()){
+                        Slice nextSlice = this.aggregationStore.getSlice(sliceIndex+1);
+                        //move records to new slice
+                        if (nextSlice instanceof LazySlice) {
+                            while (((LazySlice<InputType, ?>)nextSlice).getCLast() > 0){
+                                StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)nextSlice).dropLastElement();
+                                ((LazySlice<InputType, ?>)currentSlice).prependElement(lastElement);
+                            }
+                        }
                         this.aggregationStore.mergeSlice(sliceIndex);
                     }else{
                         if(sliceType instanceof Slice.Flexible)
