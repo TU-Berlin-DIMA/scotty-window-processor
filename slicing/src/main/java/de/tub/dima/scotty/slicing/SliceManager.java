@@ -160,10 +160,19 @@ public class SliceManager<InputType> {
     public void splitSlice(int sliceIndex, long timestamp) {
         Slice sliceA = this.aggregationStore.getSlice(sliceIndex);
         // TODO find count for left and right
-        Slice sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());
-        sliceA.setTEnd(timestamp);
-        sliceA.setType(new Slice.Flexible());
-        this.aggregationStore.addSlice(sliceIndex + 1, sliceB);
+        Slice sliceB;
+        if(timestamp < sliceA.getTEnd()) {
+            sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());
+            sliceA.setTEnd(timestamp);
+            sliceA.setType(new Slice.Flexible());
+            this.aggregationStore.addSlice(sliceIndex + 1, sliceB);
+        } else if(sliceIndex + 1 < this.aggregationStore.size()) {
+            sliceA = this.aggregationStore.getSlice(sliceIndex + 1);
+            sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());
+            sliceA.setTEnd(timestamp);
+            sliceA.setType(new Slice.Flexible());
+            this.aggregationStore.addSlice(sliceIndex + 2, sliceB);
+        } else return;
 
         //move records to new slice
         if (sliceA instanceof LazySlice) {
