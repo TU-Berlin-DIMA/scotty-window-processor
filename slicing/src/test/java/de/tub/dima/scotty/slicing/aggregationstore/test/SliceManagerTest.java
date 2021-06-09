@@ -54,18 +54,20 @@ public class SliceManagerTest {
         windowManager.addWindowAssigner(new TestWindow(WindowMeasure.Time));
 
         aggregationStore.appendSlice(sliceFactory.createSlice(0, 10, new Slice.Flexible()));
-        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
-        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
-
         sliceManager.processElement(1,1);
         sliceManager.processElement(1,4);
+        sliceManager.processElement(1,8);
         sliceManager.processElement(1,9);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
         sliceManager.processElement(1,14);
         sliceManager.processElement(1,19);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
         sliceManager.processElement(1,24);
-        sliceManager.processElement(1,26);
-        sliceManager.processElement(1,27);
-        sliceManager.processElement(1,5); // shift slice start from 10-20 to 5-20 and respectively 0-5 -- move record with ts 9 to next slice
+
+        // out-of-order tuple
+        sliceManager.processElement(1,5); // shift slice start from 10-20 to 5-20 and respectively 0-5 -- move record with ts 8 and 9 to next slice
 
         // slice 0-5
         assertEquals(0, aggregationStore.getSlice(0).getTStart());
@@ -88,16 +90,18 @@ public class SliceManagerTest {
         windowManager.addWindowAssigner(new TestWindow(WindowMeasure.Time));
 
         aggregationStore.appendSlice(sliceFactory.createSlice(0, 10, new Slice.Flexible()));
-        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
-        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
-
         sliceManager.processElement(1,1);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
+        sliceManager.processElement(1,12);
         sliceManager.processElement(1,14);
         sliceManager.processElement(1,19);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
         sliceManager.processElement(1,24);
-        sliceManager.processElement(1,26);
-        sliceManager.processElement(1,27);
-        sliceManager.processElement(1,15); // shift slice end from 0-10 to 0-15 and respectively 15-20 -- move tuple with ts 14 to previous slice
+
+        // out-of-order tuple
+        sliceManager.processElement(1,15); // shift slice end from 0-10 to 0-15 and respectively 15-20 -- move tuple with ts 12 and 14 to previous slice
 
         // slice 0-15
         assertEquals(0, aggregationStore.getSlice(0).getTStart());
@@ -120,21 +124,23 @@ public class SliceManagerTest {
         windowManager.addWindowAssigner(new TestWindow(WindowMeasure.Time));
 
         aggregationStore.appendSlice(sliceFactory.createSlice(0, 10, new Slice.Flexible(2)));
-        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible(2)));
-        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible(2)));
-
         Slice.Type sliceType = aggregationStore.getSlice(0).getType();
         assertFalse(sliceType.isMovable());
 
         sliceManager.processElement(1,1);
         sliceManager.processElement(1,4);
+        sliceManager.processElement(1,8);
         sliceManager.processElement(1,9);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible(2)));
         sliceManager.processElement(1,14);
         sliceManager.processElement(1,19);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible(2)));
         sliceManager.processElement(1,24);
-        sliceManager.processElement(1,26);
-        sliceManager.processElement(1,27);
-        sliceManager.processElement(1,5); // shift slice start from 10-20 to 5-20 and respectively split slice into 0-5 and 5-10 -- move tuple with ts 9
+
+        // out-of-order tuple
+        sliceManager.processElement(1,5); // shift slice start from 10-20 to 5-20 and respectively split slice into 0-5 and 5-10 -- move tuple with ts 8 and 9
 
         // slice 0-5
         assertEquals(0, aggregationStore.getSlice(0).getTStart());
@@ -155,26 +161,29 @@ public class SliceManagerTest {
     }
 
     /**
-     * Split slice into two slices due to a ShiftModification (Slice Movable) and move tuples into new slice
+     * Split slice into two slices due to a ShiftModification (Slice is not Movable because Flexible Slice counter != 1) and move tuples into new slice
      */
     @Test
     public void ShiftModificationSplitTest2() {
         windowManager.addWindowAssigner(new TestWindow(WindowMeasure.Time));
 
         aggregationStore.appendSlice(sliceFactory.createSlice(0, 10, new Slice.Flexible(2)));
-        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible(2)));
-        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible(2)));
-
         Slice.Type sliceType = aggregationStore.getSlice(0).getType();
         assertFalse(sliceType.isMovable());
 
         sliceManager.processElement(1,1);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible(2)));
+        sliceManager.processElement(1,12);
         sliceManager.processElement(1,14);
+        sliceManager.processElement(1,17);
         sliceManager.processElement(1,19);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible(2)));
         sliceManager.processElement(1,24);
-        sliceManager.processElement(1,26);
-        sliceManager.processElement(1,27);
-        sliceManager.processElement(1,15); // shift slice end from 0-10 to 0-15 and respectively split slice into 10-15 and 15-20
+
+        // out-of-order tuple
+        sliceManager.processElement(1,15); // shift slice end from 0-10 to 0-15 and respectively split slice into 10-15 and 15-20 -- move tuple with ts 17 and 19
 
         // slice 0-10
         assertEquals(0, aggregationStore.getSlice(0).getTStart());
@@ -184,7 +193,7 @@ public class SliceManagerTest {
         // added new slice 10-15
         assertEquals(10, aggregationStore.getSlice(1).getTStart());
         assertEquals(15, aggregationStore.getSlice(1).getTEnd());
-        assertEquals(14, aggregationStore.getSlice(1).getTFirst());
+        assertEquals(12, aggregationStore.getSlice(1).getTFirst());
         assertEquals(14, aggregationStore.getSlice(1).getTLast());
         // slice 15-20
         assertEquals(15, aggregationStore.getSlice(2).getTStart());
@@ -202,16 +211,19 @@ public class SliceManagerTest {
         windowManager.addWindowAssigner(new TestWindow(WindowMeasure.Time));
 
         aggregationStore.appendSlice(sliceFactory.createSlice(0, 10, new Slice.Flexible()));
-        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
-        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
-
         sliceManager.processElement(1,1);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
         sliceManager.processElement(1,14);
         sliceManager.processElement(1,19);
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
         sliceManager.processElement(1,22);
         sliceManager.processElement(1,24);
         sliceManager.processElement(1,26);
         sliceManager.processElement(1,27);
+
+        // out-of-order tuple
         sliceManager.processElement(1,25); // split slice 20-30 into 20-25 and add new slice 25-30 -- move tuples with ts 26 and 27 to new slice
 
         // slice 20-25
@@ -224,6 +236,40 @@ public class SliceManagerTest {
         assertEquals(30, aggregationStore.getSlice(3).getTEnd());
         assertEquals(25, aggregationStore.getSlice(3).getTFirst());
         assertEquals(27, aggregationStore.getSlice(3).getTLast());
+    }
+
+    /**
+     * Test DeleteModification: merge slice
+     */
+    @Test
+    public void DeleteModificationTest() {
+        windowManager.addWindowAssigner(new TestWindow(WindowMeasure.Time));
+
+        aggregationStore.appendSlice(sliceFactory.createSlice(0, 10, new Slice.Flexible()));
+        sliceManager.processElement(1,1);
+        aggregationStore.appendSlice(sliceFactory.createSlice(10, 20, new Slice.Flexible()));
+        sliceManager.processElement(1,14);
+        sliceManager.processElement(1,19);
+        aggregationStore.appendSlice(sliceFactory.createSlice(20, 30, new Slice.Flexible()));
+        sliceManager.processElement(1,24);
+        aggregationStore.appendSlice(sliceFactory.createSlice(30, 35, new Slice.Flexible()));
+        sliceManager.processElement(1,31);
+        sliceManager.processElement(1,33);
+        aggregationStore.appendSlice(sliceFactory.createSlice(35, 45, new Slice.Flexible()));
+        sliceManager.processElement(1,38);
+
+        sliceManager.processElement(1,35); // merge slice 20-30 and 30-35
+        // slice 20-35
+        assertEquals(20, aggregationStore.getSlice(2).getTStart());
+        assertEquals(35, aggregationStore.getSlice(2).getTEnd());
+        assertEquals(24, aggregationStore.getSlice(2).getTFirst());
+        assertEquals(33, aggregationStore.getSlice(2).getTLast());
+        // slice 35-45
+        assertEquals(35, aggregationStore.getSlice(3).getTStart());
+        assertEquals(45, aggregationStore.getSlice(3).getTEnd());
+        assertEquals(35, aggregationStore.getSlice(3).getTFirst());
+        assertEquals(38, aggregationStore.getSlice(3).getTLast());
+
     }
 
     public class TestWindow implements ForwardContextAware {
@@ -254,18 +300,12 @@ public class SliceManagerTest {
 
                 if(position == 5){
                     shiftStart(getWindow(index+1), position);
-                }
-
-                if(position == 15){
+                } else if(position == 15){
                     shiftStart(getWindow(index), position);
-                }
-
-                if(position == 25){
+                } else if(position == 25){
                     return addNewWindow(index, position, position + 10 - (position) % 10);
-                }
-
-                if(position == 35){
-                    mergeWithPre(index);
+                } else if(position == 35){
+                    return this.mergeWithPre(index);
                 }
 
                 return null;
