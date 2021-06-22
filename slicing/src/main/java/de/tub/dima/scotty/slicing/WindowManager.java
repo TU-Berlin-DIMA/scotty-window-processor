@@ -30,6 +30,7 @@ public class WindowManager {
     private boolean hasTimeMeasure;
     private long currentCount = 0;
     private long lastCount = 0;
+    private boolean isSessionWindowCase;
 
     public WindowManager(StateFactory stateFactory, AggregationStore aggregationStore) {
         this.stateFactory = stateFactory;
@@ -73,7 +74,7 @@ public class WindowManager {
             this.aggregationStore.aggregate(windows, minTs, maxTs, minCount, maxCount);
         }
         this.lastWatermark = watermarkTs;
-        this.lastCount = currentCount - 5;
+        this.lastCount = currentCount;
         clearAfterWatermark(watermarkTs - maxLateness);
         return windows.aggregationStores;
     }
@@ -108,7 +109,7 @@ public class WindowManager {
             else if (window.getWindowMeasure() == Count) {
                 int sliceIndex = this.aggregationStore.findSliceIndexByTimestamp(watermarkTs);
                 Slice slice = this.aggregationStore.getSlice(sliceIndex);
-                if (slice.getTLast() >= watermarkTs)
+                if (slice.getTLast() >= watermarkTs && sliceIndex > 0)
                     slice = this.aggregationStore.getSlice(sliceIndex - 1);
                 long cend = slice.getCLast();
                 window.triggerWindows(windowCollector, lastCount, cend + 1);
@@ -124,6 +125,13 @@ public class WindowManager {
             hasFixedWindows = true;
         }
         if (window instanceof ForwardContextAware) {
+
+            if(window instanceof SessionWindow && (!hasContextAwareWindows || isSessionWindowCase)){
+                isSessionWindowCase = true;
+            } else {
+                isSessionWindowCase = false;
+            }
+
             hasContextAwareWindows = true;
             contextAwareWindows.add(((ForwardContextAware) window).createContext());
         }
@@ -178,6 +186,8 @@ public class WindowManager {
     public boolean hasTimeMeasure() {
         return hasTimeMeasure;
     }
+
+    public boolean isSessionWindowCase() {return isSessionWindowCase; }
 
     public long getCurrentCount() {
         return currentCount;

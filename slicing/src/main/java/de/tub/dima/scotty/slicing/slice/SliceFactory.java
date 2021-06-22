@@ -15,8 +15,7 @@ public class SliceFactory<InputType, ValueType> {
     }
 
     public Slice<InputType, ValueType> createSlice(long startTs, long maxValue, long startCount, long endCount, Slice.Type type) {
-        //Todo: this should reflect the decision tree from General Slicing Paper
-        if(!windowManager.hasCountMeasure() && (!windowManager.hasContextAwareWindow() && windowManager.getMaxLateness()>0)){
+        if(!windowManager.hasCountMeasure() && ((!windowManager.hasContextAwareWindow() || windowManager.isSessionWindowCase()) && windowManager.getMaxLateness()>0)){
             return new EagerSlice<>(stateFactory, windowManager, startTs, maxValue, startCount, endCount, type);
         }
         return new LazySlice<>(stateFactory, windowManager, startTs, maxValue, startCount, endCount, type);

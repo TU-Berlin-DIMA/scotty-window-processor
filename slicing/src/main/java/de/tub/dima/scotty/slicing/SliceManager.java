@@ -114,7 +114,7 @@ public class SliceManager<InputType> {
                 long post = ((ShiftModification) mod).post;
                 int sliceIndex = this.aggregationStore.findSliceByEnd(pre);
                 if(sliceIndex==-1)
-                    return;
+                    continue;
                 Slice currentSlice = this.aggregationStore.getSlice(sliceIndex);
 
                 Slice.Type sliceType = currentSlice.getType();
