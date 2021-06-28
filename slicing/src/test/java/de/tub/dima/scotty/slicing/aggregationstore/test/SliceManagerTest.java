@@ -9,15 +9,19 @@ import de.tub.dima.scotty.slicing.SliceManager;
 import de.tub.dima.scotty.slicing.WindowManager;
 import de.tub.dima.scotty.slicing.aggregationstore.AggregationStore;
 import de.tub.dima.scotty.slicing.aggregationstore.LazyAggregateStore;
+import de.tub.dima.scotty.slicing.slice.LazySlice;
 import de.tub.dima.scotty.slicing.slice.Slice;
 import de.tub.dima.scotty.slicing.slice.SliceFactory;
+import de.tub.dima.scotty.slicing.slice.StreamRecord;
 import de.tub.dima.scotty.state.StateFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class SliceManagerTest {
 
@@ -47,7 +51,7 @@ public class SliceManagerTest {
     }
 
     /**
-     * Shift the end of a slice to a lower timestamp and move records to correct slice
+     * Shift the end of a slice to a lower timestamp and move tuples to correct slice
      */
     @Test
     public void ShiftLowerModificationTest() {
@@ -80,10 +84,12 @@ public class SliceManagerTest {
         assertEquals(5, aggregationStore.getSlice(1).getTFirst());
         assertEquals(19, aggregationStore.getSlice(1).getTLast());
 
+        checkRecords(new int[]{5,8,9,14,19}, ((LazySlice)aggregationStore.getSlice(1)).getRecords().iterator());
+
     }
 
     /**
-     * Shift the end of a slice to a higher timestamp and move records to correct slice
+     * Shift the end of a slice to a higher timestamp and move tuples to correct slice
      */
     @Test
     public void ShiftHigherModificationTest() {
@@ -113,6 +119,8 @@ public class SliceManagerTest {
         assertEquals(20, aggregationStore.getSlice(1).getTEnd());
         assertEquals(15, aggregationStore.getSlice(1).getTFirst());
         assertEquals(19, aggregationStore.getSlice(1).getTLast());
+
+        checkRecords(new int[]{1,12,14,15}, ((LazySlice)aggregationStore.getSlice(0)).getRecords().iterator());
 
     }
 
@@ -158,6 +166,7 @@ public class SliceManagerTest {
         assertEquals(14, aggregationStore.getSlice(2).getTFirst());
         assertEquals(19, aggregationStore.getSlice(2).getTLast());
 
+        checkRecords(new int[]{5,8,9}, ((LazySlice)aggregationStore.getSlice(1)).getRecords().iterator());
     }
 
     /**
@@ -201,6 +210,7 @@ public class SliceManagerTest {
         assertEquals(15, aggregationStore.getSlice(2).getTFirst());
         assertEquals(19, aggregationStore.getSlice(2).getTLast());
 
+        checkRecords(new int[]{15,17,19}, ((LazySlice)aggregationStore.getSlice(2)).getRecords().iterator());
     }
 
     /**
@@ -236,6 +246,8 @@ public class SliceManagerTest {
         assertEquals(30, aggregationStore.getSlice(3).getTEnd());
         assertEquals(25, aggregationStore.getSlice(3).getTFirst());
         assertEquals(27, aggregationStore.getSlice(3).getTLast());
+
+        checkRecords(new int[]{25,26,27,30}, ((LazySlice)aggregationStore.getSlice(3)).getRecords().iterator());
     }
 
     /**
@@ -270,6 +282,16 @@ public class SliceManagerTest {
         assertEquals(35, aggregationStore.getSlice(3).getTFirst());
         assertEquals(38, aggregationStore.getSlice(3).getTLast());
 
+        checkRecords(new int[]{24,31,33}, ((LazySlice)aggregationStore.getSlice(2)).getRecords().iterator());
+
+    }
+
+    public void checkRecords(int[] values, Iterator sliceRecords){
+        int i = 0;
+        while (sliceRecords.hasNext()) {
+            assertEquals("Wrong tuples in slice", ((StreamRecord)sliceRecords.next()).ts, values[i++]);
+        }
+        assertFalse("More tuples than expected in slice", sliceRecords.hasNext());
     }
 
     public class TestWindow implements ForwardContextAware {

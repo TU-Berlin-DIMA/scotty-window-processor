@@ -4,6 +4,7 @@ package de.tub.dima.scotty.slicing.slice;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.slicing.state.*;
 import de.tub.dima.scotty.state.*;
+import de.tub.dima.scotty.state.memory.MemorySetState;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -55,6 +56,10 @@ public class LazySlice<InputType, ValueType> extends AbstractSlice<InputType, Va
     @Override
     public AggregateState getAggState() {
         return state;
+    }
+
+    public SetState<StreamRecord<InputType>> getRecords(){
+        return this.records;
     }
 
 
