@@ -62,6 +62,15 @@ public abstract class WindowContext<Tuple> implements Serializable {
         window.setEnd(position);
     }
 
+    public void shiftStartDontModifySlice(ActiveWindow window, long position) {
+        // does not modify the start edge of the slice, only adjusts the window start
+        window.setStart(position);
+    }
+
+    public void splitSlice(long position) {
+        // adds a AddModification to split the slice if necessary, regardless of changes to the window
+        modifiedWindowEdges.add(new AddModification(position));
+    }
 
     public abstract ActiveWindow updateContext(Tuple tuple, long position);
 
