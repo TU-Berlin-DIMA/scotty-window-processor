@@ -4,6 +4,7 @@ import de.tub.dima.scotty.core.windowType.SlidingWindow;
 import de.tub.dima.scotty.core.windowType.TumblingWindow;
 import de.tub.dima.scotty.core.windowType.WindowMeasure;
 import de.tub.dima.scotty.kafkastreamsconnector.KeyedScottyWindowOperator;
+import de.tub.dima.scotty.kafkastreamsconnector.KeyedScottyWindowOperatorSupplier;
 import de.tub.dima.scotty.demo.kafkaStreams.windowFunctions.SumWindowFunction;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -26,18 +27,17 @@ public class KafkaStreamsSumDemo {
          * Topology approach
          */
 
-        KeyedScottyWindowOperator<Integer,Integer> processingFunction = new KeyedScottyWindowOperator<Integer, Integer>(new SumWindowFunction(), 100);
-        processingFunction
-                .addWindow(new TumblingWindow(WindowMeasure.Time, 2000))
-                .addWindow(new SlidingWindow(WindowMeasure.Time, 5000,1000));
+        KeyedScottyWindowOperatorSupplier<Integer, Integer> processorSupplier = new KeyedScottyWindowOperatorSupplier<>(new SumWindowFunction(), 100);
+        processorSupplier
+            .addWindow(new TumblingWindow(WindowMeasure.Time, 2000))
+            .addWindow(new SlidingWindow(WindowMeasure.Time, 5000,1000));
 
-        DemoPrinter<Integer,Integer> demoPrinter = new DemoPrinter<>();
 
         Topology demoTopology = new Topology();
         demoTopology.addSource("TestSource","testInput")
-                .addProcessor("ScottyProcess",() -> processingFunction, "TestSource")
-                .addProcessor("ResultPrinter", () -> demoPrinter, "ScottyProcess")
-                .addSink("TestSink","testOutput","ResultPrinter");
+            .addProcessor("ScottyProcess", processorSupplier, "TestSource")
+            .addProcessor("ResultPrinter", DemoPrinter::new, "ScottyProcess")
+            .addSink("TestSink","testOutput","ResultPrinter");
 
         System.out.println(demoTopology.describe());
         Thread demoSource = new DemoKafkaProducer(INPUT_DESCRIPTOR_NAME);
@@ -51,11 +51,11 @@ public class KafkaStreamsSumDemo {
         /*
         StreamsBuilder builder = new StreamsBuilder();
         KStream<Integer,Integer> input = builder.stream("testInput");
-                KeyedScottyWindowOperator<Integer,Integer> processingFunction = new KeyedScottyWindowOperator<Integer, Integer>(new SumWindowFunction(), 100);
-        processingFunction
-                .addWindow(new TumblingWindow(WindowMeasure.Time, 2000))
-                .addWindow(new SlidingWindow(WindowMeasure.Time, 5000,1000));
-        input.process(() -> processingFunction);
+        KeyedScottyWindowOperatorSupplier<Integer, Integer> processorSupplier = new KeyedScottyWindowOperatorSupplier<>(new SumWindowFunction(), 100);
+        processorSupplier
+            .addWindow(new TumblingWindow(WindowMeasure.Time, 2000))
+            .addWindow(new SlidingWindow(WindowMeasure.Time, 5000,1000));
+        input.process(processorSupplier);
         Thread demoSource = new DemoKafkaProducer(INPUT_DESCRIPTOR_NAME);
         KafkaStreams streams = new KafkaStreams(builder.build(),props);
         demoSource.start();

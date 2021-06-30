@@ -18,12 +18,12 @@ import org.apache.kafka.streams.kstream.Transformer;
 public class KeyedScottyWindowTransformer<Key, Value, Result> extends KeyedScottyWindowOperator<Key, Value>  implements Transformer<Key, Value, Result>{
 
   public KeyedScottyWindowTransformer(AggregateFunction<Value, ?, ?> windowFunction, long allowedLateness) {
-    super(windowFunction, allowedLateness);
+      super(windowFunction, allowedLateness);
   }
   
   @Override
   public Result transform(Key key, Value value) {
-    this.process(key, value);
-    return null;
+      this.process(key, value);
+      return null;
   }
 }

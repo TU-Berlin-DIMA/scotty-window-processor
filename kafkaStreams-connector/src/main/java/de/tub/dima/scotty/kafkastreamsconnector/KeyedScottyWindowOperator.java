@@ -19,7 +19,7 @@ public class KeyedScottyWindowOperator<Key, Value> implements Processor<Key,Valu
     private MemoryStateFactory stateFactory;
     private HashMap<Key, SlicingWindowOperator<Value>> slicingWindowOperatorMap;
     private long lastWatermark;
-    private final AggregateFunction windowFunction;
+    private final AggregateFunction<Value, ?, ?> windowFunction;
     private final List<Window> windows;
     private long allowedLateness;
     private long watermarkEvictionPeriod = 100;
