@@ -1,13 +1,15 @@
 package de.tub.dima.scotty.slicing;
 
-import de.tub.dima.scotty.core.windowType.*;
+import de.tub.dima.scotty.core.AggregateWindow;
+import de.tub.dima.scotty.core.WindowOperator;
+import de.tub.dima.scotty.core.windowFunction.AggregateFunction;
+import de.tub.dima.scotty.core.windowType.PunctuationWindow;
+import de.tub.dima.scotty.core.windowType.Window;
+import de.tub.dima.scotty.core.windowType.windowContext.WindowContext;
 import de.tub.dima.scotty.slicing.aggregationstore.AggregationStore;
 import de.tub.dima.scotty.slicing.aggregationstore.LazyAggregateStore;
 import de.tub.dima.scotty.slicing.slice.SliceFactory;
 import de.tub.dima.scotty.state.StateFactory;
-import de.tub.dima.scotty.core.AggregateWindow;
-import de.tub.dima.scotty.core.WindowOperator;
-import de.tub.dima.scotty.core.windowFunction.AggregateFunction;
 
 import java.util.List;
 
@@ -36,16 +38,21 @@ public class SlicingWindowOperator<InputType> implements WindowOperator<InputTyp
         this.slicer = new StreamSlicer(sliceManager, windowManager);
     }
 
-
     @Override
     public void processElement(InputType element, long ts) {
+        /*added for Punctuation Window*/
+        for (WindowContext windowContext : this.windowManager.getContextAwareWindows()) {
+            if(windowContext instanceof PunctuationWindow.PunctuationContext){
+                ((PunctuationWindow.PunctuationContext)windowContext).processPunctuation(element, ts);
+            }
+        }
         slicer.determineSlices(ts);
         sliceManager.processElement(element, ts);
     }
 
     @Override
     public List<AggregateWindow> processWatermark(long watermarkTs) {
-       return windowManager.processWatermark(watermarkTs);
+        return windowManager.processWatermark(watermarkTs);
     }
 
     @Override
