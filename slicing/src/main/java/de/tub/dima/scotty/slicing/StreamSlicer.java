@@ -71,7 +71,7 @@ public class StreamSlicer {
                 // Emit remaining separator if needed
                 if (min_next_edge_ts == te) {
                     if (flex_count > 0) {
-                        sliceManager.appendSlice(te, new Slice.Fixed());
+                        sliceManager.appendSlice(min_next_edge_ts, new Slice.Flexible(flex_count));
                     } else {
                         sliceManager.appendSlice(min_next_edge_ts, new Slice.Fixed());
                     }
