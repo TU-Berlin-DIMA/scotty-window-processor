@@ -13,6 +13,7 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class KeyedScottyWindowOperator<Key, Value> implements Processor<Key,Value> {
     private ProcessorContext context;
@@ -44,7 +45,7 @@ public class KeyedScottyWindowOperator<Key, Value> implements Processor<Key,Valu
         }
         SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
         slicingWindowOperator.processElement(value, context.timestamp());
-        processWatermark(context.timestamp(), currentKey);
+        processWatermark(context.timestamp());
     }
 
     public SlicingWindowOperator<Value> initWindowOperator() {
@@ -59,18 +60,18 @@ public class KeyedScottyWindowOperator<Key, Value> implements Processor<Key,Valu
 
 
 
-    private void processWatermark(long timeStamp, Key currentKey) {
+    private void processWatermark(long timeStamp) {
         if (timeStamp > lastWatermark + watermarkEvictionPeriod) {
-            for (SlicingWindowOperator<Value> slicingWindowOperator : this.slicingWindowOperatorMap.values()) {
-                List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(timeStamp);
-                for (AggregateWindow<Value> aggregateWindow : aggregates) {
-                    if (aggregateWindow.hasValue()) {
-                        System.out.println(aggregateWindow);
-                        for (Value aggValue : aggregateWindow.getAggValues()) {
-                            context.forward(currentKey, aggValue);
-                        }
-                    }
-                }
+            for (Map.Entry<Key, SlicingWindowOperator<Value>> keyOperatorSet : this.slicingWindowOperatorMap.entrySet()) {
+              List<AggregateWindow> aggregates = keyOperatorSet.getValue().processWatermark(timeStamp);
+              for (AggregateWindow<Value> aggregateWindow : aggregates) {
+                  if (aggregateWindow.hasValue()) {
+                      System.out.println(aggregateWindow);
+                      for (Value aggValue : aggregateWindow.getAggValues()) {
+                          context.forward(keyOperatorSet.getKey(), aggValue);
+                      }
+                  }
+              }
             }
             lastWatermark = timeStamp;
         }
