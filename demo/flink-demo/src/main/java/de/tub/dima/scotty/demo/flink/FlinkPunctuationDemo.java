@@ -1,8 +1,8 @@
-package de.tub.dima.scotty.flinkconnector.demo;
+package de.tub.dima.scotty.demo.flink;
 
 import de.tub.dima.scotty.core.windowType.PunctuationWindow;
+import de.tub.dima.scotty.demo.flink.windowFunctions.SumWindowFunction;
 import de.tub.dima.scotty.flinkconnector.KeyedScottyWindowOperator;
-import de.tub.dima.scotty.flinkconnector.demo.windowFunctions.SumWindowFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.TimeCharacteristic;
