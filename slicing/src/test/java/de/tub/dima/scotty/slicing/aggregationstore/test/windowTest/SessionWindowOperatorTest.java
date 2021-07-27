@@ -236,4 +236,21 @@ public class SessionWindowOperatorTest {
     }
 
 
+    @Test
+    public void tupleOutsideAllowedLatenessTest() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
+
+        slicingWindowOperator.processElement(1, 2600);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
+        slicingWindowOperator.processElement(1, 3700);
+
+        // tuple outside of allowed lateness: tuple ts is smaller than watermark - maxLateness (here: 3000-1000 = 2000)
+        // this tuple should not be added to any slice
+        slicingWindowOperator.processElement(1, 1999);
+
+        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
+        Assert.assertTrue(resultWindows.size() == 1);
+    }
+
 }
