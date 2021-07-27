@@ -85,25 +85,6 @@ public class SliceManager<InputType> {
                     nextSlice.prependElement(lastElement);
                 }
             }
-
-            //shift tuples in slices for Punctuation Window
-            for (WindowContext windowContext : this.windowManager.getContextAwareWindows()) {
-                if(windowContext instanceof PunctuationWindow.PunctuationContext && split){
-                    StreamRecord<InputType> currElement = new StreamRecord<>(ts, element);
-                    LazySlice<InputType, ?> lazySlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice-1);
-                    lazySlice.addElement(element,ts);
-                    while (true){
-                        StreamRecord<InputType> lastElement = lazySlice.dropLastElement();
-                        if(currElement.compareTo(lastElement) !=0){
-                            LazySlice<InputType, ?> nextSlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice);
-                            nextSlice.prependElement(lastElement);
-                        }else{
-                            split = false;
-                            break;
-                        }
-                    }
-                }
-            }
         }
     }
 
