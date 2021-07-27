@@ -1,6 +1,5 @@
 package de.tub.dima.scotty.slicing;
 
-import de.tub.dima.scotty.core.windowType.PunctuationWindow;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.*;
@@ -12,7 +11,6 @@ public class SliceManager<InputType> {
     private final SliceFactory<InputType, ?> sliceFactory;
     private final AggregationStore<InputType> aggregationStore;
     private final WindowManager windowManager;
-    public boolean split = false;
 
     public SliceManager(final SliceFactory sliceFactory, final AggregationStore<InputType> aggregationStore, final WindowManager windowManager) {
         this.sliceFactory = sliceFactory;
@@ -168,7 +166,6 @@ public class SliceManager<InputType> {
     }
 
     public void splitSlice(int sliceIndex, long timestamp) {
-        split = true;
         Slice sliceA = this.aggregationStore.getSlice(sliceIndex);
         // TODO find count for left and right
         Slice sliceB;
