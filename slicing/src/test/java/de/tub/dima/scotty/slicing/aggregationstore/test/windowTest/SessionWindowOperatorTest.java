@@ -242,15 +242,56 @@ public class SessionWindowOperatorTest {
         slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
 
         slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 2700);
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
         slicingWindowOperator.processElement(1, 3700);
 
         // tuple outside of allowed lateness: tuple ts is smaller than watermark - maxLateness (here: 3000-1000 = 2000)
-        // this tuple should not be added to any slice
+        // this tuple should not start a new session or be added to any slice
         slicingWindowOperator.processElement(1, 1999);
 
+        Assert.assertTrue(resultWindows.size() == 2);
         WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
-        Assert.assertTrue(resultWindows.size() == 1);
+        WindowAssert.assertContains(resultWindows, 2700, 2710, 1);
+    }
+
+    @Test
+    public void tupleInsideAllowedLatenessTest() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
+
+        slicingWindowOperator.processElement(1, 2600);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
+        slicingWindowOperator.processElement(1, 3700);
+
+        // tuple inside of allowed lateness: tuple ts is bigger than watermark - maxLateness (here: 3000-1000 = 2000)
+        // this tuple should add a new session window
+        slicingWindowOperator.processElement(1, 2500);
+
+        resultWindows = slicingWindowOperator.processWatermark(4000);
+
+        Assert.assertTrue(resultWindows.size() == 2);
+        WindowAssert.assertContains(resultWindows, 2500, 2510, 1);
+        WindowAssert.assertContains(resultWindows, 3700, 3710, 1);
+    }
+
+    @Test
+    public void tupleOutsideAllowedLatenessTest2() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
+
+        slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 2700);
+
+        // tuple outside of allowed lateness: tuple ts is smaller than firstTimestamp - maxLateness (here: 2600-1000 = 1600)
+        // this tuple should not be added to any slice
+        slicingWindowOperator.processElement(1, 1500);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
+
+        Assert.assertTrue(resultWindows.size() == 2);
+        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
+        WindowAssert.assertContains(resultWindows, 2700, 2710, 1);
     }
 
 }

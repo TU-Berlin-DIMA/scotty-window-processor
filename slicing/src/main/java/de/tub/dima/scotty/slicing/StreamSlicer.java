@@ -126,6 +126,11 @@ public class StreamSlicer {
             if (te >= newNextEdge)
                 flex_count++;
         }
+
+        if(this.windowManager.getMinAllowedTimestamp() == Long.MAX_VALUE){
+            this.windowManager.setMinAllowedTimestamp(te - this.windowManager.getMaxLateness());
+        }
+
         return flex_count;
     }
 
