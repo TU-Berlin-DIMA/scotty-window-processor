@@ -31,7 +31,7 @@ public class WindowManager {
     private long currentCount = 0;
     private long lastCount = 0;
     private boolean isSessionWindowCase;
-    private long minAllowedTimestamp = -1;
+    private long minAllowedTimestamp = Long.MAX_VALUE;
 
     public WindowManager(StateFactory stateFactory, AggregationStore aggregationStore) {
         this.stateFactory = stateFactory;

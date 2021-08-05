@@ -63,7 +63,7 @@ public class SliceManager<InputType> {
 
         } else {
             // out of order
-            if(ts > windowManager.getMinAllowedTimestamp()) {
+            if(ts > Math.min(this.windowManager.getMinAllowedTimestamp(), this.aggregationStore.getSlice(0).getTStart())) {
 
                 for (WindowContext<InputType> windowContext : this.windowManager.getContextAwareWindows()) {
                     Set<WindowModifications> windowModifications = new HashSet<>();
