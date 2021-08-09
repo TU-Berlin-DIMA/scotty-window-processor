@@ -57,6 +57,29 @@ Throughput in comparison to Flink for concurrent Tumbling Windows:
 
 ![](charts/ConcurrentTumblingWindows.png?raw=true)
 
+### Out-of-order Processing in Scotty:
+
+A watermark with timestamp t indicates that no tuple with a timestamp lower than t will arrive.
+When a watermark arrives, Scotty outputs all window results of windows that ended before t. 
+
+However, some out-of-order tuples may arrive with a timestamp t' lower than the watermark t (t' <= t).
+For that case, the maxLateness indicates how long Scotty stores slices and their corresponding window aggregates.
+Scotty processes an out-of-order tuple as long as its in the allowed lateness, 
+i.e. it has an timestamp t' that is bigger than watermark minus the maxLateness (t' > t - maxLateness). 
+Then, Scotty outputs updated aggregates for the windows.
+The maxLateness can be adjusted with the method setMaxLateness of the slicingWindowOperator.
+
+If an out-of-order tuple arrives outside the allowed lateness 
+(with a timestamp t' < t - maxLateness - maxFixedWindowSize), it is discarded.
+MaxFixedWindowSize is the maximum size of window types which have fixed sizes (e.g. tumbling window or 
+sliding window).
+For context-aware window types, the maxFixedWindowSize is 0.
+
+If no watermark has arrived yet, an out-of-order tuple is outside the allowed lateness, 
+when its timestamp is lower than the start timestamp of the first slice (t' < tsOfFirstSlice),
+or in case of context aware windows, the timestamp of the first tuple minus the maxlateness 
+(t' < tsOfFirstTuple - maxLateness).
+
 ### Roadmap:
 We plan to extend our framework with the following features:
 
