@@ -93,7 +93,7 @@ public class SliceManager<InputType> {
                 long post = ((ShiftModification) mod).post;
                 int sliceIndex = this.aggregationStore.findSliceByEnd(pre);
                 if(sliceIndex==-1)
-                    return;
+                    continue;
                 Slice currentSlice = this.aggregationStore.getSlice(sliceIndex);
 
                 Slice.Type sliceType = currentSlice.getType();
@@ -103,6 +103,26 @@ public class SliceManager<InputType> {
                     Slice nextSlice = this.aggregationStore.getSlice(sliceIndex + 1);
                     currentSlice.setTEnd(post);
                     nextSlice.setTStart(post);
+
+                    if(post < pre){
+                        // move tuples to nextSlice
+                        if (currentSlice instanceof LazySlice) {
+                            LazySlice<InputType, ?> lazyCurrentSlice = (LazySlice<InputType, ?>)currentSlice;
+                            while ((lazyCurrentSlice.getTFirst() < lazyCurrentSlice.getTLast()) && (lazyCurrentSlice.getTLast() >= post)){
+                                StreamRecord<InputType> lastElement = lazyCurrentSlice.dropLastElement();
+                                ((LazySlice<InputType, ?>)nextSlice).prependElement(lastElement);
+                            }
+                        }
+                    } else {
+                        // move tuples to currentSlice
+                        if (currentSlice instanceof LazySlice) {
+                            LazySlice<InputType, ?> lazyNextSlice = (LazySlice<InputType, ?>)nextSlice;
+                            while ((lazyNextSlice.getTFirst() < lazyNextSlice.getTLast()) && (lazyNextSlice.getTFirst() < post)){
+                                StreamRecord<InputType> lastElement = lazyNextSlice.dropFirstElement();
+                                ((LazySlice<InputType, ?>)currentSlice).prependElement(lastElement);
+                            }
+                        }
+                    }
                 }
                 else{
                     if(sliceType instanceof Slice.Flexible)
@@ -119,6 +139,14 @@ public class SliceManager<InputType> {
                     Slice currentSlice = this.aggregationStore.getSlice(sliceIndex);
                     Slice.Type sliceType = currentSlice.getType();
                     if(sliceType.isMovable()){
+                        Slice nextSlice = this.aggregationStore.getSlice(sliceIndex+1);
+                        //move records to new slice
+                        if (nextSlice instanceof LazySlice) {
+                            while (((LazySlice<InputType, ?>)nextSlice).getCLast() > 0){
+                                StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)nextSlice).dropLastElement();
+                                ((LazySlice<InputType, ?>)currentSlice).prependElement(lastElement);
+                            }
+                        }
                         this.aggregationStore.mergeSlice(sliceIndex);
                     }else{
                         if(sliceType instanceof Slice.Flexible)
@@ -140,9 +168,26 @@ public class SliceManager<InputType> {
     public void splitSlice(int sliceIndex, long timestamp) {
         Slice sliceA = this.aggregationStore.getSlice(sliceIndex);
         // TODO find count for left and right
-        Slice sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());
-        sliceA.setTEnd(timestamp);
-        sliceA.setType(new Slice.Flexible());
-        this.aggregationStore.addSlice(sliceIndex + 1, sliceB);
+        Slice sliceB;
+        if(timestamp < sliceA.getTEnd()) {
+            sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());
+            sliceA.setTEnd(timestamp);
+            sliceA.setType(new Slice.Flexible());
+            this.aggregationStore.addSlice(sliceIndex + 1, sliceB);
+        } else if(sliceIndex + 1 < this.aggregationStore.size()) {
+            sliceA = this.aggregationStore.getSlice(sliceIndex + 1);
+            sliceB = this.sliceFactory.createSlice(timestamp, sliceA.getTEnd(), sliceA.getCStart(), sliceA.getCLast(), sliceA.getType());
+            sliceA.setTEnd(timestamp);
+            sliceA.setType(new Slice.Flexible());
+            this.aggregationStore.addSlice(sliceIndex + 2, sliceB);
+        } else return;
+
+        //move records to new slice
+        if (sliceA instanceof LazySlice) {
+            while (((LazySlice<InputType, ?>)sliceA).getTLast() >= timestamp){
+                StreamRecord<InputType> lastElement = ((LazySlice<InputType, ?>)sliceA).dropLastElement();
+                ((LazySlice<InputType, ?>)sliceB).prependElement(lastElement);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ package de.tub.dima.scotty.slicing.slice;
 import de.tub.dima.scotty.slicing.*;
 import de.tub.dima.scotty.slicing.state.*;
 import de.tub.dima.scotty.state.*;
+import de.tub.dima.scotty.state.memory.MemorySetState;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -34,9 +35,20 @@ public class LazySlice<InputType, ValueType> extends AbstractSlice<InputType, Va
 
     public StreamRecord<InputType> dropLastElement() {
         StreamRecord<InputType> dropRecord = records.dropLast();
-        StreamRecord<InputType> currentLast = records.getLast();
         this.setCLast(this.getCLast()-1);
-        this.setTLast(currentLast.ts);
+        if(!records.isEmpty()) {
+            StreamRecord<InputType> currentLast = records.getLast();
+            this.setTLast(currentLast.ts);
+        }
+        this.state.removeElement(dropRecord);
+        return dropRecord;
+    }
+
+    public StreamRecord<InputType> dropFirstElement() {
+        StreamRecord<InputType> dropRecord = records.dropFrist();
+        StreamRecord<InputType> currentFirst = records.getFirst();
+        this.setCLast(this.getCLast()-1);
+        this.setTFirst(currentFirst.ts);
         this.state.removeElement(dropRecord);
         return dropRecord;
     }
@@ -44,6 +56,10 @@ public class LazySlice<InputType, ValueType> extends AbstractSlice<InputType, Va
     @Override
     public AggregateState getAggState() {
         return state;
+    }
+
+    public SetState<StreamRecord<InputType>> getRecords(){
+        return this.records;
     }
 
 
