@@ -15,7 +15,7 @@ public class SliceFactory<InputType, ValueType> {
     }
 
     public Slice<InputType, ValueType> createSlice(long startTs, long maxValue, long startCount, long endCount, Slice.Type type) {
-        if(!windowManager.hasCountMeasure()){
+        if(!windowManager.hasCountMeasure() && ((!windowManager.hasContextAwareWindow() || windowManager.isSessionWindowCase()) && windowManager.getMaxLateness()>0)){
             return new EagerSlice<>(stateFactory, windowManager, startTs, maxValue, startCount, endCount, type);
         }
         return new LazySlice<>(stateFactory, windowManager, startTs, maxValue, startCount, endCount, type);
