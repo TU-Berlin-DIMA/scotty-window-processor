@@ -3,8 +3,6 @@ package de.tub.dima.scotty.core.windowType;
 import de.tub.dima.scotty.core.*;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
 
-import java.util.ArrayList;
-
 public class SessionWindow implements ForwardContextAware {
 
     private final WindowMeasure measure;
@@ -116,7 +114,6 @@ public class SessionWindow implements ForwardContextAware {
                 session = getWindow(0);
             }
         }
-
     }
 
     @Override
