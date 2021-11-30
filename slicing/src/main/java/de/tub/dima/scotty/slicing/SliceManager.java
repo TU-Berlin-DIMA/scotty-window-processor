@@ -83,6 +83,11 @@ public class SliceManager<InputType> {
                     nextSlice.prependElement(lastElement);
                 }
             }
+
+            // ts smaller than watermark -> tuple in allowed lateness, might change windows that ended before last watermark
+            if (ts < this.windowManager.getLastWatermark() && this.windowManager.getResendWindowsInAllowedLateness()){
+                this.windowManager.setLastWatermarkToAllowedLateness();
+            }
         }
     }
 
@@ -157,9 +162,15 @@ public class SliceManager<InputType> {
             if (mod instanceof AddModification) {
                 long newWindowEdge = ((AddModification) mod).post;
                 int sliceIndex = this.aggregationStore.findSliceIndexByTimestamp(newWindowEdge);
-                Slice slice = this.aggregationStore.getSlice(sliceIndex);
-                if(slice.getTStart() != newWindowEdge && slice.getTEnd() != newWindowEdge ){
-                    splitSlice(sliceIndex, ((AddModification) mod).post);
+                if(sliceIndex != -1) {
+                    Slice slice = this.aggregationStore.getSlice(sliceIndex);
+                    if (slice.getTStart() != newWindowEdge && slice.getTEnd() != newWindowEdge) {
+                        splitSlice(sliceIndex, ((AddModification) mod).post);
+                    }
+                }else {
+                    Slice sliceFirst = this.aggregationStore.getSlice(0);
+                    Slice newSlice = this.sliceFactory.createSlice(newWindowEdge, sliceFirst.getTStart(), 0, 0, sliceFirst.getType());
+                    this.aggregationStore.addSlice(0, newSlice);
                 }
             }
         }

@@ -66,4 +66,6 @@ public class SlicingWindowOperator<InputType> implements WindowOperator<InputTyp
     public void setMaxLateness(long maxLateness) {
         windowManager.setMaxLateness(maxLateness);
     }
+
+    public void setResendWindowsInAllowedLateness(boolean resendWindowsInAllowedLateness) {this.windowManager.setResendWindowsInAllowedLateness(resendWindowsInAllowedLateness);}
 }
