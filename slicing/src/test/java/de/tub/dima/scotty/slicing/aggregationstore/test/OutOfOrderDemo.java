@@ -21,6 +21,8 @@ public class OutOfOrderDemo {
     public void setup() {
         this.stateFactory = new MemoryStateFactory();
         this.slicingWindowOperator = new SlicingWindowOperator<Integer>(stateFactory);
+        // workaround: set this true to output all windows in allowed lateness if tuple in allowed lateness arrived
+        // can cause performance issues since many windows are updated twice!
         this.slicingWindowOperator.setResendWindowsInAllowedLateness(true);
     }
 
@@ -64,47 +66,9 @@ public class OutOfOrderDemo {
 
         // output changed window result
         WindowAssert.assertContains(resultWindows, 2600, 2610, 2);
+        // Scotty should only output updated windows, i.e., 2800 - 2810 should not be output
         WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
     }
-
-    @Test
-    public void tupleInAllowedLatenessTestUpdateSession() {
-        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
-
-        slicingWindowOperator.processElement(1, 2600);
-        slicingWindowOperator.processElement(1, 2800);
-        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
-        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
-        //tuple in allowed lateness
-        slicingWindowOperator.processElement(1, 2600);
-        slicingWindowOperator.processElement(1, 3010);
-        resultWindows = slicingWindowOperator.processWatermark(3100);
-
-        // output updated session
-        WindowAssert.assertContains(resultWindows, 2600, 2610, 2);
-    }
-
-    /*@Test
-    public void tupleInAllowedLatenessTestChangeSession() {
-        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
-        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
-
-        slicingWindowOperator.processElement(1, 2600);
-        slicingWindowOperator.processElement(1, 2800);
-        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
-        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
-        //tuple in allowed lateness
-        slicingWindowOperator.processElement(1, 2605);
-        slicingWindowOperator.processElement(1, 3010);
-        resultWindows = slicingWindowOperator.processWatermark(3100);
-
-        // output changed session
-        WindowAssert.assertContains(resultWindows, 2600, 2615, 2);
-        WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
-    }*/
-
-
 
     @Test
     public void tupleInAllowedLatenessTestAddSession() {
@@ -123,10 +87,47 @@ public class OutOfOrderDemo {
 
         Assert.assertTrue(resultWindows.size() == 2);
         WindowAssert.assertContains(resultWindows, 2500, 2510, 1); // added new session
-        //WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
+        //WindowAssert.assertContains(resultWindows, 2600, 2610, 1); // these sessions should not be output
         //WindowAssert.assertContains(resultWindows, 2800, 2810, 1);
         WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
     }
 
+    @Test
+    public void tupleInAllowedLatenessTestUpdateSession() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
 
+        slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 2800);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
+        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
+        //tuple in allowed lateness
+        //new session is only correctly added because tuple 2600 has same ts as the tuple that started the session
+        slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 3010);
+        resultWindows = slicingWindowOperator.processWatermark(3100);
+
+        // output updated session
+        WindowAssert.assertContains(resultWindows, 2600, 2610, 2);
+    }
+
+
+    /*@Test
+    public void tupleInAllowedLatenessTestChangeSession() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
+
+        slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 2800);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
+        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
+        //tuple in allowed lateness that changes the session to be longer from 2600 - 2615
+        slicingWindowOperator.processElement(1, 2605);
+        slicingWindowOperator.processElement(1, 3010);
+        resultWindows = slicingWindowOperator.processWatermark(3100);
+
+        // output changed session
+        WindowAssert.assertContains(resultWindows, 2600, 2615, 2);
+        WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
+    }*/
 }
