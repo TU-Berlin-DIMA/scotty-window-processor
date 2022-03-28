@@ -22,7 +22,7 @@ public class OutOfOrderDemo {
         this.stateFactory = new MemoryStateFactory();
         this.slicingWindowOperator = new SlicingWindowOperator<Integer>(stateFactory);
         // workaround: set this true to output all windows in allowed lateness if tuple in allowed lateness arrived
-        // can cause performance issues since many windows are updated twice!
+        // can cause performance issues since many windows are output multiple times!
         this.slicingWindowOperator.setResendWindowsInAllowedLateness(true);
     }
 
@@ -42,11 +42,21 @@ public class OutOfOrderDemo {
         // watermark indicates that no tuple with timestamp lower than 3000 will arrive
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
 
-        // Scotty outputs all windows that ended before watermark 3000 starting from watermark - maxlateness (3000-1000)
+        // Scotty outputs the results of all windows that ended before the watermark with timestamp 3000
+        // all windows between lastWatermark and currentWatermark are triggered
+        // since this is the first watermark, lastWatermark is set to watermark - maxLateness (3000-1000 = 2000)
         WindowAssert.assertContains(resultWindows, 2000, 2010, 1);
         WindowAssert.assertContains(resultWindows, 2600, 2610, 2);
         WindowAssert.assertContains(resultWindows, 2800, 2810, 1);
         WindowAssert.assertContains(resultWindows, 2400, 2410, 1);
+
+        slicingWindowOperator.processElement(2, 3800);
+        slicingWindowOperator.processElement(3, 4000);
+
+        //next watermark arrives, Scotty triggers windows that ended between lastWatermark (3000) and currentWatermark (3900)
+        resultWindows = slicingWindowOperator.processWatermark(3900);
+        WindowAssert.assertContains(resultWindows, 3700, 3710, 1);
+        WindowAssert.assertContains(resultWindows, 3800, 3810, 2);
     }
 
 
@@ -55,16 +65,21 @@ public class OutOfOrderDemo {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         slicingWindowOperator.addWindowAssigner(new TumblingWindow(WindowMeasure.Time, 10));
 
+        // Scotty stores slices in allowed lateness
+        // at the first tuple, slices begin from the tsOfFirstTuple-maxLateness+WindowSize (2600-1000+10 = 1610)
         slicingWindowOperator.processElement(1, 2600);
         slicingWindowOperator.processElement(1, 2800);
+        // when watermark arrives, allowed lateness changes to watermark - maxLateness (3000-1000 = 2000)
+        // Scotty stores slices from watermark - maxLateness - maxFixedWindowSize (3000-1000-10 = 1990)
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
         WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
-        // tuple in allowed lateness
+        // tuple arrives after watermark, but in allowed lateness, because 2605 > 2000
         slicingWindowOperator.processElement(1, 2605);
         slicingWindowOperator.processElement(1,3010);
         resultWindows = slicingWindowOperator.processWatermark(3100);
 
-        // output changed window result
+        // Scotty outputs changed window result, because resendWindowsInAllowedLateness was set to true
+        // updated window results from allowedLateness (i.e., timestamp 2000) until watermark 3100 should be returned
         WindowAssert.assertContains(resultWindows, 2600, 2610, 2);
         // Scotty should only output updated windows, i.e., 2800 - 2810 should not be output
         WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
@@ -92,24 +107,24 @@ public class OutOfOrderDemo {
         WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
     }
 
-    @Test
+    /*@Test
     public void tupleInAllowedLatenessTestUpdateSession() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
 
         slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 2610);
         slicingWindowOperator.processElement(1, 2800);
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
-        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
-        //tuple in allowed lateness
-        //new session is only correctly added because tuple 2600 has same ts as the tuple that started the session
-        slicingWindowOperator.processElement(1, 2600);
+        WindowAssert.assertContains(resultWindows, 2600, 2620, 2);
+        // tuple in allowed lateness has to be inserted in to session 2600-2620, aggregate has to be updated
+        slicingWindowOperator.processElement(1, 2605);
         slicingWindowOperator.processElement(1, 3010);
         resultWindows = slicingWindowOperator.processWatermark(3100);
 
         // output updated session
-        WindowAssert.assertContains(resultWindows, 2600, 2610, 2);
-    }
+        WindowAssert.assertContains(resultWindows, 2600, 2620, 3);
+    }*/
 
 
     /*@Test
@@ -118,16 +133,17 @@ public class OutOfOrderDemo {
         slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
 
         slicingWindowOperator.processElement(1, 2600);
+        slicingWindowOperator.processElement(1, 2610);
         slicingWindowOperator.processElement(1, 2800);
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(3000);
-        WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
-        //tuple in allowed lateness that changes the session to be longer from 2600 - 2615
-        slicingWindowOperator.processElement(1, 2605);
+        WindowAssert.assertContains(resultWindows, 2600, 2620, 2);
+        // tuple in allowed lateness that changes the session to be longer from 2600 - 2635
+        slicingWindowOperator.processElement(1, 2625);
         slicingWindowOperator.processElement(1, 3010);
         resultWindows = slicingWindowOperator.processWatermark(3100);
 
         // output changed session
-        WindowAssert.assertContains(resultWindows, 2600, 2615, 2);
+        WindowAssert.assertContains(resultWindows, 2600, 2635, 3);
         WindowAssert.assertContains(resultWindows, 3010, 3020, 1);
     }*/
 }
