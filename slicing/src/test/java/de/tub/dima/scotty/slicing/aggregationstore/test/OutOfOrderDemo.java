@@ -59,6 +59,9 @@ public class OutOfOrderDemo {
         WindowAssert.assertContains(resultWindows, 3800, 3810, 2);
     }
 
+    /* Tests for Allowed Lateness Implementation
+    * see OutOfOrderArchitecture.md
+    */
 
     @Test
     public void tupleInAllowedLatenessTest() {
