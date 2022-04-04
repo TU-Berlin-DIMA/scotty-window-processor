@@ -63,24 +63,26 @@ public class SliceManager<InputType> {
 
         } else {
             // out of order
+            if(ts > Math.min(this.windowManager.getMinAllowedTimestamp(), this.aggregationStore.getSlice(0).getTStart())) {
 
-            for (WindowContext<InputType> windowContext : this.windowManager.getContextAwareWindows()) {
-                Set<WindowModifications> windowModifications = new HashSet<>();
-                WindowContext.ActiveWindow assignedWindow = windowContext.updateContext(element, ts, windowModifications);
-                checkSliceEdges(windowModifications);
-            }
+                for (WindowContext<InputType> windowContext : this.windowManager.getContextAwareWindows()) {
+                    Set<WindowModifications> windowModifications = new HashSet<>();
+                    WindowContext.ActiveWindow assignedWindow = windowContext.updateContext(element, ts, windowModifications);
+                    checkSliceEdges(windowModifications);
+                }
 
-            // updateSlices(windowStarts);
+                // updateSlices(windowStarts);
 
-            int indexOfSlice = this.aggregationStore.findSliceIndexByTimestamp(ts);
-            this.aggregationStore.insertValueToSlice(indexOfSlice, element, ts);
-            if(this.windowManager.hasCountMeasure()){
-                // shift count in slices
-                for(; indexOfSlice<= this.aggregationStore.size()-2; indexOfSlice++) {
-                    LazySlice<InputType, ?> lazySlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice);
-                    StreamRecord<InputType> lastElement = lazySlice.dropLastElement();
-                    LazySlice<InputType, ?> nextSlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice + 1);
-                    nextSlice.prependElement(lastElement);
+                int indexOfSlice = this.aggregationStore.findSliceIndexByTimestamp(ts);
+                this.aggregationStore.insertValueToSlice(indexOfSlice, element, ts);
+                if (this.windowManager.hasCountMeasure()) {
+                    // shift count in slices
+                    for (; indexOfSlice <= this.aggregationStore.size() - 2; indexOfSlice++) {
+                        LazySlice<InputType, ?> lazySlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice);
+                        StreamRecord<InputType> lastElement = lazySlice.dropLastElement();
+                        LazySlice<InputType, ?> nextSlice = (LazySlice<InputType, ?>) this.aggregationStore.getSlice(indexOfSlice + 1);
+                        nextSlice.prependElement(lastElement);
+                    }
                 }
             }
 
