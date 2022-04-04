@@ -85,6 +85,11 @@ public class SliceManager<InputType> {
                     }
                 }
             }
+
+            // ts smaller than watermark -> tuple in allowed lateness, might change windows that ended before last watermark
+            if (ts < this.windowManager.getLastWatermark() && this.windowManager.getResendWindowsInAllowedLateness()){
+                this.windowManager.setLastWatermarkToAllowedLateness();
+            }
         }
     }
 

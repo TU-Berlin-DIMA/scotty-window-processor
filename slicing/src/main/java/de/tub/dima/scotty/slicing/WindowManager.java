@@ -31,7 +31,8 @@ public class WindowManager {
     private long currentCount = 0;
     private long lastCount = 0;
     private boolean isSessionWindowCase;
-    private long minAllowedTimestamp = Long.MAX_VALUE;
+    private long minAllowedTimestamp = Long.MAX_VALUE;  
+    private boolean resendWindowsInAllowedLateness;
 
     public WindowManager(StateFactory stateFactory, AggregationStore aggregationStore) {
         this.stateFactory = stateFactory;
@@ -202,10 +203,18 @@ public class WindowManager {
     public void setMaxLateness(long maxLateness) {
         this.maxLateness = maxLateness;
     }
-
+  
     public long getMinAllowedTimestamp() { return this.minAllowedTimestamp; }
 
     public void setMinAllowedTimestamp(long minAllowedTimestamp) { this.minAllowedTimestamp = minAllowedTimestamp; }
+
+    public long getLastWatermark() { return this.lastWatermark; }
+
+    public void setLastWatermarkToAllowedLateness() { this.lastWatermark = this.lastWatermark - this.maxLateness; }
+
+    public void setResendWindowsInAllowedLateness(boolean resendWindowsInAllowedLateness) {this.resendWindowsInAllowedLateness = resendWindowsInAllowedLateness;}
+
+    public boolean getResendWindowsInAllowedLateness() {return this.resendWindowsInAllowedLateness;}
 
     public class AggregationWindowCollector implements WindowCollector, Iterable<AggregateWindow> {
 
