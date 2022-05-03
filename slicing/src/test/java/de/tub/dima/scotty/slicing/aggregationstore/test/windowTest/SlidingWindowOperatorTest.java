@@ -166,6 +166,42 @@ public class SlidingWindowOperatorTest {
         Assert.assertEquals(3, resultWindows.get(6).getAggValues().get(0));
     }
 
+    @Test
+    public void slideTest() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlidingWindow(WindowMeasure.Time, 10, 3));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 10);
+        slicingWindowOperator.processElement(1, 11);
+        slicingWindowOperator.processElement(1, 12);
+        slicingWindowOperator.processElement(1, 13);
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(1, 15);
+        slicingWindowOperator.processElement(1, 19);
+        slicingWindowOperator.processElement(2, 21);
+        slicingWindowOperator.processElement(1, 22);
+        slicingWindowOperator.processElement(1, 23);
+        slicingWindowOperator.processElement(1, 24);
+        slicingWindowOperator.processElement(3, 29);
+        slicingWindowOperator.processElement(4, 36);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
+
+        WindowAssert.assertContains(resultWindows, 0, 10, 1);
+        WindowAssert.assertContains(resultWindows, 3, 13, 3);
+        WindowAssert.assertContains(resultWindows, 6, 16, 6);
+        WindowAssert.assertContains(resultWindows, 9, 19, 6);
+        WindowAssert.assertContains(resultWindows, 12, 22, 7);
+
+        resultWindows = slicingWindowOperator.processWatermark(55);
+        WindowAssert.assertContains(resultWindows, 15, 25, 7);
+        WindowAssert.assertContains(resultWindows, 18, 28, 6);
+        WindowAssert.assertContains(resultWindows, 21, 31, 6);
+        WindowAssert.assertContains(resultWindows, 24, 34, 4);
+        WindowAssert.assertContains(resultWindows, 27, 37, 7);
+    }
+
 
     @Test
     public void outOfOrderTest() {
