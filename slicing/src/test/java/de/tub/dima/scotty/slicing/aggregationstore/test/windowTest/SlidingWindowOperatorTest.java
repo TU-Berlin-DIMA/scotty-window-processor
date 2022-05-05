@@ -172,6 +172,7 @@ public class SlidingWindowOperatorTest {
         slicingWindowOperator.addWindowAssigner(new SlidingWindow(WindowMeasure.Time, 10, 3));
 
         slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 9);
         slicingWindowOperator.processElement(1, 10);
         slicingWindowOperator.processElement(1, 11);
         slicingWindowOperator.processElement(1, 12);
@@ -188,10 +189,10 @@ public class SlidingWindowOperatorTest {
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
 
-        WindowAssert.assertContains(resultWindows, 0, 10, 1);
-        WindowAssert.assertContains(resultWindows, 3, 13, 3);
-        WindowAssert.assertContains(resultWindows, 6, 16, 6);
-        WindowAssert.assertContains(resultWindows, 9, 19, 6);
+        WindowAssert.assertContains(resultWindows, 0, 10, 2);
+        WindowAssert.assertContains(resultWindows, 3, 13, 4);
+        WindowAssert.assertContains(resultWindows, 6, 16, 7);
+        WindowAssert.assertContains(resultWindows, 9, 19, 7);
         WindowAssert.assertContains(resultWindows, 12, 22, 7);
 
         resultWindows = slicingWindowOperator.processWatermark(55);
