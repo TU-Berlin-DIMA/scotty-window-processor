@@ -197,7 +197,7 @@ public class SlidingWindowOperatorTest {
         resultWindows = slicingWindowOperator.processWatermark(55);
         WindowAssert.assertContains(resultWindows, 15, 25, 7);
         WindowAssert.assertContains(resultWindows, 18, 28, 6);
-        WindowAssert.assertContains(resultWindows, 21, 31, 6);
+        WindowAssert.assertContains(resultWindows, 21, 31, 8);
         WindowAssert.assertContains(resultWindows, 24, 34, 4);
         WindowAssert.assertContains(resultWindows, 27, 37, 7);
     }
