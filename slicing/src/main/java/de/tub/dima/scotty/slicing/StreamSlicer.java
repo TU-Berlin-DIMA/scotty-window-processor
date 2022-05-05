@@ -116,8 +116,12 @@ public class StreamSlicer {
     }
 
     private int calculateNextFlexEdge(long te) {
-        // next_edge will be the last edge
-        long t_c = Math.max(this.maxEventTime, min_next_edge_ts);
+        long t_c;
+        if (min_next_edge_ts == Long.MIN_VALUE){ // if no fixed windows min_next_edge stays default value
+            t_c = this.maxEventTime;
+        }else {
+            t_c = Math.min(this.maxEventTime, min_next_edge_ts); // take next smallest window edge
+        }
         long edge = Long.MAX_VALUE;
         int flex_count = 0;
         for (WindowContext cw : this.windowManager.getContextAwareWindows()) {
