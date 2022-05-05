@@ -231,5 +231,35 @@ public class SlidingWindowOperatorTest {
         WindowAssert.assertContains(resultWindows, 2600, 2610, 1);
     }
 
+    @Test
+    public void slicingStartTest() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlidingWindow(WindowMeasure.Time, 10, 4));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 10);
+        slicingWindowOperator.processElement(1, 11);
+        slicingWindowOperator.processElement(1, 12);
+        slicingWindowOperator.processElement(1, 13);
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(1, 15);
+        slicingWindowOperator.processElement(3, 19);
+        slicingWindowOperator.processElement(4, 29);
+        slicingWindowOperator.processElement(5, 36);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(22);
+
+        WindowAssert.assertContains(resultWindows, 0, 10, 1);
+        WindowAssert.assertContains(resultWindows, 4, 14, 4);
+        WindowAssert.assertContains(resultWindows, 8, 18, 6);
+        WindowAssert.assertContains(resultWindows, 12, 22, 7);
+
+        resultWindows = slicingWindowOperator.processWatermark(55);
+        WindowAssert.assertContains(resultWindows, 16, 26, 3);
+        WindowAssert.assertContains(resultWindows, 20, 30, 4);
+        WindowAssert.assertContains(resultWindows, 24, 34, 4);
+        WindowAssert.assertContains(resultWindows, 28, 38, 9);
+        WindowAssert.assertContains(resultWindows, 32, 42, 5);
+    }
 
 }
