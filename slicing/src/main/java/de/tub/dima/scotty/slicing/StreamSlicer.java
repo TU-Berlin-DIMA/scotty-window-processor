@@ -102,7 +102,7 @@ public class StreamSlicer {
 
     private long calculateNextFixedEdge(long te) {
         // next_edge will be the last edge
-        long current_min_edge = min_next_edge_ts == Long.MIN_VALUE ? Long.MAX_VALUE : min_next_edge_ts;
+        long current_min_edge = min_next_edge_ts == Long.MIN_VALUE ? 0 : min_next_edge_ts;
         long t_c = Math.max(te - this.windowManager.getMaxLateness(), current_min_edge);
         long edge = Long.MAX_VALUE;
         for (ContextFreeWindow tw : this.windowManager.getContextFreeWindows()) {
