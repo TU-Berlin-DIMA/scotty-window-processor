@@ -40,7 +40,7 @@ public class SlidingWindow implements ContextFreeWindow {
     @Override
     public long assignNextWindowStart(long recordStamp) {
         long nextWindowStart = recordStamp + getSlide() - (recordStamp) % getSlide();
-        long nextWindowEnd = recordStamp + this.getSlide() - (recordStamp - this.getSize()) % this.getSlide();
+        long nextWindowEnd = recordStamp < getSize() ? getSize() : recordStamp + this.getSlide() - (recordStamp - this.getSize()) % this.getSlide();
         return Math.min(nextWindowStart, nextWindowEnd);
     }
 
