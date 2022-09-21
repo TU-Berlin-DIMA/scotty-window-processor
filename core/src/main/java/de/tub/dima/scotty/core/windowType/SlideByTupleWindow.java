@@ -150,8 +150,8 @@ public class SlideByTupleWindow implements ForwardContextAware {
             //returns newest window
             int i = numberOfActiveWindows()-1;
             for (; i >= 0 ; i--) {
-                ActiveWindow p = getWindow(i);
-                if (p.getStart() <= position) {
+                ActiveWindow w = getWindow(i);
+                if (w.getStart() <= position) {
                     return i;
                 }
             }
@@ -160,33 +160,26 @@ public class SlideByTupleWindow implements ForwardContextAware {
 
         @Override
         public long assignNextWindowStart(long position) {
-            if (slide > 1) {
-                if (count == nextStart) {
-                    // new Window starts, append new Slice
-                    return position;
-                } else {
-                    // determine if new slice is needed
-                    int windowIndex = getWindowIndex(position);
-                    if(windowIndex == -1){
-                        return position;
-                    }
-                    ActiveWindow w = getWindow(windowIndex);
-                    if (windowIndex == 0) { // first window: all tuples belong to the first slice
-                        return w.getEnd();
-                    } else {
-                        ActiveWindow wBefore = getWindow(windowIndex - 1);
-                        if (wBefore.getEnd() <= position) {
-                            //tuple before does not belong to window before -> append current value to slice
-                            return w.getEnd();
-                        } else {
-                            //tuple before also belongs to the window before or is outlier -> new slice
-                            return wBefore.getEnd();
-                        }
-                    }
-                }
-            } else { //append one slice for each tuple for slide == 1
+            if (count == nextStart) {
+                // new window starts, create new slice
                 return position;
+            } else {
+                // return next window end
+                return getNextWindowEnd(position);
             }
+        }
+
+        public long getNextWindowEnd(long position) {
+            //returns next window end after position
+            long nextWEnd = -1;
+            for (int i = numberOfActiveWindows() -1 ; i >= 0 ; i--) {
+                ActiveWindow w = getWindow(i);
+                if (position >= w.getEnd()) {
+                    break;
+                }
+                nextWEnd = w.getEnd();
+            }
+            return nextWEnd;
         }
 
         @Override
