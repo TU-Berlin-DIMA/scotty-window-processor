@@ -1,5 +1,6 @@
 package de.tub.dima.scotty.slicing;
 
+import de.tub.dima.scotty.core.windowType.SlideByTupleWindow;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.*;

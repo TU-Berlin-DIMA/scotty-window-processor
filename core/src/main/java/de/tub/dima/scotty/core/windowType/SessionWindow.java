@@ -114,8 +114,6 @@ public class SessionWindow implements ForwardContextAware {
                 session = getWindow(0);
             }
         }
-
-
     }
 
     @Override
