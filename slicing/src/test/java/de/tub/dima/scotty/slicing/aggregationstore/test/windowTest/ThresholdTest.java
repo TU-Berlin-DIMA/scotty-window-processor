@@ -143,7 +143,7 @@ public class ThresholdTest {
     }
 
     @Test
-    public void NoShift() {
+    public void NoShiftAtStartOfFrame() {
         slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
         slicingWindowOperator.addWindowAssigner(new ThresholdFrame(3));
 
@@ -164,6 +164,29 @@ public class ThresholdTest {
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(20);
         WindowAssert.assertEquals(resultWindows.get(0),4, 8, 16);
         WindowAssert.assertEquals(resultWindows.get(1),12, 14, 12);
+    }
+
+    @Test
+    public void noShiftSingleFrame() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new ThresholdFrame(3));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(2, 2);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(5, 4); //begin of frame because 5>3
+        slicingWindowOperator.processElement(4, 5);
+        slicingWindowOperator.processElement(7, 6);
+        slicingWindowOperator.processElement(2, 8); //end of frame because 2<3
+        slicingWindowOperator.processElement(1, 9);
+        slicingWindowOperator.processElement(1, 10);
+        slicingWindowOperator.processElement(2, 12);
+        slicingWindowOperator.processElement(3, 13);
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(2, 11);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(20);
+        WindowAssert.assertEquals(resultWindows.get(0),4, 8, 16);
     }
 
     @Test

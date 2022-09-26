@@ -132,31 +132,23 @@ public class ThresholdFrame implements ForwardContextFree {
                         //else: simple insert, changes nothing
                     }
                     //else: current frame is the last one, tuple belongs to current frame
-                }else{
+                }else {
                     //value below or equal to threshold
                     ActiveWindow f = getWindow(fIndex);
                     int index = timestamps.indexOf(position);
                     long timestampAfter = (long) timestamps.get(index + 1);
                     long timestampBefore = (long) timestamps.get(index - 1);
                     long last_ts = f.getEnd();
+                    long nextStart = -1;
 
-                    if(fIndex+1 == numberOfActiveWindows()){ //if current frame is last frame
+                    if((fIndex+1) < numberOfActiveWindows()) { // current frame is not the last frame
+                        nextStart = getWindow(fIndex + 1).getStart(); // get start of next frame
+                    }
+
+                    if (timestampBefore < last_ts && timestampAfter != nextStart) {
                         shiftEndAndModify(f, position);
-                        if (timestampAfter == last_ts) { //shift frame end
-                            return f;
-                        } else { //split frame
+                        if (timestampAfter != last_ts) { //shift frame end
                             return addNewWindow(fIndex + 1, timestampAfter, last_ts);
-                        }
-                    }else if((fIndex+1) < numberOfActiveWindows()) { //current frame is not the last frame
-                        ActiveWindow fNext = getWindow(fIndex + 1);
-                        if (timestampAfter != fNext.getStart() && timestampBefore < last_ts) {
-                            //do not shift start of next frame, but shift end
-                            shiftEndAndModify(f, position);
-                            if (timestampAfter == last_ts) { //shift frame end
-                                return f;
-                            } else { //split frame
-                                return addNewWindow(fIndex + 1, timestampAfter, last_ts);
-                            }
                         }
                     }
                 }
