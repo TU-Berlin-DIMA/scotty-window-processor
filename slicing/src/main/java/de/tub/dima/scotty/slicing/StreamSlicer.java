@@ -102,7 +102,7 @@ public class StreamSlicer {
 
     private long calculateNextFixedEdge(long te) {
         // next_edge will be the last edge
-        long current_min_edge = min_next_edge_ts == Long.MIN_VALUE ? Long.MAX_VALUE : min_next_edge_ts;
+        long current_min_edge = min_next_edge_ts == Long.MIN_VALUE ? 0 : min_next_edge_ts;
         long t_c = Math.max(te - this.windowManager.getMaxLateness(), current_min_edge);
         long edge = Long.MAX_VALUE;
         for (ContextFreeWindow tw : this.windowManager.getContextFreeWindows()) {
@@ -116,8 +116,12 @@ public class StreamSlicer {
     }
 
     private int calculateNextFlexEdge(long te) {
-        // next_edge will be the last edge
-        long t_c = Math.max(this.maxEventTime, min_next_edge_ts);
+        long t_c;
+        if (min_next_edge_ts == Long.MIN_VALUE){ // if no fixed windows min_next_edge stays default value
+            t_c = this.maxEventTime;
+        }else {
+            t_c = Math.min(this.maxEventTime, min_next_edge_ts); // take next smallest window edge
+        }
         long edge = Long.MAX_VALUE;
         int flex_count = 0;
         for (WindowContext cw : this.windowManager.getContextAwareWindows()) {
@@ -126,6 +130,11 @@ public class StreamSlicer {
             if (te >= newNextEdge)
                 flex_count++;
         }
+
+        if(this.windowManager.getMinAllowedTimestamp() == Long.MAX_VALUE){
+            this.windowManager.setMinAllowedTimestamp(te - this.windowManager.getMaxLateness());
+        }
+
         return flex_count;
     }
 
