@@ -62,6 +62,11 @@ public abstract class WindowContext<Tuple> implements Serializable {
         window.setEnd(position);
     }
 
+    public void shiftEndAndModify(ActiveWindow window, long position) {
+        modifiedWindowEdges.add(new ShiftModification(window.end, position)); //adds a ShiftModification for end of window
+        window.setEnd(position);
+    }
+
 
     public abstract ActiveWindow updateContext(Tuple tuple, long position);
 

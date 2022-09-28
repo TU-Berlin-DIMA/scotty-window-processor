@@ -1,5 +1,6 @@
 package de.tub.dima.scotty.slicing;
 
+import de.tub.dima.scotty.core.windowType.ThresholdFrame;
 import de.tub.dima.scotty.core.windowType.windowContext.*;
 import de.tub.dima.scotty.slicing.aggregationstore.*;
 import de.tub.dima.scotty.slicing.slice.*;
@@ -51,7 +52,6 @@ public class SliceManager<InputType> {
         }
 
         final Slice currentSlice = this.aggregationStore.getCurrentSlice();
-
         // is element in order?
         if (ts >= currentSlice.getTLast()) {
             // in order
