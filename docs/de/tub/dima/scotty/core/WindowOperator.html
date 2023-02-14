@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in de.tub.dima.scotty.core"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in stream.scotty.core"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.core</div>
+<div class="subTitle">stream.scotty.core</div>
 <h2 title="Interface WindowOperator" class="title">Interface WindowOperator&lt;InputType&gt;</h2>
 </div>
 <div class="contentContainer">
@@ -104,7 +104,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in de.tub.dima.scotty.slicing">SlicingWindowOperator</a></dd>
+<dd><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in stream.scotty.slicing">SlicingWindowOperator</a></dd>
 </dl>
 <hr>
 <br>
@@ -130,13 +130,13 @@ extends java.io.Serializable</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>&lt;OutputType&gt;<br>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addAggregation-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">addAggregation</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="type parameter in WindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addAggregation-windowFunction.stream.scotty.core.AggregateFunction-">addAggregation</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="type parameter in WindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</code>
 <div class="block">Add a aggregation</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addWindowAssigner-de.tub.dima.scotty.core.windowType.Window-">addWindowAssigner</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&nbsp;window)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addWindowAssigner-windowType.stream.scotty.core.Window-">addWindowAssigner</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&nbsp;window)</code>
 <div class="block">Add a window assigner to the window operator.</div>
 </td>
 </tr>
@@ -148,7 +148,7 @@ extends java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#processWatermark-long-">processWatermark</a></span>(long&nbsp;watermarkTs)</code>
 <div class="block">Process a watermark at a specific timestamp</div>
 </td>
@@ -187,27 +187,27 @@ extends java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>processWatermark</h4>
-<pre>java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&gt;&nbsp;processWatermark(long&nbsp;watermarkTs)</pre>
+<pre>java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&gt;&nbsp;processWatermark(long&nbsp;watermarkTs)</pre>
 <div class="block">Process a watermark at a specific timestamp</div>
 </li>
 </ul>
-<a name="addWindowAssigner-de.tub.dima.scotty.core.windowType.Window-">
+<a name="addWindowAssigner-windowType.stream.scotty.core.Window-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addWindowAssigner</h4>
-<pre>void&nbsp;addWindowAssigner(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&nbsp;window)</pre>
+<pre>void&nbsp;addWindowAssigner(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&nbsp;window)</pre>
 <div class="block">Add a window assigner to the window operator.</div>
 </li>
 </ul>
-<a name="addAggregation-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">
+<a name="addAggregation-windowFunction.stream.scotty.core.AggregateFunction-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>addAggregation</h4>
-<pre>&lt;OutputType&gt;&nbsp;void&nbsp;addAggregation(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="type parameter in WindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</pre>
+<pre>&lt;OutputType&gt;&nbsp;void&nbsp;addAggregation(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="type parameter in WindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</pre>
 <div class="block">Add a aggregation</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -242,7 +242,7 @@ extends java.io.Serializable</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in de.tub.dima.scotty.core"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in stream.scotty.core"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">

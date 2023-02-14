@@ -6,7 +6,7 @@
       <modelVersion>4.0.0</modelVersion>
 
 
-    <groupId>de.tub.dima.scotty</groupId>
+    <groupId>stream.scotty</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>0.4</version>

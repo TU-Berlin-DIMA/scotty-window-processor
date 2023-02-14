@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStoreFactory.html" title="interface in de.tub.dima.scotty.slicing.aggregationstore"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStoreFactory.html" title="interface in stream.scotty.slicing.aggregationstore"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../index.html?de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" target="_top">Frames</a></li>
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.slicing.aggregationstore</div>
+<div class="subTitle">stream.scotty.slicing.aggregationstore</div>
 <h2 title="Interface AggregationStore" class="title">Interface AggregationStore&lt;InputType&gt;</h2>
 </div>
 <div class="contentContainer">
@@ -100,7 +100,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/LazyAggregateStore.html" title="class in de.tub.dima.scotty.slicing.aggregationstore">LazyAggregateStore</a></dd>
+<dd><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/LazyAggregateStore.html" title="class in stream.scotty.slicing.aggregationstore">LazyAggregateStore</a></dd>
 </dl>
 <hr>
 <br>
@@ -125,14 +125,14 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#addSlice-int-de.tub.dima.scotty.slicing.slice.Slice-">addSlice</a></span>(int&nbsp;index,
-        <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&nbsp;newSlice)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#addSlice-int-slice.stream.scotty.slicing.Slice-">addSlice</a></span>(int&nbsp;index,
+        <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&nbsp;newSlice)</code>
 <div class="block">Add a new Slice at a specific index</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#aggregate-de.tub.dima.scotty.slicing.WindowManager.AggregationWindowCollector-long-long-">aggregate</a></span>(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.AggregationWindowCollector.html" title="class in de.tub.dima.scotty.slicing">WindowManager.AggregationWindowCollector</a>&nbsp;aggregateWindows,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#aggregate-stream.scotty.slicing.WindowManager.AggregationWindowCollector-long-long-">aggregate</a></span>(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.AggregationWindowCollector.html" title="class in stream.scotty.slicing">WindowManager.AggregationWindowCollector</a>&nbsp;aggregateWindows,
          long&nbsp;minTs,
          long&nbsp;maxTs)</code>
 <div class="block">Generates the window aggregates.</div>
@@ -140,7 +140,7 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#appendSlice-de.tub.dima.scotty.slicing.slice.Slice-">appendSlice</a></span>(<a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;newSlice)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#appendSlice-slice.stream.scotty.slicing.Slice-">appendSlice</a></span>(<a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;newSlice)</code>
 <div class="block">Appends a new slice as new current slice</div>
 </td>
 </tr>
@@ -155,11 +155,11 @@ var activeTableTab = "activeTableTab";
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#getCurrentSlice--">getCurrentSlice</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html#getSlice-int-">getSlice</a></span>(int&nbsp;index)</code>
 <div class="block">Returns slice for a given index or @<code>IndexOutOfBoundsException</code></div>
 </td>
@@ -213,7 +213,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getCurrentSlice</h4>
-<pre><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;getCurrentSlice()</pre>
+<pre><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;getCurrentSlice()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>get the newest slice.</dd>
@@ -243,7 +243,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getSlice</h4>
-<pre><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;getSlice(int&nbsp;index)</pre>
+<pre><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;getSlice(int&nbsp;index)</pre>
 <div class="block">Returns slice for a given index or @<code>IndexOutOfBoundsException</code></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -284,13 +284,13 @@ var activeTableTab = "activeTableTab";
                         long&nbsp;ts)</pre>
 </li>
 </ul>
-<a name="appendSlice-de.tub.dima.scotty.slicing.slice.Slice-">
+<a name="appendSlice-slice.stream.scotty.slicing.Slice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>appendSlice</h4>
-<pre>void&nbsp;appendSlice(<a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;newSlice)</pre>
+<pre>void&nbsp;appendSlice(<a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" title="type parameter in AggregationStore">InputType</a>,?&gt;&nbsp;newSlice)</pre>
 <div class="block">Appends a new slice as new current slice</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -320,17 +320,17 @@ var activeTableTab = "activeTableTab";
 </dl>
 </li>
 </ul>
-<a name="aggregate-de.tub.dima.scotty.slicing.WindowManager.AggregationWindowCollector-long-long-">
+<a name="aggregate-stream.scotty.slicing.WindowManager.AggregationWindowCollector-long-long-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre>void&nbsp;aggregate(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.AggregationWindowCollector.html" title="class in de.tub.dima.scotty.slicing">WindowManager.AggregationWindowCollector</a>&nbsp;aggregateWindows,
+<pre>void&nbsp;aggregate(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.AggregationWindowCollector.html" title="class in stream.scotty.slicing">WindowManager.AggregationWindowCollector</a>&nbsp;aggregateWindows,
                long&nbsp;minTs,
                long&nbsp;maxTs)</pre>
 <div class="block">Generates the window aggregates.
- On every @<a href="../../../../../../de/tub/dima/scotty/slicing/AggregateWindowState.html" title="class in de.tub.dima.scotty.slicing"><code>AggregateWindowState</code></a> the aggregated value is set.</div>
+ On every @<a href="../../../../../../de/tub/dima/scotty/slicing/AggregateWindowState.html" title="class in stream.scotty.slicing"><code>AggregateWindowState</code></a> the aggregated value is set.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>aggregateWindows</code> - definition of the requested window</dd>
@@ -339,14 +339,14 @@ var activeTableTab = "activeTableTab";
 </dl>
 </li>
 </ul>
-<a name="addSlice-int-de.tub.dima.scotty.slicing.slice.Slice-">
+<a name="addSlice-int-slice.stream.scotty.slicing.Slice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addSlice</h4>
 <pre>void&nbsp;addSlice(int&nbsp;index,
-              <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&nbsp;newSlice)</pre>
+              <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&nbsp;newSlice)</pre>
 <div class="block">Add a new Slice at a specific index</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -409,7 +409,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStoreFactory.html" title="interface in de.tub.dima.scotty.slicing.aggregationstore"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../de/tub/dima/scotty/slicing/aggregationstore/AggregationStoreFactory.html" title="interface in stream.scotty.slicing.aggregationstore"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../index.html?de/tub/dima/scotty/slicing/aggregationstore/AggregationStore.html" target="_top">Frames</a></li>
