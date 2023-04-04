@@ -13,7 +13,11 @@ This repository provides Scotty, a framework for efficient window aggregations f
 - Connector for [Apache Storm](https://storm.apache.org/).
 - Connector for [Apache Beam](https://beam.apache.org/).
 - Connector for [Apache Kafka](https://kafka.apache.org/).
-- Connector for [Apache Spark](https://spark.apache.org/).
+- Connector for [Apache Spark](https://spark.apache.org/). 
+- Connector for [Apache Samza](https://samza.apache.org/).
+
+### Website
+- Our [Website](https://scotty.stream/) provides several blog posts about Scotty and its features.
 
 ### Resources:
  - [Paper: Efficient Window Aggregation with General Stream Slicing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-efficient-window-aggregation-with-general-stream-slicing-edbt-2019.pdf) (EDBT 2019, Best Paper)
@@ -24,6 +28,8 @@ This repository provides Scotty, a framework for efficient window aggregations f
  - [Paper: Benson et al.: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf) (EDBT 2020)
  - [Repository: Disco: Stream Processing Engine for Distributed Window Aggregation](https://github.com/hpides/disco)
  - [Repository: Scotty Fork including Disco](https://github.com/lawben/scotty-window-processor)
+ - [Paper: Verwiebe et al.: Survey of window types for aggregation in stream processing systems](https://scotty.stream/paper/verwiebe_vldbj2023.pdf) (VLDBJ 2023)
+ - [Paper: Verwiebe et al.: Algorithms for Windowed Aggregations and Joins on Distributed Stream Processing Systems](https://scotty.stream/paper/verwiebe_dbspektrum2022.pdf) (DB Spektrum 2022)
 
 ### Flink Integration Example:
 
@@ -238,5 +244,74 @@ scales to support future data-intensive streaming applications.
   booktitle={EDBT},
   volume={20},
   year={2020}
+}
+```
+
+### Verwiebe et al.: Survey of window types for aggregation in stream processing systems
+
+**Abstract:**  
+In this paper, we present the first comprehensive survey of window 
+types for stream processing systems which have been presented in 
+research and commercial systems. We cover publications from the most 
+relevant conferences, journals, and system whitepapers on stream processing, 
+windowing, and window aggregation which have been published over the last 20 years.
+For each window type, we provide detailed specifications, formal notations, 
+synonyms, and use-case examples. We classify each window type according to 
+categories that have been proposed in literature and describe the out-of-order processing. 
+In addition, we examine academic, commercial, and open-source systems with 
+respect to the window types that they support. Our survey offers a comprehensive 
+overview that may serve as a guideline for the development of stream processing systems,
+window aggregation techniques, and frameworks that support a variety of window types.
+
+- Paper: [Survey of window types for aggregation in stream processing systems](https://scotty.stream/paper/verwiebe_vldbj2023.pdf)
+
+- BibTeX Citation:
+```
+@article{verwiebe2023survey,
+  title={Survey of window types for aggregation in stream processing systems},
+  author={Verwiebe, Juliane and Grulich, Philipp M and Traub, Jonas and Markl, Volker},
+  journal={The VLDB Journal},
+  pages={1--27},
+  year={2023},
+  publisher={Springer}
+}
+```
+
+Acknowledgements: This work was funded by German Research Foundation
+(MA4662-5 and 410830482), German Federal Ministry for Education
+and Research as BIFOLD - Berlin Institute for the Foundations of Learning and Data (ref. 01IS18025A and ref. 01IS18037A) 
+and Software Campus (01IS17052).
+
+### Verwiebe et al.: Algorithms for Windowed Aggregations and Joins on Distributed Stream Processing Systems
+
+**Abstract:**  
+Window aggregations and windowed joins are central operators of modern 
+real-time analytic workloads and significantly
+impact the performance of stream processing systems.
+This paper gives an overview of state-of-the-art research in this area 
+conducted by the Berlin Institute for the Foundations
+of Learning and Data (BIFOLD) and the Technische Universität Berlin. 
+To this end, we present different algorithms
+for efficiently processing windowed operators and discuss techniques 
+for distributed stream processing. Recently, several
+approaches have leveraged modern hardware for windowed stream processing, 
+which we will also include in this overview.
+Additionally, we describe the integration of windowed operators into 
+various stream processing systems and diverse
+applications that use specialized window operations
+
+- Paper: [Algorithms for Windowed Aggregations and Joins on Distributed Stream Processing Systems](https://scotty.stream/paper/verwiebe_dbspektrum2022.pdf)
+
+- BibTeX Citation:
+```
+@article{verwiebe2022algorithms,
+  title={Algorithms for Windowed Aggregations and Joins on Distributed Stream Processing Systems},
+  author={Verwiebe, Juliane and Grulich, Philipp M and Traub, Jonas and Markl, Volker},
+  journal={Datenbank-Spektrum},
+  volume={22},
+  number={2},
+  pages={99--107},
+  year={2022},
+  publisher={Springer}
 }
 ```
