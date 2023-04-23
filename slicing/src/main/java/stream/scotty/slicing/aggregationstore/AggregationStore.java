@@ -26,7 +26,7 @@ public interface AggregationStore<InputType> {
      * Returns slice for a given index or @{@link IndexOutOfBoundsException}
      *
      * @param index >= 0 < size
-     * @return @Slice
+     * @return Slice
      */
     Slice<InputType, ?> getSlice(int index);
 

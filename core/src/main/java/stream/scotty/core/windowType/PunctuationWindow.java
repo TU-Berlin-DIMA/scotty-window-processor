@@ -13,7 +13,7 @@ public class PunctuationWindow implements ForwardContextFree {
     /**
      * the measure of the Punctuation Window is time
      * @param punctuation defines how the punctuation tuple looks like
-     * @see stream.scotty.slicing.aggregationstore.test.windowTest.PunctuationWindowTest
+     * stream.scotty.slicing.aggregationstore.test.windowTest.PunctuationWindowTest
      * and stream.scotty.slicing.aggregationstore.test.windowTest.PunctuationWindowTupleTest
      * for examples for punctuations
      */
