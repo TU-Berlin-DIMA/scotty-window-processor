@@ -14,7 +14,7 @@
     <properties>
         <scotty.version>0.4</scotty.version>
         <samza.version>1.2.0</samza.version>
-        <kafka.version>2.3.0</kafka.version>
+        <kafka.version>2.6.3</kafka.version>
     </properties>
 
     <dependencies>
