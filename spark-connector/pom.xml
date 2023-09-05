@@ -14,7 +14,7 @@
     <properties>
         <scotty.version>0.4</scotty.version>
         <spark.version>2.4.4</spark.version>
-        <kafka.version>2.4.0</kafka.version>
+        <kafka.version>2.6.3</kafka.version>
     </properties>
 
     <dependencies>
