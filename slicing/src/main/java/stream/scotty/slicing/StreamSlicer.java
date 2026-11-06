@@ -34,6 +34,11 @@ public class StreamSlicer {
      * @param te event timestamp for which slices have to be created
      */
     public void determineSlices(final long te) {
+        // before the first watermark, tuples are in allowed lateness if they are newer than the first timestamp - maxLateness
+        if (this.windowManager.getMinAllowedTimestamp() == Long.MAX_VALUE) {
+            this.windowManager.setMinAllowedTimestamp(te - this.windowManager.getMaxLateness());
+        }
+
         if (this.windowManager.hasCountMeasure()) {
             if (this.min_next_edge_count == Long.MIN_VALUE || windowManager.getCurrentCount() == this.min_next_edge_count) {
                 if(maxEventTime == Long.MIN_VALUE)
@@ -129,10 +134,6 @@ public class StreamSlicer {
             long newNextEdge = cw.assignNextWindowStart(t_c);
             if (te >= newNextEdge)
                 flex_count++;
-        }
-
-        if(this.windowManager.getMinAllowedTimestamp() == Long.MAX_VALUE){
-            this.windowManager.setMinAllowedTimestamp(te - this.windowManager.getMaxLateness());
         }
 
         return flex_count;
