@@ -170,6 +170,10 @@ public class WindowManager {
         return maxLateness;
     }
 
+    public long getMaxFixedWindowSize() {
+        return maxFixedWindowSize;
+    }
+
     public List<ContextFreeWindow> getContextFreeWindows() {
         return contextFreeWindows;
     }
