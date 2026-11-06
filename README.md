@@ -1,4 +1,4 @@
-# Scotty: Efficient Window Aggregation for out-of-order Stream Processing [![Build Status](https://travis-ci.org/TU-Berlin-DIMA/scotty-window-processor.svg?branch=master)](https://travis-ci.org/TU-Berlin-DIMA/scotty-window-processor)
+# Scotty: Efficient Window Aggregation for out-of-order Stream Processing [![Build Status](https://github.com/TU-Berlin-DIMA/scotty-window-processor/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/TU-Berlin-DIMA/scotty-window-processor/actions/workflows/maven.yml)
 
 This repository provides Scotty, a framework for efficient window aggregations for out-of-order Stream Processing.
 
