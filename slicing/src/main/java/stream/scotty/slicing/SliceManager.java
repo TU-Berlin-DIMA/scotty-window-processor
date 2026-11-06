@@ -1,6 +1,5 @@
 package stream.scotty.slicing;
 
-import stream.scotty.core.windowType.SlideByTupleWindow;
 import stream.scotty.core.windowType.windowContext.*;
 import stream.scotty.slicing.aggregationstore.*;
 import stream.scotty.slicing.slice.*;
