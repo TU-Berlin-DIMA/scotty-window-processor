@@ -2,6 +2,7 @@ package stream.scotty.slicing.aggregationstore.test.windowTest;
 
 import stream.scotty.core.AggregateWindow;
 import stream.scotty.core.windowFunction.AggregateFunction;
+import stream.scotty.core.windowFunction.ReduceAggregateFunction;
 import stream.scotty.core.windowType.PunctuationWindow;
 import stream.scotty.slicing.SlicingWindowOperator;
 import stream.scotty.state.memory.MemoryStateFactory;
@@ -13,30 +14,43 @@ import java.util.List;
 
 public class PunctuationWindowTupleTest {
 
-    private SlicingWindowOperator<Tuple2<Integer, Integer>> slicingWindowOperator;
+    /*
+     * The stream mixes data tuples (Integer, Integer) and punctuation tuples (String, Integer), so the
+     * first field is typed as Object. Punctuation tuples are part of the stream and are aggregated as well
+     * (with value 0). The sum function must not cast the first field to Integer: javac 9+ inserts such a
+     * cast for Tuple2<Integer, Integer>.f0, which made this test fail on JDK 9+ (see issue #52).
+     */
+    private static class SumWindowFunction implements ReduceAggregateFunction<Tuple2<Object, Integer>> {
+        @Override
+        public Tuple2<Object, Integer> combine(Tuple2<Object, Integer> partialAggregate1, Tuple2<Object, Integer> partialAggregate2) {
+            return new Tuple2<>(partialAggregate2.f0, partialAggregate1.f1 + partialAggregate2.f1);
+        }
+    }
+
+    private SlicingWindowOperator<Tuple2<Object, Integer>> slicingWindowOperator;
     private MemoryStateFactory stateFactory;
 
     @Before
     public void setup() {
         this.stateFactory = new MemoryStateFactory();
-        this.slicingWindowOperator = new SlicingWindowOperator<Tuple2<Integer, Integer>>(stateFactory);
+        this.slicingWindowOperator = new SlicingWindowOperator<>(stateFactory);
     }
     @Test
     public void inOrderTest() {
-        final AggregateFunction<Tuple2<Integer, Integer>, ?, Tuple2<Integer, Integer>> windowFunction = new SumWindowFunctionTest();
+        final AggregateFunction<Tuple2<Object, Integer>, ?, Tuple2<Object, Integer>> windowFunction = new SumWindowFunction();
         slicingWindowOperator.addWindowFunction(windowFunction);
 
-        Tuple2 punctuation = new Tuple2("key", ".*"); //string matching
+        Tuple2<Object, Object> punctuation = new Tuple2<>("key", ".*"); //string matching
         slicingWindowOperator.addWindowAssigner(new PunctuationWindow(punctuation));
 
         slicingWindowOperator.processElement(new Tuple2<>(1,1), 1);
-        slicingWindowOperator.processElement(new Tuple2("key",0), 10);
+        slicingWindowOperator.processElement(new Tuple2<>("key",0), 10);
         slicingWindowOperator.processElement(new Tuple2<>(1,2), 19);
         slicingWindowOperator.processElement(new Tuple2<>(1,3), 23);
-        slicingWindowOperator.processElement(new Tuple2("key",0), 30);
+        slicingWindowOperator.processElement(new Tuple2<>("key",0), 30);
         slicingWindowOperator.processElement(new Tuple2<>(1,4), 30);
         slicingWindowOperator.processElement(new Tuple2<>(1,5), 49);
-        slicingWindowOperator.processElement(new Tuple2("key",0), 51);
+        slicingWindowOperator.processElement(new Tuple2<>("key",0), 51);
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(31);
         WindowAssert.assertEquals(resultWindows.get(0), 1,10,new Tuple2<>(1,1));
@@ -48,20 +62,20 @@ public class PunctuationWindowTupleTest {
 
     @Test
     public void inOrderTestRegex() {
-        final AggregateFunction<Tuple2<Integer, Integer>, ?, Tuple2<Integer, Integer>> windowFunction = new SumWindowFunctionTest();
+        final AggregateFunction<Tuple2<Object, Integer>, ?, Tuple2<Object, Integer>> windowFunction = new SumWindowFunction();
         slicingWindowOperator.addWindowFunction(windowFunction);
 
-        Tuple2 punctuation = new Tuple2(".*", 0);
+        Tuple2<Object, Object> punctuation = new Tuple2<>(".*", 0);
         slicingWindowOperator.addWindowAssigner(new PunctuationWindow(punctuation));
 
         slicingWindowOperator.processElement(new Tuple2<>(1,1), 1);
-        slicingWindowOperator.processElement(new Tuple2("123",0), 10);
+        slicingWindowOperator.processElement(new Tuple2<>("123",0), 10);
         slicingWindowOperator.processElement(new Tuple2<>(1,2), 19);
         slicingWindowOperator.processElement(new Tuple2<>(1,3), 23);
-        slicingWindowOperator.processElement(new Tuple2("234",0), 30);
+        slicingWindowOperator.processElement(new Tuple2<>("234",0), 30);
         slicingWindowOperator.processElement(new Tuple2<>(1,4), 30);
         slicingWindowOperator.processElement(new Tuple2<>(1,5), 49);
-        slicingWindowOperator.processElement(new Tuple2("345",0), 51);
+        slicingWindowOperator.processElement(new Tuple2<>("345",0), 51);
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(31);
         WindowAssert.assertEquals(resultWindows.get(0), 1,10,new Tuple2<>(1,1));
@@ -73,13 +87,13 @@ public class PunctuationWindowTupleTest {
 
     @Test
     public void outOfOrderTupleTest() {
-        final AggregateFunction<Tuple2<Integer, Integer>, ?, Tuple2<Integer, Integer>> windowFunction = new SumWindowFunctionTest();
+        final AggregateFunction<Tuple2<Object, Integer>, ?, Tuple2<Object, Integer>> windowFunction = new SumWindowFunction();
         slicingWindowOperator.addWindowFunction(windowFunction);
 
-        Tuple2 p = new Tuple2(1, 0);
+        Tuple2<Object, Integer> p = new Tuple2<>(1, 0);
         slicingWindowOperator.addWindowAssigner(new PunctuationWindow(p));
 
-        Tuple2<Integer,Integer> t = new Tuple2<>(1,0);
+        Tuple2<Object, Integer> t = new Tuple2<>(1, 0);
         slicingWindowOperator.processElement(new Tuple2<>(1,1), 1);
         slicingWindowOperator.processElement(t, 10);
         slicingWindowOperator.processElement(new Tuple2<>(1,2), 19);
@@ -98,23 +112,23 @@ public class PunctuationWindowTupleTest {
 
     @Test
     public void twoWindowsTest() {
-        final AggregateFunction<Tuple2<Integer, Integer>, ?, Tuple2<Integer, Integer>> windowFunction = new SumWindowFunctionTest();
+        final AggregateFunction<Tuple2<Object, Integer>, ?, Tuple2<Object, Integer>> windowFunction = new SumWindowFunction();
         slicingWindowOperator.addWindowFunction(windowFunction);
 
-        Tuple2 p = new Tuple2(1, 0);
-        Tuple2 p2 = new Tuple2("123", 0);
+        Tuple2<Object, Integer> p = new Tuple2<>(1, 0);
+        Tuple2<Object, Integer> p2 = new Tuple2<>("123", 0);
         slicingWindowOperator.addWindowAssigner(new PunctuationWindow(p));
         slicingWindowOperator.addWindowAssigner(new PunctuationWindow(p2));
 
-        Tuple2<Integer,Integer> t = new Tuple2<>(1,0);
+        Tuple2<Object, Integer> t = new Tuple2<>(1, 0);
         slicingWindowOperator.processElement(new Tuple2<>(1,1), 1);
         slicingWindowOperator.processElement(t, 10);
         slicingWindowOperator.processElement(new Tuple2<>(1,2), 19);
-        slicingWindowOperator.processElement(new Tuple2("123", 0), 30);
+        slicingWindowOperator.processElement(new Tuple2<>("123", 0), 30);
         slicingWindowOperator.processElement(new Tuple2<>(1,3), 23); //out-of-order tuple
         slicingWindowOperator.processElement(new Tuple2<>(1,5), 49);
         slicingWindowOperator.processElement(t, 51);
-        slicingWindowOperator.processElement(new Tuple2("123", 0), 51);
+        slicingWindowOperator.processElement(new Tuple2<>("123", 0), 51);
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(31);
         WindowAssert.assertEquals(resultWindows.get(0), 1,10,new Tuple2<>(1,1));
