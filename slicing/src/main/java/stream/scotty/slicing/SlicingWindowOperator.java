@@ -55,6 +55,13 @@ public class SlicingWindowOperator<InputType> implements WindowOperator<InputTyp
         return windowManager.processWatermark(watermarkTs);
     }
 
+    /**
+     * @return true if a future watermark can still trigger windows that contain tuples, without new tuples arriving.
+     */
+    public boolean hasPendingWindows() {
+        return windowManager.hasPendingWindows();
+    }
+
     @Override
     public void addWindowAssigner(Window window) {
         windowManager.addWindowAssigner(window);

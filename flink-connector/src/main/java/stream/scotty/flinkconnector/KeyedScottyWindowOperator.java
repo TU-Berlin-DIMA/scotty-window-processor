@@ -18,8 +18,6 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
 
     private MemoryStateFactory stateFactory;
     private HashMap<Key, SlicingWindowOperator<InputType>> slicingWindowOperatorMap;
-    // max event timestamp per key, used to stop re-registering watermark timers for idle keys
-    private HashMap<Key, Long> maxTimestampMap;
     private long lastWatermark;
 
     private final AggregateFunction<InputType, ?, FinalAggregateType> windowFunction;
@@ -37,7 +35,6 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
         super.open(parameters);
         this.stateFactory = new MemoryStateFactory();
         slicingWindowOperatorMap = new HashMap<>();
-        maxTimestampMap = new HashMap<>();
     }
 
     public SlicingWindowOperator<InputType> initWindowOperator() {
@@ -61,9 +58,7 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
             slicingWindowOperatorMap.put(currentKey, initWindowOperator());
         }
         SlicingWindowOperator<InputType> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
-        long timestamp = getTimestamp(ctx);
-        slicingWindowOperator.processElement(value, timestamp);
-        maxTimestampMap.merge(currentKey, timestamp, Math::max);
+        slicingWindowOperator.processElement(value, getTimestamp(ctx));
         processWatermark(ctx, out);
         // A KeyedProcessFunction is not notified about watermarks. Register an event-time timer that fires
         // with the next watermark, so that windows are also triggered if no further elements arrive (#61).
@@ -74,8 +69,10 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
     public void onTimer(long timestamp, OnTimerContext ctx, Collector<AggregateWindow<FinalAggregateType>> out) throws Exception {
         long currentWatermark = ctx.timerService().currentWatermark();
         processWatermark(currentWatermark, out);
-        Long maxTimestamp = maxTimestampMap.get(ctx.getCurrentKey());
-        if (maxTimestamp != null && currentWatermark <= maxTimestamp + getTriggerHorizon()) {
+        // Stop registering timers for this key if only new elements can trigger further windows of the key.
+        // The next element of the key registers a new timer.
+        SlicingWindowOperator<InputType> slicingWindowOperator = slicingWindowOperatorMap.get(ctx.getCurrentKey());
+        if (slicingWindowOperator != null && slicingWindowOperator.hasPendingWindows()) {
             registerWatermarkTimer(currentWatermark, ctx.timerService());
         }
     }
@@ -84,22 +81,6 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
         if (currentWatermark < Long.MAX_VALUE) {
             timerService.registerEventTimeTimer(currentWatermark + 1);
         }
-    }
-
-    /**
-     * How long after the last element of a key the watermark timers of that key are kept alive.
-     */
-    private long getTriggerHorizon() {
-        long horizon = 0;
-        for (Window window : windows) {
-            if (window instanceof ContextFreeWindow) {
-                horizon = Math.max(horizon, ((ContextFreeWindow) window).clearDelay());
-            } else {
-                // context aware windows (e.g. session or punctuation windows) have no fixed size
-                return Long.MAX_VALUE / 2;
-            }
-        }
-        return horizon + allowedLateness;
     }
 
     private long getTimestamp(Context context){

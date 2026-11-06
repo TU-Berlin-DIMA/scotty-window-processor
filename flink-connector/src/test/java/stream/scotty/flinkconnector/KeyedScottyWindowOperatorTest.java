@@ -10,10 +10,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import stream.scotty.core.AggregateWindow;
 import stream.scotty.core.windowFunction.ReduceAggregateFunction;
+import stream.scotty.core.windowType.SessionWindow;
 import stream.scotty.core.windowType.SlidingWindow;
 import stream.scotty.core.windowType.WindowMeasure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class KeyedScottyWindowOperatorTest {
@@ -75,6 +78,50 @@ public class KeyedScottyWindowOperatorTest {
         Assert.assertTrue(res.toString(), res.contains("15-25=5"));
         Assert.assertTrue(res.toString(), res.contains("25-35=6"));
         Assert.assertTrue(res.toString(), res.contains("30-40=6"));
+        // no timers are kept for a key after all windows with tuples of this key were emitted
+        Assert.assertEquals(0, harness.numEventTimeTimers());
+        harness.close();
+    }
+
+    private static List<String> keyedResults(KeyedOneInputStreamOperatorTestHarness<String, Tuple2<String, Integer>, AggregateWindow<Tuple2<String, Integer>>> harness) {
+        List<String> res = new ArrayList<>();
+        for (Object o : harness.getOutput()) {
+            if (o instanceof StreamRecord) {
+                @SuppressWarnings("unchecked")
+                AggregateWindow<Tuple2<String, Integer>> w = ((StreamRecord<AggregateWindow<Tuple2<String, Integer>>>) o).getValue();
+                res.add(w.getAggValues().get(0).f0 + ":" + w.getStart() + "-" + w.getEnd() + "=" + w.getAggValues().get(0).f1);
+            }
+        }
+        Collections.sort(res);
+        return res;
+    }
+
+    @Test
+    public void sparseKeyedSessionWindowTest() throws Exception {
+        KeyedScottyWindowOperator<String, Tuple2<String, Integer>, Tuple2<String, Integer>> windowOperator =
+                new KeyedScottyWindowOperator<>(new Sum());
+        windowOperator.addWindow(new SessionWindow(WindowMeasure.Time, 5));
+
+        KeyedOneInputStreamOperatorTestHarness<String, Tuple2<String, Integer>, AggregateWindow<Tuple2<String, Integer>>> harness =
+                new KeyedOneInputStreamOperatorTestHarness<>(new KeyedProcessOperator<>(windowOperator), new KeyOf(), Types.STRING);
+        harness.open();
+
+        harness.processElement(new Tuple2<>("a", 1), 1);
+        harness.processElement(new Tuple2<>("b", 2), 2);
+        harness.processElement(new Tuple2<>("a", 3), 3);
+        harness.processWatermark(5);
+        harness.processWatermark(10);
+        Assert.assertEquals(Arrays.asList("a:1-8=4", "b:2-7=2"), keyedResults(harness));
+        // the sessions of both keys are emitted, so no timers are needed until new elements arrive
+        Assert.assertEquals(0, harness.numEventTimeTimers());
+        harness.processWatermark(20);
+
+        harness.processElement(new Tuple2<>("a", 5), 30);
+        Assert.assertEquals(1, harness.numEventTimeTimers());
+        harness.processWatermark(31);
+        harness.processWatermark(40);
+        Assert.assertEquals(Arrays.asList("a:1-8=4", "a:30-35=5", "b:2-7=2"), keyedResults(harness));
+        Assert.assertEquals(0, harness.numEventTimeTimers());
         harness.close();
     }
 }
