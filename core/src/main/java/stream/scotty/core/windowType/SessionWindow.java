@@ -105,6 +105,9 @@ public class SessionWindow implements ForwardContextAware {
 
         @Override
         public void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark) {
+            // all sessions were already triggered
+            if (hasActiveWindows())
+                return;
             ActiveWindow session = getWindow(0);
             while (session.getEnd() + gap < currentWatermark) {
                 aggregateWindows.trigger(session.getStart(), session.getEnd() + gap, measure);
