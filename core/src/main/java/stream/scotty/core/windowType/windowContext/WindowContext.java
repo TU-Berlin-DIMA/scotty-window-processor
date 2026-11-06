@@ -62,8 +62,14 @@ public abstract class WindowContext<Tuple> implements Serializable {
         window.setEnd(position);
     }
 
-    public void shiftEndAndModify(ActiveWindow window, long position) {
-        modifiedWindowEdges.add(new ShiftModification(window.end, position)); //adds a ShiftModification for end of window
+    /**
+     * Shifts the end of a window and registers the new end as an additional slice edge.
+     * Unlike a ShiftModification, the slice edge at the old end is kept, as it may still
+     * be needed (e.g. as the end of a window that was split off) and as moving it could
+     * cross other slice edges.
+     */
+    public void shiftEndAndAddEdge(ActiveWindow window, long position) {
+        modifiedWindowEdges.add(new AddModification(position));
         window.setEnd(position);
     }
 
