@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Tests {@link SlicingWindowOperator#hasPendingWindows()}.
+ * Tests {@link SlicingWindowOperator#hasPendingWindows()} and the end of stream watermark Long.MAX_VALUE.
  */
 public class PendingWindowsTest {
 
@@ -86,6 +86,29 @@ public class PendingWindowsTest {
 
         List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(11);
         WindowAssert.assertEquals(resultWindows.get(0), 1, 10, 1);
+        Assert.assertFalse(slicingWindowOperator.hasPendingWindows());
+    }
+
+    @Test
+    public void endOfStreamWatermarkTest() {
+        slicingWindowOperator.addWindowAssigner(new TumblingWindow(WindowMeasure.Time, 10));
+        slicingWindowOperator.addWindowAssigner(new SlidingWindow(WindowMeasure.Time, 10, 5));
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 100));
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(2, 19);
+
+        List<AggregateWindow> resultWindows = withValue(slicingWindowOperator.processWatermark(12));
+        // tumbling and sliding window 0-10
+        Assert.assertEquals(2, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 0, 10, 1);
+        WindowAssert.assertEquals(resultWindows.get(1), 0, 10, 1);
+
+        resultWindows = withValue(slicingWindowOperator.processWatermark(Long.MAX_VALUE));
+        // tumbling and sliding window 10-20, sliding window 15-25 and the session window
+        Assert.assertEquals(4, resultWindows.size());
+        WindowAssert.assertContains(resultWindows, 10, 20, 2);
+        WindowAssert.assertContains(resultWindows, 15, 25, 2);
+        WindowAssert.assertContains(resultWindows, 1, 119, 3);
         Assert.assertFalse(slicingWindowOperator.hasPendingWindows());
     }
 }

@@ -12,6 +12,7 @@ import stream.scotty.core.AggregateWindow;
 import stream.scotty.core.windowFunction.ReduceAggregateFunction;
 import stream.scotty.core.windowType.SessionWindow;
 import stream.scotty.core.windowType.SlidingWindow;
+import stream.scotty.core.windowType.TumblingWindow;
 import stream.scotty.core.windowType.WindowMeasure;
 
 import java.util.ArrayList;
@@ -122,6 +123,24 @@ public class KeyedScottyWindowOperatorTest {
         harness.processWatermark(40);
         Assert.assertEquals(Arrays.asList("a:1-8=4", "a:30-35=5", "b:2-7=2"), keyedResults(harness));
         Assert.assertEquals(0, harness.numEventTimeTimers());
+        harness.close();
+    }
+
+    @Test
+    public void endOfInputTest() throws Exception {
+        KeyedScottyWindowOperator<String, Tuple2<String, Integer>, Tuple2<String, Integer>> windowOperator =
+                new KeyedScottyWindowOperator<>(new Sum());
+        windowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 10));
+
+        KeyedOneInputStreamOperatorTestHarness<String, Tuple2<String, Integer>, AggregateWindow<Tuple2<String, Integer>>> harness =
+                new KeyedOneInputStreamOperatorTestHarness<>(new KeyedProcessOperator<>(windowOperator), new KeyOf(), Types.STRING);
+        harness.open();
+
+        harness.processElement(new Tuple2<>("a", 1), 1);
+        harness.processWatermark(5);
+        harness.processElement(new Tuple2<>("a", 2), 12);
+        harness.processWatermark(Long.MAX_VALUE);
+        Assert.assertEquals(Arrays.asList("a:0-10=1", "a:10-20=2"), keyedResults(harness));
         harness.close();
     }
 }

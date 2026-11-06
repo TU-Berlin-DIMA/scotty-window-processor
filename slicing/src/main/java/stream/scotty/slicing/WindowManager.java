@@ -125,6 +125,12 @@ public class WindowManager {
 
     private void assignContextFreeWindows(long watermarkTs, WindowCollector windowCollector) {
 
+        if (watermarkTs == Long.MAX_VALUE) {
+            // The watermark Long.MAX_VALUE marks the end of the stream (e.g., in Flink).
+            // Only trigger the windows that can contain tuples instead of all windows up to Long.MAX_VALUE.
+            watermarkTs = this.aggregationStore.getCurrentSlice().getTLast() + maxFixedWindowSize + 1;
+        }
+
         for (ContextFreeWindow window : contextFreeWindows) {
             if (window.getWindowMeasure() == Time)
                 window.triggerWindows(windowCollector, lastWatermark, watermarkTs);
