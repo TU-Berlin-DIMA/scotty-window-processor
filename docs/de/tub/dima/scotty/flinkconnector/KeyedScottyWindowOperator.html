@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../de/tub/dima/scotty/flinkconnector/GlobalScottyWindowOperator.html" title="class in de.tub.dima.scotty.flinkconnector"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/flinkconnector/GlobalScottyWindowOperator.html" title="class in stream.scotty.flinkconnector"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.flinkconnector</div>
+<div class="subTitle">stream.scotty.flinkconnector</div>
 <h2 title="Class KeyedScottyWindowOperator" class="title">Class KeyedScottyWindowOperator&lt;Key,InputType,FinalAggregateType&gt;</h2>
 </div>
 <div class="contentContainer">
@@ -102,10 +102,10 @@ var activeTableTab = "activeTableTab";
 <li>org.apache.flink.api.common.functions.AbstractRichFunction</li>
 <li>
 <ul class="inheritance">
-<li>org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,InputType,<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;FinalAggregateType&gt;&gt;</li>
+<li>org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,InputType,<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;FinalAggregateType&gt;&gt;</li>
 <li>
 <ul class="inheritance">
-<li>de.tub.dima.scotty.flinkconnector.KeyedScottyWindowOperator&lt;Key,InputType,FinalAggregateType&gt;</li>
+<li>flinkconnector.stream.scotty.KeyedScottyWindowOperator&lt;Key,InputType,FinalAggregateType&gt;</li>
 </ul>
 </li>
 </ul>
@@ -123,10 +123,10 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">KeyedScottyWindowOperator&lt;Key,InputType,FinalAggregateType&gt;</span>
-extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,InputType,<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;FinalAggregateType&gt;&gt;</pre>
+extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,InputType,<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;FinalAggregateType&gt;&gt;</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../serialized-form.html#de.tub.dima.scotty.flinkconnector.KeyedScottyWindowOperator">Serialized Form</a></dd>
+<dd><a href="../../../../../serialized-form.html#flinkconnector.stream.scotty.KeyedScottyWindowOperator">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -166,19 +166,19 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#lastWatermark">lastWatermark</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private java.util.HashMap&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">Key</a>,<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in de.tub.dima.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;&gt;</code></td>
+<td class="colFirst"><code>private java.util.HashMap&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">Key</a>,<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in stream.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#slicingWindowOperatorMap">slicingWindowOperatorMap</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/state/memory/MemoryStateFactory.html" title="class in de.tub.dima.scotty.state.memory">MemoryStateFactory</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/state/memory/MemoryStateFactory.html" title="class in stream.scotty.state.memory">MemoryStateFactory</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#stateFactory">stateFactory</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;</code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#windowFunction">windowFunction</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&gt;</code></td>
+<td class="colFirst"><code>private java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#windows">windows</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -196,7 +196,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#KeyedScottyWindowOperator-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">KeyedScottyWindowOperator</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&nbsp;windowFunction)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#KeyedScottyWindowOperator-windowFunction.stream.scotty.core.AggregateFunction-">KeyedScottyWindowOperator</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&nbsp;windowFunction)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -215,8 +215,8 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#addWindow-de.tub.dima.scotty.core.windowType.Window-">addWindow</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&nbsp;window)</code>
-<div class="block">Register a new @<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType"><code>Window</code></a> definition to the ActiveWindow Operator.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#addWindow-windowType.stream.scotty.core.Window-">addWindow</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&nbsp;window)</code>
+<div class="block">Register a new @<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType"><code>Window</code></a> definition to the ActiveWindow Operator.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -224,7 +224,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#getKey-org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context-">getKey</a></span>(org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context&nbsp;ctx)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in de.tub.dima.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in stream.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#initWindowOperator--">initWindowOperator</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -235,12 +235,12 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#processElement-InputType-org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context-org.apache.flink.util.Collector-">processElement</a></span>(<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&nbsp;value,
               org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context&nbsp;ctx,
-              org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)</code>&nbsp;</td>
+              org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html#processWatermark-org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context-org.apache.flink.util.Collector-">processWatermark</a></span>(org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context&nbsp;ctx,
-                org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)</code>&nbsp;</td>
+                org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -284,7 +284,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <ul class="blockList">
 <li class="blockList">
 <h4>stateFactory</h4>
-<pre>private&nbsp;<a href="../../../../../de/tub/dima/scotty/state/memory/MemoryStateFactory.html" title="class in de.tub.dima.scotty.state.memory">MemoryStateFactory</a> stateFactory</pre>
+<pre>private&nbsp;<a href="../../../../../de/tub/dima/scotty/state/memory/MemoryStateFactory.html" title="class in stream.scotty.state.memory">MemoryStateFactory</a> stateFactory</pre>
 </li>
 </ul>
 <a name="slicingWindowOperatorMap">
@@ -293,7 +293,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <ul class="blockList">
 <li class="blockList">
 <h4>slicingWindowOperatorMap</h4>
-<pre>private&nbsp;java.util.HashMap&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">Key</a>,<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in de.tub.dima.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;&gt; slicingWindowOperatorMap</pre>
+<pre>private&nbsp;java.util.HashMap&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">Key</a>,<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in stream.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;&gt; slicingWindowOperatorMap</pre>
 </li>
 </ul>
 <a name="lastWatermark">
@@ -311,7 +311,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <ul class="blockList">
 <li class="blockList">
 <h4>windowFunction</h4>
-<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt; windowFunction</pre>
+<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt; windowFunction</pre>
 </li>
 </ul>
 <a name="windows">
@@ -320,7 +320,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <ul class="blockListLast">
 <li class="blockList">
 <h4>windows</h4>
-<pre>private final&nbsp;java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&gt; windows</pre>
+<pre>private final&nbsp;java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&gt; windows</pre>
 </li>
 </ul>
 </li>
@@ -331,13 +331,13 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="KeyedScottyWindowOperator-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">
+<a name="KeyedScottyWindowOperator-windowFunction.stream.scotty.core.AggregateFunction-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>KeyedScottyWindowOperator</h4>
-<pre>public&nbsp;KeyedScottyWindowOperator(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&nbsp;windowFunction)</pre>
+<pre>public&nbsp;KeyedScottyWindowOperator(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,?,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&nbsp;windowFunction)</pre>
 </li>
 </ul>
 </li>
@@ -372,7 +372,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <ul class="blockList">
 <li class="blockList">
 <h4>initWindowOperator</h4>
-<pre>public&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in de.tub.dima.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;&nbsp;initWindowOperator()</pre>
+<pre>public&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="class in stream.scotty.slicing">SlicingWindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&gt;&nbsp;initWindowOperator()</pre>
 </li>
 </ul>
 <a name="getKey-org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context-">
@@ -394,11 +394,11 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <h4>processElement</h4>
 <pre>public&nbsp;void&nbsp;processElement(<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>&nbsp;value,
                            org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context&nbsp;ctx,
-                           org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)
+                           org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)
                     throws java.lang.Exception</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>processElement</code>&nbsp;in class&nbsp;<code>org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">Key</a>,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;</code></dd>
+<dd><code>processElement</code>&nbsp;in class&nbsp;<code>org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">Key</a>,<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">InputType</a>,<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.Exception</code></dd>
 </dl>
@@ -411,18 +411,18 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 <li class="blockList">
 <h4>processWatermark</h4>
 <pre>private&nbsp;void&nbsp;processWatermark(org.apache.flink.streaming.api.functions.KeyedProcessFunction.Context&nbsp;ctx,
-                              org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)</pre>
+                              org.apache.flink.util.Collector&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&lt;<a href="../../../../../de/tub/dima/scotty/flinkconnector/KeyedScottyWindowOperator.html" title="type parameter in KeyedScottyWindowOperator">FinalAggregateType</a>&gt;&gt;&nbsp;out)</pre>
 </li>
 </ul>
-<a name="addWindow-de.tub.dima.scotty.core.windowType.Window-">
+<a name="addWindow-windowType.stream.scotty.core.Window-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>addWindow</h4>
-<pre>public&nbsp;void&nbsp;addWindow(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&nbsp;window)</pre>
-<div class="block">Register a new @<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType"><code>Window</code></a> definition to the ActiveWindow Operator.
- For example <a href="../../../../../de/tub/dima/scotty/core/windowType/SlidingWindow.html" title="class in de.tub.dima.scotty.core.windowType"><code>SlidingWindow</code></a> or <a href="../../../../../de/tub/dima/scotty/core/windowType/TumblingWindow.html" title="class in de.tub.dima.scotty.core.windowType"><code>TumblingWindow</code></a></div>
+<pre>public&nbsp;void&nbsp;addWindow(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&nbsp;window)</pre>
+<div class="block">Register a new @<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType"><code>Window</code></a> definition to the ActiveWindow Operator.
+ For example <a href="../../../../../de/tub/dima/scotty/core/windowType/SlidingWindow.html" title="class in stream.scotty.core.windowType"><code>SlidingWindow</code></a> or <a href="../../../../../de/tub/dima/scotty/core/windowType/TumblingWindow.html" title="class in stream.scotty.core.windowType"><code>TumblingWindow</code></a></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>window</code> - the new window definition</dd>
@@ -456,7 +456,7 @@ extends org.apache.flink.streaming.api.functions.KeyedProcessFunction&lt;Key,Inp
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../de/tub/dima/scotty/flinkconnector/GlobalScottyWindowOperator.html" title="class in de.tub.dima.scotty.flinkconnector"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/flinkconnector/GlobalScottyWindowOperator.html" title="class in stream.scotty.flinkconnector"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">

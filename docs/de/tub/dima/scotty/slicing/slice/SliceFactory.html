@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in de.tub.dima.scotty.slicing.slice"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in stream.scotty.slicing.slice"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.slicing.slice</div>
+<div class="subTitle">stream.scotty.slicing.slice</div>
 <h2 title="Class SliceFactory" class="title">Class SliceFactory&lt;InputType,ValueType&gt;</h2>
 </div>
 <div class="contentContainer">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>de.tub.dima.scotty.slicing.slice.SliceFactory&lt;InputType,ValueType&gt;</li>
+<li>slice.stream.scotty.slicing.SliceFactory&lt;InputType,ValueType&gt;</li>
 </ul>
 </li>
 </ul>
@@ -129,11 +129,11 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private <a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html#stateFactory">stateFactory</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private <a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in de.tub.dima.scotty.slicing">WindowManager</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in stream.scotty.slicing">WindowManager</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html#windowManager">windowManager</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -151,8 +151,8 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html#SliceFactory-de.tub.dima.scotty.slicing.WindowManager-de.tub.dima.scotty.state.StateFactory-">SliceFactory</a></span>(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in de.tub.dima.scotty.slicing">WindowManager</a>&nbsp;windowManager,
-            <a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a>&nbsp;stateFactory)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html#SliceFactory-stream.scotty.slicing.WindowManager-state.stream.scotty.StateFactory-">SliceFactory</a></span>(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in stream.scotty.slicing">WindowManager</a>&nbsp;windowManager,
+            <a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a>&nbsp;stateFactory)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -170,10 +170,10 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">InputType</a>,<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">ValueType</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html#createSlice-long-long-de.tub.dima.scotty.slicing.slice.Slice.Type-">createSlice</a></span>(long&nbsp;startTs,
+<td class="colFirst"><code><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">InputType</a>,<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">ValueType</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html#createSlice-long-long-slice.stream.scotty.slicing.Slice.Type-">createSlice</a></span>(long&nbsp;startTs,
            long&nbsp;maxValue,
-           <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice.Type</a>&nbsp;type)</code>&nbsp;</td>
+           <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in stream.scotty.slicing.slice">Slice.Type</a>&nbsp;type)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -203,7 +203,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>windowManager</h4>
-<pre>private final&nbsp;<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in de.tub.dima.scotty.slicing">WindowManager</a> windowManager</pre>
+<pre>private final&nbsp;<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in stream.scotty.slicing">WindowManager</a> windowManager</pre>
 </li>
 </ul>
 <a name="stateFactory">
@@ -212,7 +212,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>stateFactory</h4>
-<pre>private&nbsp;<a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a> stateFactory</pre>
+<pre>private&nbsp;<a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a> stateFactory</pre>
 </li>
 </ul>
 </li>
@@ -223,14 +223,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SliceFactory-de.tub.dima.scotty.slicing.WindowManager-de.tub.dima.scotty.state.StateFactory-">
+<a name="SliceFactory-stream.scotty.slicing.WindowManager-state.stream.scotty.StateFactory-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SliceFactory</h4>
-<pre>public&nbsp;SliceFactory(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in de.tub.dima.scotty.slicing">WindowManager</a>&nbsp;windowManager,
-                    <a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a>&nbsp;stateFactory)</pre>
+<pre>public&nbsp;SliceFactory(<a href="../../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in stream.scotty.slicing">WindowManager</a>&nbsp;windowManager,
+                    <a href="../../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a>&nbsp;stateFactory)</pre>
 </li>
 </ul>
 </li>
@@ -241,15 +241,15 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="createSlice-long-long-de.tub.dima.scotty.slicing.slice.Slice.Type-">
+<a name="createSlice-long-long-slice.stream.scotty.slicing.Slice.Type-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>createSlice</h4>
-<pre>public&nbsp;<a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">InputType</a>,<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">ValueType</a>&gt;&nbsp;createSlice(long&nbsp;startTs,
+<pre>public&nbsp;<a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.html" title="interface in stream.scotty.slicing.slice">Slice</a>&lt;<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">InputType</a>,<a href="../../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="type parameter in SliceFactory">ValueType</a>&gt;&nbsp;createSlice(long&nbsp;startTs,
                                               long&nbsp;maxValue,
-                                              <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in de.tub.dima.scotty.slicing.slice">Slice.Type</a>&nbsp;type)</pre>
+                                              <a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in stream.scotty.slicing.slice">Slice.Type</a>&nbsp;type)</pre>
 </li>
 </ul>
 </li>
@@ -279,7 +279,7 @@ extends java.lang.Object</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in de.tub.dima.scotty.slicing.slice"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../de/tub/dima/scotty/slicing/slice/Slice.Type.html" title="interface in stream.scotty.slicing.slice"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">

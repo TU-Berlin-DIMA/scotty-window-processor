@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../../de/tub/dima/scotty/core/windowType/ForwardContextAware.html" title="interface in de.tub.dima.scotty.core.windowType"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../de/tub/dima/scotty/core/windowType/ForwardContextAware.html" title="interface in stream.scotty.core.windowType"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../index.html?de/tub/dima/scotty/core/windowType/ContextFreeWindow.html" target="_top">Frames</a></li>
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.core.windowType</div>
+<div class="subTitle">stream.scotty.core.windowType</div>
 <h2 title="Interface ContextFreeWindow" class="title">Interface ContextFreeWindow</h2>
 </div>
 <div class="contentContainer">
@@ -100,16 +100,16 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Superinterfaces:</dt>
-<dd>java.io.Serializable, <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a></dd>
+<dd>java.io.Serializable, <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a></dd>
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../../../de/tub/dima/scotty/core/windowType/SlidingWindow.html" title="class in de.tub.dima.scotty.core.windowType">SlidingWindow</a>, <a href="../../../../../../de/tub/dima/scotty/core/windowType/TumblingWindow.html" title="class in de.tub.dima.scotty.core.windowType">TumblingWindow</a></dd>
+<dd><a href="../../../../../../de/tub/dima/scotty/core/windowType/SlidingWindow.html" title="class in stream.scotty.core.windowType">SlidingWindow</a>, <a href="../../../../../../de/tub/dima/scotty/core/windowType/TumblingWindow.html" title="class in stream.scotty.core.windowType">TumblingWindow</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">ContextFreeWindow</span>
-extends <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a></pre>
+extends <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a></pre>
 </li>
 </ul>
 </div>
@@ -134,16 +134,16 @@ extends <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.htm
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/core/windowType/ContextFreeWindow.html#triggerWindows-de.tub.dima.scotty.core.WindowCollector-long-long-">triggerWindows</a></span>(<a href="../../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in de.tub.dima.scotty.core">WindowCollector</a>&nbsp;aggregateWindows,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/tub/dima/scotty/core/windowType/ContextFreeWindow.html#triggerWindows-stream.scotty.core.WindowCollector-long-long-">triggerWindows</a></span>(<a href="../../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in stream.scotty.core">WindowCollector</a>&nbsp;aggregateWindows,
               long&nbsp;lastWatermark,
               long&nbsp;currentWatermark)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.de.tub.dima.scotty.core.windowType.Window">
+<li class="blockList"><a name="methods.inherited.from.class.windowType.stream.scotty.core.Window">
 <!--   -->
 </a>
-<h3>Methods inherited from interface&nbsp;de.tub.dima.scotty.core.windowType.<a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a></h3>
+<h3>Methods inherited from interface&nbsp;stream.scotty.core.windowType.<a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a></h3>
 <code><a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.html#getWindowMeasure--">getWindowMeasure</a></code></li>
 </ul>
 </li>
@@ -169,13 +169,13 @@ extends <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.htm
 <pre>long&nbsp;assignNextWindowStart(long&nbsp;position)</pre>
 </li>
 </ul>
-<a name="triggerWindows-de.tub.dima.scotty.core.WindowCollector-long-long-">
+<a name="triggerWindows-stream.scotty.core.WindowCollector-long-long-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>triggerWindows</h4>
-<pre>void&nbsp;triggerWindows(<a href="../../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in de.tub.dima.scotty.core">WindowCollector</a>&nbsp;aggregateWindows,
+<pre>void&nbsp;triggerWindows(<a href="../../../../../../de/tub/dima/scotty/core/WindowCollector.html" title="interface in stream.scotty.core">WindowCollector</a>&nbsp;aggregateWindows,
                     long&nbsp;lastWatermark,
                     long&nbsp;currentWatermark)</pre>
 </li>
@@ -208,7 +208,7 @@ extends <a href="../../../../../../de/tub/dima/scotty/core/windowType/Window.htm
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../../de/tub/dima/scotty/core/windowType/ForwardContextAware.html" title="interface in de.tub.dima.scotty.core.windowType"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../de/tub/dima/scotty/core/windowType/ForwardContextAware.html" title="interface in stream.scotty.core.windowType"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../index.html?de/tub/dima/scotty/core/windowType/ContextFreeWindow.html" target="_top">Frames</a></li>

@@ -48,8 +48,8 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in de.tub.dima.scotty.slicing"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in de.tub.dima.scotty.slicing"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in stream.scotty.slicing"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in stream.scotty.slicing"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?de/tub/dima/scotty/slicing/SlicingWindowOperator.html" target="_top">Frames</a></li>
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">de.tub.dima.scotty.slicing</div>
+<div class="subTitle">stream.scotty.slicing</div>
 <h2 title="Class SlicingWindowOperator" class="title">Class SlicingWindowOperator&lt;InputType&gt;</h2>
 </div>
 <div class="contentContainer">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>de.tub.dima.scotty.slicing.SlicingWindowOperator&lt;InputType&gt;</li>
+<li>stream.scotty.slicing.SlicingWindowOperator&lt;InputType&gt;</li>
 </ul>
 </li>
 </ul>
@@ -112,19 +112,19 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in de.tub.dima.scotty.core">WindowOperator</a>&lt;InputType&gt;, java.io.Serializable</dd>
+<dd><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in stream.scotty.core">WindowOperator</a>&lt;InputType&gt;, java.io.Serializable</dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">SlicingWindowOperator&lt;InputType&gt;</span>
 extends java.lang.Object
-implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in de.tub.dima.scotty.core">WindowOperator</a>&lt;InputType&gt;</pre>
+implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in stream.scotty.core">WindowOperator</a>&lt;InputType&gt;</pre>
 <div class="block">Implementation of the slicing window operator based on the Scotty technique:
  Scotty: Efficient AbstractWindow Aggregation for out-of-order Stream Processing:
  Jonas Traub, Philipp M. Grulich, Alejandro Rodrıguez Cuéllar, Sebastian Breß, Asterios Katsifodimos, Tilmann Rabl, Volker Markl *</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../serialized-form.html#de.tub.dima.scotty.slicing.SlicingWindowOperator">Serialized Form</a></dd>
+<dd><a href="../../../../../serialized-form.html#stream.scotty.slicing.SlicingWindowOperator">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -145,23 +145,23 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="class in de.tub.dima.scotty.slicing.slice">SliceFactory</a>&lt;java.lang.Integer,java.lang.Integer&gt;</code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="class in stream.scotty.slicing.slice">SliceFactory</a>&lt;java.lang.Integer,java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#sliceFactory">sliceFactory</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in de.tub.dima.scotty.slicing">SliceManager</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in stream.scotty.slicing">SliceManager</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#sliceManager">sliceManager</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in de.tub.dima.scotty.slicing">StreamSlicer</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in stream.scotty.slicing">StreamSlicer</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#slicer">slicer</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#stateFactory">stateFactory</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in de.tub.dima.scotty.slicing">WindowManager</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in stream.scotty.slicing">WindowManager</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#windowManager">windowManager</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -179,7 +179,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#SlicingWindowOperator-de.tub.dima.scotty.state.StateFactory-">SlicingWindowOperator</a></span>(<a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a>&nbsp;stateFactory)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#SlicingWindowOperator-state.stream.scotty.StateFactory-">SlicingWindowOperator</a></span>(<a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a>&nbsp;stateFactory)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -198,19 +198,19 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>&lt;OutputType&gt;<br>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#addAggregation-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">addAggregation</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#addAggregation-windowFunction.stream.scotty.core.AggregateFunction-">addAggregation</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</code>
 <div class="block">Add a aggregation</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#addWindowAssigner-de.tub.dima.scotty.core.windowType.Window-">addWindowAssigner</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&nbsp;window)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#addWindowAssigner-windowType.stream.scotty.core.Window-">addWindowAssigner</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&nbsp;window)</code>
 <div class="block">Add a window assigner to the window operator.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;Agg,OutputType&gt;<br>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#addWindowFunction-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">addWindowFunction</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,Agg,OutputType&gt;&nbsp;windowFunction)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#addWindowFunction-windowFunction.stream.scotty.core.AggregateFunction-">addWindowFunction</a></span>(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,Agg,OutputType&gt;&nbsp;windowFunction)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -220,7 +220,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html#processWatermark-long-">processWatermark</a></span>(long&nbsp;watermarkTs)</code>
 <div class="block">Process a watermark at a specific timestamp</div>
 </td>
@@ -253,7 +253,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <ul class="blockList">
 <li class="blockList">
 <h4>stateFactory</h4>
-<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a> stateFactory</pre>
+<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a> stateFactory</pre>
 </li>
 </ul>
 <a name="windowManager">
@@ -262,7 +262,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <ul class="blockList">
 <li class="blockList">
 <h4>windowManager</h4>
-<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in de.tub.dima.scotty.slicing">WindowManager</a> windowManager</pre>
+<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/WindowManager.html" title="class in stream.scotty.slicing">WindowManager</a> windowManager</pre>
 </li>
 </ul>
 <a name="sliceFactory">
@@ -271,7 +271,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <ul class="blockList">
 <li class="blockList">
 <h4>sliceFactory</h4>
-<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="class in de.tub.dima.scotty.slicing.slice">SliceFactory</a>&lt;java.lang.Integer,java.lang.Integer&gt; sliceFactory</pre>
+<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/slice/SliceFactory.html" title="class in stream.scotty.slicing.slice">SliceFactory</a>&lt;java.lang.Integer,java.lang.Integer&gt; sliceFactory</pre>
 </li>
 </ul>
 <a name="sliceManager">
@@ -280,7 +280,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <ul class="blockList">
 <li class="blockList">
 <h4>sliceManager</h4>
-<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in de.tub.dima.scotty.slicing">SliceManager</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt; sliceManager</pre>
+<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in stream.scotty.slicing">SliceManager</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt; sliceManager</pre>
 </li>
 </ul>
 <a name="slicer">
@@ -289,7 +289,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <ul class="blockListLast">
 <li class="blockList">
 <h4>slicer</h4>
-<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in de.tub.dima.scotty.slicing">StreamSlicer</a> slicer</pre>
+<pre>private final&nbsp;<a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in stream.scotty.slicing">StreamSlicer</a> slicer</pre>
 </li>
 </ul>
 </li>
@@ -300,13 +300,13 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SlicingWindowOperator-de.tub.dima.scotty.state.StateFactory-">
+<a name="SlicingWindowOperator-state.stream.scotty.StateFactory-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SlicingWindowOperator</h4>
-<pre>public&nbsp;SlicingWindowOperator(<a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in de.tub.dima.scotty.state">StateFactory</a>&nbsp;stateFactory)</pre>
+<pre>public&nbsp;SlicingWindowOperator(<a href="../../../../../de/tub/dima/scotty/state/StateFactory.html" title="interface in stream.scotty.state">StateFactory</a>&nbsp;stateFactory)</pre>
 </li>
 </ul>
 </li>
@@ -331,7 +331,7 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <div class="block">Process a new element of the stream</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#processElement-InputType-long-">processElement</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in de.tub.dima.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
+<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#processElement-InputType-long-">processElement</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in stream.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -341,52 +341,52 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 <ul class="blockList">
 <li class="blockList">
 <h4>processWatermark</h4>
-<pre>public&nbsp;java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in de.tub.dima.scotty.core">AggregateWindow</a>&gt;&nbsp;processWatermark(long&nbsp;watermarkTs)</pre>
+<pre>public&nbsp;java.util.List&lt;<a href="../../../../../de/tub/dima/scotty/core/AggregateWindow.html" title="interface in stream.scotty.core">AggregateWindow</a>&gt;&nbsp;processWatermark(long&nbsp;watermarkTs)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#processWatermark-long-">WindowOperator</a></code></span></div>
 <div class="block">Process a watermark at a specific timestamp</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#processWatermark-long-">processWatermark</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in de.tub.dima.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
+<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#processWatermark-long-">processWatermark</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in stream.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
-<a name="addWindowAssigner-de.tub.dima.scotty.core.windowType.Window-">
+<a name="addWindowAssigner-windowType.stream.scotty.core.Window-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addWindowAssigner</h4>
-<pre>public&nbsp;void&nbsp;addWindowAssigner(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in de.tub.dima.scotty.core.windowType">Window</a>&nbsp;window)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addWindowAssigner-de.tub.dima.scotty.core.windowType.Window-">WindowOperator</a></code></span></div>
+<pre>public&nbsp;void&nbsp;addWindowAssigner(<a href="../../../../../de/tub/dima/scotty/core/windowType/Window.html" title="interface in stream.scotty.core.windowType">Window</a>&nbsp;window)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addWindowAssigner-windowType.stream.scotty.core.Window-">WindowOperator</a></code></span></div>
 <div class="block">Add a window assigner to the window operator.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addWindowAssigner-de.tub.dima.scotty.core.windowType.Window-">addWindowAssigner</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in de.tub.dima.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
+<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addWindowAssigner-windowType.stream.scotty.core.Window-">addWindowAssigner</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in stream.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
-<a name="addAggregation-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">
+<a name="addAggregation-windowFunction.stream.scotty.core.AggregateFunction-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addAggregation</h4>
-<pre>public&nbsp;&lt;OutputType&gt;&nbsp;void&nbsp;addAggregation(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addAggregation-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">WindowOperator</a></code></span></div>
+<pre>public&nbsp;&lt;OutputType&gt;&nbsp;void&nbsp;addAggregation(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,?,OutputType&gt;&nbsp;windowFunction)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addAggregation-windowFunction.stream.scotty.core.AggregateFunction-">WindowOperator</a></code></span></div>
 <div class="block">Add a aggregation</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addAggregation-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">addAggregation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in de.tub.dima.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
+<dd><code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html#addAggregation-windowFunction.stream.scotty.core.AggregateFunction-">addAggregation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" title="interface in stream.scotty.core">WindowOperator</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
-<a name="addWindowFunction-de.tub.dima.scotty.core.windowFunction.AggregateFunction-">
+<a name="addWindowFunction-windowFunction.stream.scotty.core.AggregateFunction-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>addWindowFunction</h4>
-<pre>public&nbsp;&lt;Agg,OutputType&gt;&nbsp;void&nbsp;addWindowFunction(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in de.tub.dima.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,Agg,OutputType&gt;&nbsp;windowFunction)</pre>
+<pre>public&nbsp;&lt;Agg,OutputType&gt;&nbsp;void&nbsp;addWindowFunction(<a href="../../../../../de/tub/dima/scotty/core/windowFunction/AggregateFunction.html" title="interface in stream.scotty.core.windowFunction">AggregateFunction</a>&lt;<a href="../../../../../de/tub/dima/scotty/slicing/SlicingWindowOperator.html" title="type parameter in SlicingWindowOperator">InputType</a>,Agg,OutputType&gt;&nbsp;windowFunction)</pre>
 </li>
 </ul>
 </li>
@@ -416,8 +416,8 @@ implements <a href="../../../../../de/tub/dima/scotty/core/WindowOperator.html" 
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in de.tub.dima.scotty.slicing"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in de.tub.dima.scotty.slicing"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/slicing/SliceManager.html" title="class in stream.scotty.slicing"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../de/tub/dima/scotty/slicing/StreamSlicer.html" title="class in stream.scotty.slicing"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?de/tub/dima/scotty/slicing/SlicingWindowOperator.html" target="_top">Frames</a></li>
