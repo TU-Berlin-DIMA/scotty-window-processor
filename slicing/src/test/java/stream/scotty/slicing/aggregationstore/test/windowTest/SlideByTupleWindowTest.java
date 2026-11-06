@@ -3,8 +3,11 @@ package stream.scotty.slicing.aggregationstore.test.windowTest;
 import stream.scotty.core.AggregateWindow;
 import stream.scotty.core.windowFunction.ReduceAggregateFunction;
 import stream.scotty.core.windowType.SlideByTupleWindow;
+import stream.scotty.core.windowType.TumblingWindow;
+import stream.scotty.core.windowType.WindowMeasure;
 import stream.scotty.slicing.SlicingWindowOperator;
 import stream.scotty.state.memory.MemoryStateFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -463,5 +466,160 @@ public class SlideByTupleWindowTest {
         WindowAssert.assertEquals(resultWindows.get(14),22, 32, 3);
         WindowAssert.assertEquals(resultWindows.get(15),24, 34, 2);
         WindowAssert.assertEquals(resultWindows.get(16),25, 35, 1);
+    }
+
+    @Test
+    public void tupleCountContinuesAfterAllWindowsTriggered() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 3));
+
+        slicingWindowOperator.processElement(1, 1); // tuple 0 starts a window
+        slicingWindowOperator.processElement(1, 2);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(20);
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 2);
+
+        slicingWindowOperator.processElement(1, 21); // tuple 2 does not start a window
+        slicingWindowOperator.processElement(1, 22); // tuple 3 starts a window
+        slicingWindowOperator.processElement(1, 23);
+        resultWindows = slicingWindowOperator.processWatermark(40);
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 22, 32, 2);
+    }
+
+    @Test
+    public void watermarkWithoutActiveWindows() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 3);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(20);
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 2);
+        resultWindows = slicingWindowOperator.processWatermark(30);
+        Assert.assertTrue(resultWindows.isEmpty());
+    }
+
+    @Test
+    public void outOfOrderShiftCreatesNextWindow() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 6);
+        slicingWindowOperator.processElement(1, 8);
+        //out-of-order tuple: 8 becomes tuple 4 and has to start a window
+        slicingWindowOperator.processElement(1, 2);
+        slicingWindowOperator.processElement(1, 20);
+        slicingWindowOperator.processElement(1, 21);
+        slicingWindowOperator.processElement(1, 22);
+        slicingWindowOperator.processElement(1, 23);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
+
+        // sorted: 1,2,3,6,8,20,21,22,23 -> windows start at tuples 0,2,4,6,8
+        Assert.assertEquals(5, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 5);
+        WindowAssert.assertEquals(resultWindows.get(1), 3, 13, 3);
+        WindowAssert.assertEquals(resultWindows.get(2), 8, 18, 1);
+        WindowAssert.assertEquals(resultWindows.get(3), 21, 31, 3);
+        WindowAssert.assertEquals(resultWindows.get(4), 23, 33, 1);
+    }
+
+    @Test
+    public void outOfOrderBeforeFirstWindow() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+
+        slicingWindowOperator.processElement(1, 5);
+        slicingWindowOperator.processElement(1, 7);
+        slicingWindowOperator.processElement(1, 9);
+        slicingWindowOperator.processElement(1, 3);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
+
+        Assert.assertEquals(2, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 3, 13, 4);
+        WindowAssert.assertEquals(resultWindows.get(1), 7, 17, 2);
+    }
+
+    @Test
+    public void outOfOrderDuplicateTimestamp() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 6);
+        slicingWindowOperator.processElement(1, 8);
+        slicingWindowOperator.processElement(1, 6);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
+
+        // sorted: 1,3,6,6,8
+        Assert.assertEquals(3, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 5);
+        WindowAssert.assertEquals(resultWindows.get(1), 6, 16, 3);
+        WindowAssert.assertEquals(resultWindows.get(2), 8, 18, 1);
+    }
+
+    @Test
+    public void outOfOrderAfterPartialTrigger() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 6);
+        slicingWindowOperator.processElement(1, 8);
+        slicingWindowOperator.processElement(1, 13);
+        slicingWindowOperator.processElement(1, 17);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(12);
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 4);
+
+        slicingWindowOperator.processElement(1, 24);
+        slicingWindowOperator.processElement(1, 14);
+        slicingWindowOperator.processElement(1, 25);
+        resultWindows = slicingWindowOperator.processWatermark(40);
+
+        // sorted: 1,3,6,8,13,14,17,24,25 -> windows start at tuples 2,4,6,8
+        Assert.assertEquals(4, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 6, 16, 4);
+        WindowAssert.assertEquals(resultWindows.get(1), 13, 23, 3);
+        WindowAssert.assertEquals(resultWindows.get(2), 17, 27, 3);
+        WindowAssert.assertEquals(resultWindows.get(3), 25, 35, 1);
+    }
+
+    @Test
+    public void outOfOrderDoesNotCorruptTumblingWindow() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+        slicingWindowOperator.addWindowAssigner(new TumblingWindow(WindowMeasure.Time, 5));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 6);
+        slicingWindowOperator.processElement(1, 8);
+        slicingWindowOperator.processElement(1, 13);
+        //out-of-order tuple shifts the start of window [6,16) to 4
+        slicingWindowOperator.processElement(1, 4);
+        slicingWindowOperator.processElement(1, 17);
+        slicingWindowOperator.processElement(1, 24);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(40);
+
+        // tumbling windows
+        WindowAssert.assertContains(resultWindows, 0, 5, 3);
+        WindowAssert.assertContains(resultWindows, 5, 10, 2);
+        WindowAssert.assertContains(resultWindows, 10, 15, 1);
+        WindowAssert.assertContains(resultWindows, 15, 20, 1);
+        WindowAssert.assertContains(resultWindows, 20, 25, 1);
+        // sorted: 1,3,4,6,8,13,17,24 -> slide-by-tuple windows start at tuples 0,2,4,6
+        WindowAssert.assertContains(resultWindows, 1, 11, 5);
+        WindowAssert.assertContains(resultWindows, 4, 14, 4);
+        WindowAssert.assertContains(resultWindows, 8, 18, 3);
+        WindowAssert.assertContains(resultWindows, 17, 27, 2);
     }
 }
