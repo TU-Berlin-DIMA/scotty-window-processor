@@ -38,8 +38,8 @@ User-defined window functions have to implement one of the interfaces of the win
 
 ### Window types
 
-Scotty provides different implementations for window types such as the tumbling window, sliding window, session window 
-and fixed-band window.
+Scotty provides different implementations for window types such as the tumbling window, sliding window, session window,
+fixed-band window, punctuation window, slide-by-tuple window and threshold frame.
 Scotty enables to add multiple window types to the window operator, so that multiple different concurrent
 windows are applies onto the stream.
 When assigning these window types, one can choose different window configurations.
@@ -50,25 +50,36 @@ with user-defined window types as needed.
 
 ### Flink Demo
 
-The Flink subfolder presents three different examples that utilize Scotty as a window operator within the Flink API.
+The Flink subfolder presents four different examples that utilize Scotty as a window operator within the Flink API.
 The demo files provide Flink pipelines that are almost identical, but with minor modifications.
 This exemplifies how to change the window types and window functions.
-The FlinkSumWindowDemo uses a sum aggregation as the window function. This example shows how to
-assign three different window types to the window operator. Here, the tumbling window, sliding window and session window are used.
-To change this up, the FlinkQuantileDemo computes the median of each window with the quantile window function.
-A third demo adjusts the tumbling window to be of count-based measure.
+- The FlinkSumDemo uses a sum aggregation as the window function. This example shows how to
+assign multiple window types to the window operator, here a tumbling window and a sliding window.
+- The FlinkQuantileDemo computes the median of each window with the quantile window function.
+- The FlinkSumCountWindowDemo adjusts the tumbling window to be of count-based measure.
+- The FlinkPunctuationDemo uses punctuation windows: a new window starts at every tuple that matches the punctuation.
 
 Similarly, one can adjust the other demo files to try out different window functions, window types or window configurations.
 
-### Demo Requirements for Samza, Kafka, Spark
+### Running the Demos
 
-* Apache Zookeeper host:localhost , port:2181
-* Apache Kafka Server host:localhost , port:9092
+The Flink, Storm and Beam demos run locally without other systems.
+Start their main class, e.g. `FlinkSumDemo`, `ScottyDemoTopology` (Storm) or `BeamSumDemo`.
 
-#### Demo Usage:
-* Start Zookeeper
-* Start Kafka Server
-* Start SparkSumDemo.java
+The Kafka Streams, Spark and Samza demos read from the Kafka topic `testInput` on a Kafka broker at `localhost:9092`.
+Each demo writes its own demo data to this topic with a `DemoKafkaProducer`.
+The Samza demo also configures Apache ZooKeeper at `localhost:2181`.
+
+1. Start a Kafka broker, e.g. with Docker:
+   `docker run -d --name kafka -p 9092:9092 apache/kafka:3.9.2`
+2. Create the topic:
+   `docker exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic testInput`
+3. Start the main class of the demo: `KafkaStreamsSumDemo`, `SparkSumDemo` or `SamzaSumDemo`.
+   Start the Samza demo from the root folder of the repository, as it reads `samza-connector/src/main/Properties/config.properties`.
+
+The demos write different data formats to the topic (e.g. strings in the Spark demo, integers in the Kafka Streams demo).
+Delete the topic and create it again before you start another demo:
+`docker exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic testInput`
 
 
 Note:

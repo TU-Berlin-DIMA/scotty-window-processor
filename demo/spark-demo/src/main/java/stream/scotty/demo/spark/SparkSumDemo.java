@@ -51,7 +51,7 @@ public class SparkSumDemo {
         Dataset<Tuple3<String, String, Timestamp>> srcDemoFrame = spark
                 .readStream()
                 .format("kafka")
-                .option("kafka.bootstrap.servers", "localhost:2181,localhost:9092")
+                .option("kafka.bootstrap.servers", "localhost:9092")
                 .option("subscribe", "testInput")
                 .option("startingOffsets", "latest")
                 .load()

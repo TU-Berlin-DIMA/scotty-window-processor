@@ -1,10 +1,8 @@
 # Kafka Streams Connector
 
-### Demo Requirements:
-* Apache Zookeeper host:localhost , port:2181
-* Apache Kafka Server host:localhost , port:9092
+Uses Scotty as a window operator in [Kafka Streams](https://kafka.apache.org/documentation/streams/).
+`KeyedScottyWindowOperatorSupplier` adds Scotty to a topology of the Processor API,
+`KeyedScottyWindowTransformerSupplier` to a stream of the DSL.
 
-### Demo Usage:
-* Start Zookeeper
-* Start Kafka Server
-* Start KafkaStreamsSumDemo.java
+The [Kafka Streams demo](../demo/kafka-demo) shows how to use it.
+The [demo README](../demo/README.md#running-the-demos) describes how to run it.
