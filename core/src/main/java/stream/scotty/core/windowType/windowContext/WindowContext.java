@@ -24,6 +24,13 @@ public abstract class WindowContext<Tuple> implements Serializable {
         return newWindow;
     }
 
+    /**
+     * @return true if a future watermark can trigger an active window of this context without new tuples arriving.
+     */
+    public boolean hasPendingWindows() {
+        return !activeWindows.isEmpty();
+    }
+
     public ArrayList<ActiveWindow> getActiveWindows() {
         return activeWindows;
     }

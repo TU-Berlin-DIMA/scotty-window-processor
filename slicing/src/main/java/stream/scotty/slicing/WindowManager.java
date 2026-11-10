@@ -81,6 +81,25 @@ public class WindowManager {
         return windows.aggregationStores;
     }
 
+    /**
+     * @return true if a watermark after the last processed watermark can still trigger windows that contain tuples.
+     * If false, windows are only triggered again after new tuples arrived.
+     */
+    public boolean hasPendingWindows() {
+        if (this.aggregationStore.isEmpty())
+            return false;
+        // tLast of the newest slice is at least the newest tuple timestamp, and fixed windows that contain tuples
+        // end at most the max fixed window size after it
+        long maxTs = this.aggregationStore.getCurrentSlice().getTLast();
+        if (hasFixedWindows && this.lastWatermark < maxTs + maxFixedWindowSize)
+            return true;
+        for (WindowContext<?> context : contextAwareWindows) {
+            if (context.hasPendingWindows())
+                return true;
+        }
+        return false;
+    }
+
     public void clearAfterWatermark(long currentWatermark) {
 
         long firstActiveWindowStart = currentWatermark;
@@ -105,6 +124,12 @@ public class WindowManager {
     }
 
     private void assignContextFreeWindows(long watermarkTs, WindowCollector windowCollector) {
+
+        if (watermarkTs == Long.MAX_VALUE) {
+            // The watermark Long.MAX_VALUE marks the end of the stream (e.g., in Flink).
+            // Only trigger the windows that can contain tuples instead of all windows up to Long.MAX_VALUE.
+            watermarkTs = this.aggregationStore.getCurrentSlice().getTLast() + maxFixedWindowSize + 1;
+        }
 
         for (ContextFreeWindow window : contextFreeWindows) {
             if (window.getWindowMeasure() == Time)
@@ -168,6 +193,10 @@ public class WindowManager {
 
     public long getMaxLateness() {
         return maxLateness;
+    }
+
+    public long getMaxFixedWindowSize() {
+        return maxFixedWindowSize;
     }
 
     public List<ContextFreeWindow> getContextFreeWindows() {

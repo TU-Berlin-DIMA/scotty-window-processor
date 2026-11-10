@@ -108,7 +108,11 @@ public class StreamSlicer {
     private long calculateNextFixedEdge(long te) {
         // next_edge will be the last edge
         long current_min_edge = min_next_edge_ts == Long.MIN_VALUE ? 0 : min_next_edge_ts;
-        long t_c = Math.max(te - this.windowManager.getMaxLateness(), current_min_edge);
+        // Edges in [te - maxLateness, te] are needed for out-of-order tuples within the allowed lateness and
+        // edges in [te - maxFixedWindowSize, te] are needed by all windows that contain te. Only edges before
+        // both bounds can safely be skipped (e.g. after a gap without tuples).
+        long earliestRequiredEdge = te - Math.max(this.windowManager.getMaxLateness(), this.windowManager.getMaxFixedWindowSize());
+        long t_c = Math.max(earliestRequiredEdge, current_min_edge);
         long edge = Long.MAX_VALUE;
         for (ContextFreeWindow tw : this.windowManager.getContextFreeWindows()) {
             if (tw.getWindowMeasure() == WindowMeasure.Time) {
