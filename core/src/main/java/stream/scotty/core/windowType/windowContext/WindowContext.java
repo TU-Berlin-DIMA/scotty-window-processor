@@ -69,6 +69,16 @@ public abstract class WindowContext<Tuple> implements Serializable {
         window.setEnd(position);
     }
 
+    public void shiftStartDontModifySlice(ActiveWindow window, long position) {
+        // does not modify the start edge of the slice, only adjusts the window start
+        window.setStart(position);
+    }
+
+    public void splitSlice(long position) {
+        // adds a AddModification to split the slice if necessary, regardless of changes to the window
+        modifiedWindowEdges.add(new AddModification(position));
+    }
+
     /**
      * Shifts the end of a window and registers the new end as an additional slice edge.
      * Unlike a ShiftModification, the slice edge at the old end is kept, as it may still
