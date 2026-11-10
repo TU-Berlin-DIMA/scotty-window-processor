@@ -37,6 +37,26 @@ public class PendingWindowsTest {
     }
 
     @Test
+    public void thresholdFrameTest() {
+        slicingWindowOperator.addWindowAssigner(new ThresholdFrame(5));
+
+        slicingWindowOperator.processElement(7, 1);
+        slicingWindowOperator.processElement(8, 2);
+        // the frame is still open, only a tuple below the threshold can close it
+        Assert.assertFalse(slicingWindowOperator.hasPendingWindows());
+        Assert.assertTrue(withValue(slicingWindowOperator.processWatermark(10)).isEmpty());
+        Assert.assertFalse(slicingWindowOperator.hasPendingWindows());
+
+        slicingWindowOperator.processElement(1, 11);
+        Assert.assertTrue(slicingWindowOperator.hasPendingWindows());
+
+        List<AggregateWindow> resultWindows = withValue(slicingWindowOperator.processWatermark(20));
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 15);
+        Assert.assertFalse(slicingWindowOperator.hasPendingWindows());
+    }
+
+    @Test
     public void slidingWindowTest() {
         slicingWindowOperator.addWindowAssigner(new SlidingWindow(WindowMeasure.Time, 10, 5));
         Assert.assertFalse(slicingWindowOperator.hasPendingWindows());
