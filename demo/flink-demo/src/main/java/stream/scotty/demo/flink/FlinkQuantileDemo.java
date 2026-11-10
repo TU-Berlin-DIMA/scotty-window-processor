@@ -2,7 +2,7 @@ package stream.scotty.demo.flink;
 
 import stream.scotty.core.windowType.*;
 import stream.scotty.flinkconnector.*;
-import stream.scotty.demo.flink.windowFunctions.*;
+import stream.scotty.core.windowFunction.builtin.Quantile;
 import org.apache.flink.api.java.tuple.*;
 import org.apache.flink.streaming.api.*;
 import org.apache.flink.streaming.api.datastream.*;
@@ -18,15 +18,15 @@ public class FlinkQuantileDemo implements Serializable {
 
         DataStream<Tuple2<Integer, Integer>> stream = sev.addSource(new DemoSource());
 
-        KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> windowOperator =
-                new KeyedScottyWindowOperator<>(new QuantileWindowFunction(0.5));
+        KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Integer> windowOperator =
+                new KeyedScottyWindowOperator<>(new Quantile<>(0.5, (Tuple2<Integer, Integer> tuple) -> tuple.f1));
 
         windowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
 
         stream
                 .keyBy(0)
                 .process(windowOperator)
-                .map(x -> x.getAggValues().get(0).f1)
+                .map(x -> x.getAggValues().get(0))
                 .print();
 
         sev.execute("demo");

@@ -10,6 +10,7 @@ import stream.scotty.core.windowFunction.AggregateFunction;
 
 import java.io.*;
 import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -43,6 +44,7 @@ public class SerializationTest {
         Assert.assertEquals(Integer.valueOf(1), aggregate(roundTrip(Min.<Integer>create()), 1, 2, 3));
         Assert.assertEquals(Integer.valueOf(3), aggregate(roundTrip(Max.<Integer>create()), 1, 2, 3));
         Assert.assertEquals(Double.valueOf(2.0), aggregate(roundTrip(Mean.<Integer>create()), 1, 2, 3));
+        Assert.assertEquals(Integer.valueOf(3), aggregate(roundTrip(Quantile.<Integer>create(0.75)), 1, 2, 3, 4));
     }
 
     @Test
@@ -52,6 +54,8 @@ public class SerializationTest {
         Assert.assertEquals(Integer.valueOf(42), roundTrip(new Min<Map.Entry<String, Integer>, Integer>(Map.Entry::getValue)).lift(tuple));
         Assert.assertEquals(Integer.valueOf(42), roundTrip(new Max<Map.Entry<String, Integer>, Integer>(Map.Entry::getValue)).lift(tuple));
         Assert.assertEquals(new Mean.SumCount(42, 1), roundTrip(new Mean<Map.Entry<String, Integer>>(Map.Entry::getValue)).lift(tuple));
+        Quantile<Map.Entry<String, Integer>, Integer> quantile = roundTrip(new Quantile<Map.Entry<String, Integer>, Integer>(0.5, t -> t.getValue()));
+        Assert.assertEquals(Integer.valueOf(42), quantile.lower(quantile.lift(tuple)));
     }
 
     @SuppressWarnings("unchecked")
@@ -69,11 +73,33 @@ public class SerializationTest {
         Mean<Map.Entry<String, Integer>> mean = kryoRoundTrip(new Mean<Map.Entry<String, Integer>>(t -> t.getValue()));
         Assert.assertEquals(Integer.valueOf(5), sum.lower(5));
         Assert.assertEquals(Double.valueOf(2.5), mean.lower(new Mean.SumCount(5, 2)));
+
+        Quantile<Map.Entry<String, Integer>, Integer> quantile = kryoRoundTrip(new Quantile<Map.Entry<String, Integer>, Integer>(0.9, Map.Entry::getValue));
+        Quantile.ValueCounts<Integer> counts = new Quantile.ValueCounts<>();
+        counts.add(1, 1);
+        counts.add(9, 1);
+        Assert.assertEquals(Integer.valueOf(9), quantile.lower(counts));
     }
 
     @Test
     public void meanPartialAggregate() throws Exception {
         Mean.SumCount partial = new Mean.SumCount(7.5, 3);
         Assert.assertEquals(partial, roundTrip(partial));
+    }
+
+    @Test
+    public void quantilePartialAggregate() throws Exception {
+        Quantile<Integer, Integer> median = Quantile.create(0.5);
+        Quantile.ValueCounts<Integer> partial = median.liftAndCombine(median.liftAndCombine(median.lift(3), 1), 3);
+        for (Quantile.ValueCounts<Integer> copy : Arrays.asList(roundTrip(partial), kryoRoundTrip(partial))) {
+            Assert.assertEquals(partial, copy);
+            Assert.assertEquals(3, copy.size());
+            Assert.assertEquals(Integer.valueOf(3), median.lower(copy));
+            // the copy is still sorted and can be updated
+            copy = median.liftAndCombine(copy, 0);
+            copy = median.liftAndCombine(copy, 0);
+            Assert.assertEquals(Integer.valueOf(1), median.lower(copy));
+            Assert.assertEquals(5, copy.size());
+        }
     }
 }

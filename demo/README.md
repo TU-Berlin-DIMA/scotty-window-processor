@@ -30,12 +30,11 @@ However, the records could have multiple attributes of different data types.
 
 ### Window Functions
 
-The core module provides built-in window aggregation functions for all connectors: sum, count, min, max and mean
+The core module provides built-in window aggregation functions for all connectors: sum, count, min, max, mean and quantile
 (package `stream.scotty.core.windowFunction.builtin`). They either aggregate the tuples themselves or a value
 that a `ValueExtractor` takes from each tuple, e.g. `new Sum<>(tuple -> tuple.f1)` for a Flink `Tuple2`.
 The demos use these built-in functions.
 User-defined window functions have to implement one of the interfaces of the windowFunction folder in the core module.
-The quantile window functions in the demo folders are examples for this.
 
 ### Window types
 
@@ -56,7 +55,7 @@ The demo files provide Flink pipelines that are almost identical, but with minor
 This exemplifies how to change the window types and window functions.
 The FlinkSumWindowDemo uses a sum aggregation as the window function. This example shows how to
 assign three different window types to the window operator. Here, the tumbling window, sliding window and session window are used.
-To change this up, the FlinkQuantileDemo applies the quantile window function onto the stream.
+To change this up, the FlinkQuantileDemo computes the median of each window with the quantile window function.
 A third demo adjusts the tumbling window to be of count-based measure.
 
 Similarly, one can adjust the other demo files to try out different window functions, window types or window configurations.
