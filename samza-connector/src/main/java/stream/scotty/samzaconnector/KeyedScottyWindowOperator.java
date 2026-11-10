@@ -11,6 +11,8 @@ import org.apache.samza.system.SystemStream;
 import org.apache.samza.task.MessageCollector;
 import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.TaskCoordinator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class KeyedScottyWindowOperator<Key, Value> implements StreamTask {
 
+    private static final Logger LOG = LoggerFactory.getLogger(KeyedScottyWindowOperator.class);
     private MemoryStateFactory stateFactory;
     private HashMap<Key, SlicingWindowOperator<Value>> slicingWindowOperatorMap;
     private long lastWatermark;
@@ -63,7 +66,7 @@ public class KeyedScottyWindowOperator<Key, Value> implements StreamTask {
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(timeStamp);
                 for (AggregateWindow<Value> aggregateWindow : aggregates) {
                     if (aggregateWindow.hasValue()) {
-                        System.out.println(aggregateWindow);
+                        LOG.debug("AggregateWindow: {}", aggregateWindow);
                         for (Value aggValue : aggregateWindow.getAggValues()) {
                             collector.send(new OutgoingMessageEnvelope(outputStream, aggValue));
                         }
