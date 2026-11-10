@@ -48,8 +48,8 @@ stream.keyBy(0)
       .process(windowOperator)
 
 // For non-keyed streams, use the GlobalScottyWindowOperator
-GlobalScottyWindowOperator<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> globalWindowOperator =
-new GlobalScottyWindowOperator<>(new SumWindowFunction());
+GlobalScottyWindowOperator<Tuple2<Integer, Integer>, Integer> globalWindowOperator =
+new GlobalScottyWindowOperator<>(new Sum<>(tuple -> tuple.f1));
 globalWindowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
 globalWindowOperator.applyTo(stream);
 ```
