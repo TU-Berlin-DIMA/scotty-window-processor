@@ -11,6 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.List;
 
 public class SlideByTupleWindowTest {
@@ -621,5 +623,75 @@ public class SlideByTupleWindowTest {
         WindowAssert.assertContains(resultWindows, 4, 14, 4);
         WindowAssert.assertContains(resultWindows, 8, 18, 3);
         WindowAssert.assertContains(resultWindows, 17, 27, 2);
+    }
+
+    @Test
+    public void outOfOrderBeforeOldestActiveWindowIsCounted() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(1, 3));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 50);
+        slicingWindowOperator.processElement(1, 60);
+        slicingWindowOperator.processElement(1, 70);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(5);
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 2, 1);
+
+        //not late, but older than the start of the oldest active window [70,71)
+        slicingWindowOperator.processElement(1, 55);
+        resultWindows = slicingWindowOperator.processWatermark(100);
+
+        // sorted: 1,50,55,60,70 -> windows start at tuples 0,3
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 60, 61, 1);
+    }
+
+    @Test
+    public void lateTupleBeforeRemovedTimestampsDoesNotShiftWindows() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlideByTupleWindow(10, 2));
+
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(1, 3);
+        slicingWindowOperator.processElement(1, 6);
+        slicingWindowOperator.processElement(1, 8);
+        slicingWindowOperator.processElement(1, 13);
+        slicingWindowOperator.processElement(1, 17);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(12);
+        Assert.assertEquals(1, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 11, 4);
+
+        //late tuple older than the oldest active window [6,16), the timestamps 1 and 3 were removed
+        slicingWindowOperator.processElement(1, 2);
+        slicingWindowOperator.processElement(1, 24);
+        slicingWindowOperator.processElement(1, 25);
+        resultWindows = slicingWindowOperator.processWatermark(40);
+
+        // the triggered window [1,11) is final, the active windows keep starting at tuples 2,4,6 of 1,3,6,8,13,17,24,25
+        Assert.assertEquals(3, resultWindows.size());
+        WindowAssert.assertEquals(resultWindows.get(0), 6, 16, 3);
+        WindowAssert.assertEquals(resultWindows.get(1), 13, 23, 2);
+        WindowAssert.assertEquals(resultWindows.get(2), 24, 34, 2);
+    }
+
+    @Test
+    public void timestampsArePrunedOnWatermark() throws Exception {
+        SlideByTupleWindow.SlideByTupleContext context = new SlideByTupleWindow(10, 3).createContext();
+        Field timestamps = SlideByTupleWindow.SlideByTupleContext.class.getDeclaredField("timestamps");
+        timestamps.setAccessible(true);
+
+        List<Long> triggeredStarts = new java.util.ArrayList<>();
+        for (long ts = 1; ts <= 10000; ts++) {
+            context.updateContext(1, ts, new HashSet<>());
+            if (ts % 10 == 0) {
+                context.triggerWindows((start, end, measure) -> triggeredStarts.add(start), ts - 10, ts);
+            }
+        }
+
+        // windows start at every third tuple and the buffer only keeps the tuples of the active windows
+        Assert.assertEquals(1, (long) triggeredStarts.get(0));
+        Assert.assertEquals(9988, (long) triggeredStarts.get(triggeredStarts.size() - 1));
+        Assert.assertTrue(((List<?>) timestamps.get(context)).size() <= 20);
     }
 }

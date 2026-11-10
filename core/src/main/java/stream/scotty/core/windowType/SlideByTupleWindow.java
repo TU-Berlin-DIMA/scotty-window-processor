@@ -4,6 +4,7 @@ import stream.scotty.core.WindowCollector;
 import stream.scotty.core.windowType.windowContext.WindowContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SlideByTupleWindow implements ForwardContextAware {
 
@@ -47,21 +48,31 @@ public class SlideByTupleWindow implements ForwardContextAware {
      * Window k (k = 0, 1, 2, ...) starts at the tuple with index k * slide, where tuples are
      * indexed in event-time order, and spans [start, start + size).
      * Tuples between the end of one window and the start of the next belong to no window.
+     * Windows that were already triggered are final, a late tuple only re-aligns windows that are still active.
+     * On each watermark, timestamps older than the watermark and the start of the oldest active window are removed.
+     * Late tuples older than the removed timestamps are not counted in the tuple index.
      */
     public class SlideByTupleContext extends WindowContext<Object> {
 
         private long nextStart = 0; //tuple index at which the next window starts
         private long firstActiveWindowNumber = 0; //sequence number k of getWindow(0)
-        private final ArrayList<Long> timestamps = new ArrayList<Long>(); //sorted timestamps of all tuples, index = tuple count
+        private final ArrayList<Long> timestamps = new ArrayList<Long>(); //sorted timestamps of tuples, index = tuple count - prunedCount
+        private long prunedCount = 0; //number of tuples removed from the front of timestamps
+        private long prunedUpTo = Long.MIN_VALUE; //timestamps below this bound were removed from timestamps
 
         @Override
         public ActiveWindow updateContext(Object tuple, long position) {
+
+            if (position < prunedUpTo) {
+                //very late tuple before the oldest active window, its index is no longer known
+                return null;
+            }
 
             if (timestamps.isEmpty() || position >= timestamps.get(timestamps.size() - 1)) {
                 //processes in-order tuples
                 int windowIndex = getWindowIndex(position);
                 timestamps.add(position);
-                if (timestamps.size() - 1 == nextStart) {
+                if (getCount() - 1 == nextStart) {
                     //current tuple starts a new window
                     nextStart += slide;
                     return addNewWindow(numberOfActiveWindows(), position, position + size);
@@ -82,9 +93,9 @@ public class SlideByTupleWindow implements ForwardContextAware {
             //all windows starting at a tuple index >= insertIndex now start one tuple earlier in event time
             shiftWindows();
 
-            if (timestamps.size() - 1 >= nextStart) {
+            if (getCount() - 1 >= nextStart) {
                 //the inserted tuple moved the tuple with index nextStart into the stream, start a new window there
-                long positionOfNewWindow = timestamps.get((int) nextStart);
+                long positionOfNewWindow = getTimestamp(nextStart);
                 nextStart += slide;
                 addNewWindow(numberOfActiveWindows(), positionOfNewWindow, positionOfNewWindow + size);
             }
@@ -100,7 +111,7 @@ public class SlideByTupleWindow implements ForwardContextAware {
         private void shiftWindows() {
             for (int i = 0; i < numberOfActiveWindows(); i++) {
                 ActiveWindow w = getWindow(i);
-                long newStart = timestamps.get((int) ((firstActiveWindowNumber + i) * slide));
+                long newStart = getTimestamp((firstActiveWindowNumber + i) * slide);
                 if (newStart != w.getStart()) {
                     shiftStartDontModifySlice(w, newStart);
                     splitSlice(newStart);
@@ -108,6 +119,14 @@ public class SlideByTupleWindow implements ForwardContextAware {
                     splitSlice(newStart + size);
                 }
             }
+        }
+
+        private long getCount() {
+            return prunedCount + timestamps.size();
+        }
+
+        private long getTimestamp(long tupleIndex) {
+            return timestamps.get((int) (tupleIndex - prunedCount));
         }
 
         /**
@@ -141,7 +160,7 @@ public class SlideByTupleWindow implements ForwardContextAware {
 
         @Override
         public long assignNextWindowStart(long position) {
-            if (timestamps.size() == nextStart) {
+            if (getCount() == nextStart) {
                 // new window starts, create new slice
                 return position;
             } else {
@@ -170,6 +189,34 @@ public class SlideByTupleWindow implements ForwardContextAware {
                 aggregateWindows.trigger(w.getStart(), w.getEnd(), measure);
                 removeWindow(0);
                 firstActiveWindowNumber++;
+            }
+            pruneTimestamps(currentWatermark);
+        }
+
+        /**
+         * Removes timestamps that can no longer change an active window, so that the
+         * context does not grow with the stream. Keeps everything from the watermark or the
+         * start of the oldest active window on, whichever is older, and always the latest timestamp.
+         */
+        private void pruneTimestamps(long currentWatermark) {
+            if (timestamps.isEmpty()) {
+                return;
+            }
+            long bound = Math.min(currentWatermark, timestamps.get(timestamps.size() - 1));
+            if (numberOfActiveWindows() > 0) {
+                bound = Math.min(bound, getWindow(0).getStart());
+            }
+            int index = Collections.binarySearch(timestamps, bound);
+            if (index < 0) {
+                index = -index - 1;
+            }
+            while (index > 0 && timestamps.get(index - 1) == bound) {
+                index--;
+            }
+            if (index > 0) {
+                timestamps.subList(0, index).clear();
+                prunedCount += index;
+                prunedUpTo = Math.max(prunedUpTo, bound);
             }
         }
     }
