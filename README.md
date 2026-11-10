@@ -57,10 +57,12 @@ globalWindowOperator.applyTo(stream);
 More examples for Flink as well as demos for the other systems are provided in the [demo folder](demo).
 
 ### Aggregation Functions:
-Scotty provides the aggregation functions `Sum`, `Count`, `Min`, `Max` and `Mean` for all connectors
+Scotty provides the aggregation functions `Sum`, `Count`, `Min`, `Max`, `Mean` and `Quantile` for all connectors
 in the package `stream.scotty.core.windowFunction.builtin`.
 They aggregate the input tuples themselves, e.g. `Sum.create()` for a stream of integers,
 or a value taken from each tuple, e.g. `new Sum<>(tuple -> tuple.f1)`.
+`Quantile` computes the exact nearest-rank quantile, e.g. the median with `Quantile.create(0.5)`
+or `new Quantile<>(0.5, (Tuple2<Integer, Integer> tuple) -> tuple.f1)`.
 User-defined aggregation functions implement one of the interfaces in `stream.scotty.core.windowFunction`.
 
 ### Benchmark:  
