@@ -5,7 +5,7 @@
     <parent>
         <artifactId>scotty</artifactId>
         <groupId>stream.scotty</groupId>
-        <version>0.4</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,17 +14,17 @@
         <dependency>
             <groupId>stream.scotty</groupId>
             <artifactId>core</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>stream.scotty</groupId>
             <artifactId>slicing</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>stream.scotty</groupId>
             <artifactId>state</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-streaming-java -->
         <dependency>

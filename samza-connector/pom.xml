@@ -5,14 +5,14 @@
     <parent>
         <artifactId>scotty</artifactId>
         <groupId>stream.scotty</groupId>
-        <version>0.4</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>samza-connector</artifactId>
 
     <properties>
-        <scotty.version>0.4</scotty.version>
+        <scotty.version>0.5-SNAPSHOT</scotty.version>
         <samza.version>1.2.0</samza.version>
         <kafka.version>2.3.0</kafka.version>
     </properties>
