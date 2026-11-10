@@ -5,10 +5,11 @@ This repository provides Scotty, a framework for efficient window aggregations f
 ### Features:
 - High performance window aggregation with stream slicing. 
 - Scales to thousands of concurrent windows. 
-- Support for Tumbling, Sliding, and Session Windows.
+- Support for Tumbling, Sliding, Session, Punctuation, Fixed-band and Slide-by-tuple Windows, and Threshold Frames.
 - Initial support for Count-based windows.
 - Out-of-order processing.
 - Aggregate Sharing among all concurrent windows.
+- Built-in aggregation functions (sum, count, min, max, mean, quantile) for all connectors.
 - Connector for [Apache Flink](https://flink.apache.org/).
 - Connector for [Apache Storm](https://storm.apache.org/).
 - Connector for [Apache Beam](https://beam.apache.org/).
@@ -23,7 +24,7 @@ This repository provides Scotty, a framework for efficient window aggregations f
  - [Paper: Efficient Window Aggregation with General Stream Slicing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-efficient-window-aggregation-with-general-stream-slicing-edbt-2019.pdf) (EDBT 2019, Best Paper)
  - [Paper: Scotty: Efficient Window Aggregation for out-of-order Stream Processing](http://www.user.tu-berlin.de/powibol/assets/publications/traub-scotty-icde-2018.pdf) (ICDE 2018)
  - [Presentations Slides FlinkForward 2018](https://www.slideshare.net/powibol/flink-forward-2018-efficient-window-aggregation-with-stream-slicing)
- - [API Documentation](docs)
+ - [API Documentation](https://tu-berlin-dima.github.io/scotty-window-processor/docs/)
  - [Paper: Scotty: General and Efficient Open-source Window Aggregation for Stream Processing Systems](https://dl.acm.org/doi/pdf/10.1145/3433675) (ACM TODS 2021)
  - [Paper: Benson et al.: Disco: Efficient Distributed Window Aggregation](https://openproceedings.org/2020/conf/edbt/paper_300.pdf) (EDBT 2020)
  - [Repository: Disco: Stream Processing Engine for Distributed Window Aggregation](https://github.com/hpides/disco)
@@ -40,12 +41,12 @@ new KeyedScottyWindowOperator<>(new Sum<>(tuple -> tuple.f1));
 
 // Add multiple windows to the same operator
 windowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
-windowOperator.addWindow(new SlidingWindow(WindowMeasure.Time, 1000, 5000));
+windowOperator.addWindow(new SlidingWindow(WindowMeasure.Time, 5000, 1000));
 windowOperator.addWindow(new SessionWindow(WindowMeasure.Time, 1000));
 
 // Add operator to Flink job
 stream.keyBy(0)
-      .process(windowOperator)
+      .process(windowOperator);
 
 // For non-keyed streams, use the GlobalScottyWindowOperator
 GlobalScottyWindowOperator<Tuple2<Integer, Integer>, Integer> globalWindowOperator =
@@ -85,10 +86,17 @@ When a watermark arrives, Scotty outputs all window results of windows that ende
 
 However, some out-of-order tuples may arrive with a timestamp t' lower than the watermark t (t' <= t).
 For that case, the maxLateness indicates how long Scotty stores slices and their corresponding window aggregates.
-Scotty processes an out-of-order tuple as long as its in the allowed lateness, 
-i.e. it has an timestamp t' that is bigger than watermark minus the maxLateness (t' > t - maxLateness). 
-Then, Scotty outputs updated aggregates for the windows.
-The maxLateness can be adjusted with the method setMaxLateness of the slicingWindowOperator.
+Scotty processes an out-of-order tuple as long as it is in the allowed lateness, 
+i.e. it has a timestamp t' that is bigger than watermark minus the maxLateness (t' > t - maxLateness),
+and adds it to the aggregates of its windows.
+The maxLateness can be adjusted with the method setMaxLateness of the SlicingWindowOperator
+or with the allowed lateness parameter of the connectors, e.g. `allowedLateness` of the Flink operators.
+
+By default, windows that were already output are not output again.
+With `setResendWindowsInAllowedLateness(true)` on the SlicingWindowOperator, Scotty outputs the windows
+in the allowed lateness again when such a tuple arrives. The connectors do not expose this option yet.
+The [out-of-order architecture document](slicing/src/test/java/stream/scotty/slicing/aggregationstore/test/OutOfOrderArchitecture.md)
+describes the current state and its limitations.
 
 If an out-of-order tuple arrives outside the allowed lateness 
 (with a timestamp t' < t - maxLateness - maxFixedWindowSize), it is discarded.
@@ -97,9 +105,8 @@ sliding window).
 For context-aware window types, the maxFixedWindowSize is 0.
 
 If no watermark has arrived yet, an out-of-order tuple is outside the allowed lateness, 
-when its timestamp is lower than the start timestamp of the first slice (t' < tsOfFirstSlice),
-or in case of context aware windows, the timestamp of the first tuple minus the maxlateness 
-(t' < tsOfFirstTuple - maxLateness).
+when its timestamp is not bigger than the timestamp of the first tuple minus the maxLateness 
+(t' <= tsOfFirstTuple - maxLateness).
 
 ### Roadmap:
 We plan to extend our framework with the following features:
@@ -110,18 +117,8 @@ We plan to extend our framework with the following features:
 - Support of Flink Checkpoints and State Backends
 
 ### Setup:
-The maven package is currently not publically available.
-Therefore we have to build it from source:
-
-`
-git clone git@github.com:TU-Berlin-DIMA/scotty-window-processor.git
-`
-
-`
-mvn clean install
-`
-
-Then you can use the library in your maven project.
+Scotty is available on Maven Central.
+Add the connector for your stream processing system to your Maven project, e.g. for Flink:
 
 ```xml
 <dependency> 
@@ -130,6 +127,22 @@ Then you can use the library in your maven project.
  <version>0.4</version>
 </dependency>
 ```
+
+The other connectors are `storm-connector`, `beam-connector`, `kafkaStreams-connector`, `spark-connector` and `samza-connector`.
+
+To build Scotty from source, you need JDK 8 and Maven.
+The versions used for development are pinned in [.tool-versions](.tool-versions) (e.g. for [asdf](https://asdf-vm.com/)).
+
+```
+git clone https://github.com/TU-Berlin-DIMA/scotty-window-processor.git
+cd scotty-window-processor
+mvn clean install
+```
+
+The master branch has the `-SNAPSHOT` version of the next release.
+The [API documentation](docs) is generated with
+`mvn org.apache.maven.plugins:maven-javadoc-plugin:3.6.3:aggregate -Ddoclint=none -DexcludePackageNames='stream.scotty.demo*:stream.scotty.flinkBenchmark*:stream.scotty.microbenchmark*'`
+and copied from `target/site/apidocs` to `docs`.
 
 ### License:
 Scotty is licensed under the [Apache License, Version 2.0](LICENSE).

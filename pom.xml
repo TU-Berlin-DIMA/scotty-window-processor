@@ -9,7 +9,7 @@
     <groupId>stream.scotty</groupId>
     <artifactId>scotty</artifactId>
     <packaging>pom</packaging>
-    <version>0.4</version>
+    <version>0.5-SNAPSHOT</version>
 
     <name>Scotty Window Processor</name>
     <description>Scotty is an open-source framework for efficient window aggregation for out-of-order stream processing.</description>
@@ -82,7 +82,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Unique entry point for version number management -->
-        <global.version>0.4</global.version>
+        <global.version>0.5-SNAPSHOT</global.version>
 
         <generated.docs.dir>./docs/_includes/generated</generated.docs.dir>
     </properties>

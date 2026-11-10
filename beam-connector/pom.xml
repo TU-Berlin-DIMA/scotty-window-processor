@@ -5,7 +5,7 @@
     <parent>
         <artifactId>scotty</artifactId>
         <groupId>stream.scotty</groupId>
-        <version>0.4</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <scotty.version>0.4</scotty.version>
+        <scotty.version>0.5-SNAPSHOT</scotty.version>
         <beam.version>2.12.0</beam.version>
         <guava.version>20.0</guava.version>
         <joda.version>2.4</joda.version>

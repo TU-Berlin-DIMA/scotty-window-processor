@@ -1,10 +1,7 @@
-#Samza Connector
+# Samza Connector
 
-### Demo Requirements:
-* Apache Zookeeper host:localhost , port:2181
-* Apache Kafka Server host:localhost , port:9092
+Uses Scotty as a window operator in [Apache Samza](https://samza.apache.org/).
+`KeyedScottyWindowOperator` is a Samza `StreamTask`.
 
-### Demo Usage:
-* Start Zookeeper
-* Start Kafka Server
-* Start SamzaSumDemo.java
+The [Samza demo](../demo/samza-demo) shows how to use it.
+The [demo README](../demo/README.md#running-the-demos) describes how to run it.
