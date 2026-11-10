@@ -201,6 +201,12 @@ public class ThresholdFrame implements ForwardContextFree {
         }
 
         @Override
+        public boolean hasPendingWindows() {
+            // the frame that is still open is only triggered after a tuple below the threshold closed it
+            return numberOfActiveWindows() > 0 && getWindow(0).getEnd() <= lastEnd;
+        }
+
+        @Override
         public void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark) {
             while (numberOfActiveWindows() > 0) {
                 ActiveWindow window = getWindow(0);
