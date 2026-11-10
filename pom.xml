@@ -121,6 +121,43 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- Checks that all Java files carry the license header (#15). Add missing headers with
+                 mvn license:format. Runs once for the whole repository from the root project. -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>4.6</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>license-header.txt</header>
+                            <includes>
+                                <include>**/src/**/*.java</include>
+                            </includes>
+                            <excludes>
+                                <!-- taken from Apache Flink and Apache Storm, keep their ASF license header -->
+                                <exclude>core/src/main/java/stream/scotty/core/TimeMeasure.java</exclude>
+                                <exclude>demo/storm-demo/src/main/java/stream/scotty/demo/storm/PrinterBolt.java</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>

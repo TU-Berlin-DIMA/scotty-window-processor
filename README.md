@@ -131,6 +131,11 @@ Then you can use the library in your maven project.
 </dependency>
 ```
 
+### License:
+Scotty is licensed under the [Apache License, Version 2.0](LICENSE).
+New Java files need the license header from [license-header.txt](license-header.txt).
+The build checks this, and `mvn license:format` adds missing headers.
+
 ### Efficient Window Aggregation with General Stream Slicing at EDBT 2019
 General Stream Slicing received the Best Paper Award at the [22nd International Conference on Extending Database Technology](http://edbticdt2019.inesc-id.pt/?awards_bp_edbt) in March 2019.  
 
