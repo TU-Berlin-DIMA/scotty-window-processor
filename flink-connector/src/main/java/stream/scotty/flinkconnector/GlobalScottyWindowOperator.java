@@ -6,18 +6,28 @@ import stream.scotty.slicing.*;
 import stream.scotty.state.memory.*;
 import stream.scotty.core.*;
 import org.apache.flink.api.common.time.Time;
-import org.apache.flink.configuration.*;
-import org.apache.flink.streaming.api.functions.*;
-import org.apache.flink.util.*;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.datastream.*;
+import org.apache.flink.streaming.api.operators.*;
+import org.apache.flink.streaming.api.watermark.Watermark;
+import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 
 import java.util.*;
 
-public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends ProcessFunction<InputType, AggregateWindow<FinalAggregateType>> {
+/**
+ * Scotty window operator for non-keyed streams.
+ * Windows are triggered by watermarks, so they are also emitted if no further elements arrive.
+ * Apply it with {@link #applyTo(DataStream)} or {@link DataStream#transform}.
+ */
+public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends AbstractStreamOperator<AggregateWindow<FinalAggregateType>>
+        implements OneInputStreamOperator<InputType, AggregateWindow<FinalAggregateType>> {
 
 
-    private MemoryStateFactory stateFactory;
-    private SlicingWindowOperator<InputType> slicingWindowOperator;
+    private transient MemoryStateFactory stateFactory;
+    private transient SlicingWindowOperator<InputType> slicingWindowOperator;
+    private transient TimestampedCollector<AggregateWindow<FinalAggregateType>> collector;
     private long lastWatermark;
+    private long currentWatermark = Long.MIN_VALUE;
 
     private final AggregateFunction<InputType,?, FinalAggregateType> windowFunction;
     private final List<Window> windows;
@@ -26,14 +36,16 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
     public GlobalScottyWindowOperator(AggregateFunction<InputType, ?, FinalAggregateType> windowFunction) {
         this.windowFunction = windowFunction;
         this.windows = new ArrayList<>();
+        this.chainingStrategy = ChainingStrategy.ALWAYS;
     }
 
 
     @Override
-    public void open(Configuration parameters) throws Exception {
-        super.open(parameters);
+    public void open() throws Exception {
+        super.open();
         this.stateFactory = new MemoryStateFactory();
         this.slicingWindowOperator = initWindowOperator();
+        this.collector = new TimestampedCollector<>(output);
     }
 
     public SlicingWindowOperator initWindowOperator(){
@@ -47,23 +59,35 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
     }
 
     @Override
-    public void processElement(InputType value, Context ctx, Collector<AggregateWindow<FinalAggregateType>> out) throws Exception {
+    public void processElement(StreamRecord<InputType> element) throws Exception {
+        long timestamp = getTimestamp(element);
+        this.slicingWindowOperator.processElement(element.getValue(), timestamp);
 
-        this.slicingWindowOperator.processElement(value, getTimestamp(ctx));
+        collector.setTimestamp(element);
+        processWatermark(currentWatermark < 0 ? timestamp : currentWatermark);
+    }
 
-        long currentWaterMark = ctx.timerService().currentWatermark()<0?getTimestamp(ctx):ctx.timerService().currentWatermark();
+    @Override
+    public void processWatermark(Watermark mark) throws Exception {
+        // trigger windows before the watermark is forwarded (#61)
+        currentWatermark = mark.getTimestamp();
+        collector.setAbsoluteTimestamp(mark.getTimestamp());
+        processWatermark(mark.getTimestamp());
+        super.processWatermark(mark);
+    }
 
+    private void processWatermark(long currentWaterMark) {
         if (currentWaterMark > this.lastWatermark) {
             List<AggregateWindow> aggregates = this.slicingWindowOperator.processWatermark(currentWaterMark);
             for(AggregateWindow<FinalAggregateType> aggregateWindow: aggregates){
-                out.collect(aggregateWindow);
+                collector.collect(aggregateWindow);
             }
             this.lastWatermark = currentWaterMark;
         }
     }
 
-    private long getTimestamp(Context context){
-        return context.timestamp()!=null?context.timestamp():context.timerService().currentProcessingTime();
+    private long getTimestamp(StreamRecord<InputType> element){
+        return element.hasTimestamp()?element.getTimestamp():getProcessingTimeService().getCurrentProcessingTime();
     }
 
     /**
@@ -71,14 +95,26 @@ public class GlobalScottyWindowOperator<InputType, FinalAggregateType> extends P
      * For example {@link SlidingWindow} or {@link TumblingWindow}
      * @param window the new window definition
      */
-    public GlobalScottyWindowOperator addWindow(Window window) {
+    public GlobalScottyWindowOperator<InputType, FinalAggregateType> addWindow(Window window) {
         windows.add(window);
         return this;
     }
 
 
-    public GlobalScottyWindowOperator allowedLateness(Time time){
+    public GlobalScottyWindowOperator<InputType, FinalAggregateType> allowedLateness(Time time){
         this.allowedLateness = time.toMilliseconds();
         return this;
+    }
+
+    /**
+     * Applies this window operator to a non-keyed stream.
+     * @param stream the input stream
+     * @return the stream of window aggregates
+     */
+    @SuppressWarnings("unchecked")
+    public SingleOutputStreamOperator<AggregateWindow<FinalAggregateType>> applyTo(DataStream<InputType> stream) {
+        TypeInformation<AggregateWindow<FinalAggregateType>> outputType =
+                TypeInformation.of((Class<AggregateWindow<FinalAggregateType>>) (Class<?>) AggregateWindow.class);
+        return stream.transform("GlobalScottyWindowOperator", outputType, this);
     }
 }

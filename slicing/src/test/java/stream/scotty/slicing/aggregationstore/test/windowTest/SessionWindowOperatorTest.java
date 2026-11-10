@@ -294,4 +294,23 @@ public class SessionWindowOperatorTest {
         WindowAssert.assertContains(resultWindows, 2700, 2710, 1);
     }
 
+    @Test
+    public void watermarkWithoutActiveSessionsTest() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SessionWindow(WindowMeasure.Time, 10));
+        slicingWindowOperator.processElement(1, 1);
+        slicingWindowOperator.processElement(2, 5);
+
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(30);
+        WindowAssert.assertEquals(resultWindows.get(0), 1, 15, 3);
+
+        // all sessions were triggered, the next watermark must not fail
+        resultWindows = slicingWindowOperator.processWatermark(40);
+        Assert.assertTrue(resultWindows.isEmpty());
+
+        slicingWindowOperator.processElement(3, 50);
+        resultWindows = slicingWindowOperator.processWatermark(70);
+        WindowAssert.assertEquals(resultWindows.get(0), 50, 60, 3);
+    }
+
 }

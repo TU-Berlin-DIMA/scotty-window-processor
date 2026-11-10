@@ -24,6 +24,13 @@ public abstract class WindowContext<Tuple> implements Serializable {
         return newWindow;
     }
 
+    /**
+     * @return true if a future watermark can trigger an active window of this context without new tuples arriving.
+     */
+    public boolean hasPendingWindows() {
+        return !activeWindows.isEmpty();
+    }
+
     public ArrayList<ActiveWindow> getActiveWindows() {
         return activeWindows;
     }
@@ -71,6 +78,18 @@ public abstract class WindowContext<Tuple> implements Serializable {
         // adds a AddModification to split the slice if necessary, regardless of changes to the window
         modifiedWindowEdges.add(new AddModification(position));
     }
+
+    /**
+     * Shifts the end of a window and registers the new end as an additional slice edge.
+     * Unlike a ShiftModification, the slice edge at the old end is kept, as it may still
+     * be needed (e.g. as the end of a window that was split off) and as moving it could
+     * cross other slice edges.
+     */
+    public void shiftEndAndAddEdge(ActiveWindow window, long position) {
+        modifiedWindowEdges.add(new AddModification(position));
+        window.setEnd(position);
+    }
+
 
     public abstract ActiveWindow updateContext(Tuple tuple, long position);
 

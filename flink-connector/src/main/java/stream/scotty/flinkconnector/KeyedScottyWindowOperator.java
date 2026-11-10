@@ -7,6 +7,7 @@ import stream.scotty.slicing.*;
 import stream.scotty.state.memory.*;
 import org.apache.flink.api.common.time.Time;
 import org.apache.flink.configuration.*;
+import org.apache.flink.streaming.api.TimerService;
 import org.apache.flink.streaming.api.functions.*;
 import org.apache.flink.util.*;
 
@@ -59,8 +60,27 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
         SlicingWindowOperator<InputType> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
         slicingWindowOperator.processElement(value, getTimestamp(ctx));
         processWatermark(ctx, out);
+        // A KeyedProcessFunction is not notified about watermarks. Register an event-time timer that fires
+        // with the next watermark, so that windows are also triggered if no further elements arrive (#61).
+        registerWatermarkTimer(ctx.timerService().currentWatermark(), ctx.timerService());
+    }
 
+    @Override
+    public void onTimer(long timestamp, OnTimerContext ctx, Collector<AggregateWindow<FinalAggregateType>> out) throws Exception {
+        long currentWatermark = ctx.timerService().currentWatermark();
+        processWatermark(currentWatermark, out);
+        // Stop registering timers for this key if only new elements can trigger further windows of the key.
+        // The next element of the key registers a new timer.
+        SlicingWindowOperator<InputType> slicingWindowOperator = slicingWindowOperatorMap.get(ctx.getCurrentKey());
+        if (slicingWindowOperator != null && slicingWindowOperator.hasPendingWindows()) {
+            registerWatermarkTimer(currentWatermark, ctx.timerService());
+        }
+    }
 
+    private void registerWatermarkTimer(long currentWatermark, TimerService timerService) {
+        if (currentWatermark < Long.MAX_VALUE) {
+            timerService.registerEventTimeTimer(currentWatermark + 1);
+        }
     }
 
     private long getTimestamp(Context context){
@@ -68,9 +88,11 @@ public class KeyedScottyWindowOperator<Key, InputType, FinalAggregateType> exten
     }
 
     private void processWatermark(Context ctx, Collector<AggregateWindow<FinalAggregateType>> out) {
-
         long currentWaterMark = ctx.timerService().currentWatermark()<0?getTimestamp(ctx):ctx.timerService().currentWatermark();
+        processWatermark(currentWaterMark, out);
+    }
 
+    private void processWatermark(long currentWaterMark, Collector<AggregateWindow<FinalAggregateType>> out) {
         if (currentWaterMark > this.lastWatermark) {
             for (SlicingWindowOperator<InputType> slicingWindowOperator : this.slicingWindowOperatorMap.values()) {
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(currentWaterMark);

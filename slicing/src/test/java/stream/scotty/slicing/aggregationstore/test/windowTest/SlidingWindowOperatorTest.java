@@ -299,4 +299,34 @@ public class SlidingWindowOperatorTest {
         WindowAssert.assertContains(resultWindows, 32, 42, 5);
     }
 
+    /**
+     * Regression test for https://github.com/TU-Berlin-DIMA/scotty-window-processor/issues/61:
+     * with a small allowed lateness (the Flink connector default is 1), slice edges inside a gap
+     * without tuples were skipped, so sparse tuples ended up in slices that are wider than the
+     * windows containing them and were missing from all window results.
+     */
+    @Test
+    public void sparseTuplesSmallLatenessTest() {
+        slicingWindowOperator.addWindowFunction((ReduceAggregateFunction<Integer>) (currentAggregate, element) -> currentAggregate + element);
+        slicingWindowOperator.addWindowAssigner(new SlidingWindow(WindowMeasure.Time, 10, 5));
+        slicingWindowOperator.setMaxLateness(1);
+
+        slicingWindowOperator.processElement(4, 1);
+        List<AggregateWindow> resultWindows = slicingWindowOperator.processWatermark(1);
+        resultWindows = slicingWindowOperator.processWatermark(11);
+        WindowAssert.assertContains(resultWindows, 0, 10, 4);
+
+        slicingWindowOperator.processElement(5, 16);
+        resultWindows = slicingWindowOperator.processWatermark(25);
+        WindowAssert.assertContains(resultWindows, 10, 20, 5);
+        WindowAssert.assertContains(resultWindows, 15, 25, 5);
+
+        resultWindows = slicingWindowOperator.processWatermark(30);
+        slicingWindowOperator.processElement(6, 33);
+        resultWindows = slicingWindowOperator.processWatermark(35);
+        WindowAssert.assertContains(resultWindows, 25, 35, 6);
+        resultWindows = slicingWindowOperator.processWatermark(40);
+        WindowAssert.assertContains(resultWindows, 30, 40, 6);
+    }
+
 }
