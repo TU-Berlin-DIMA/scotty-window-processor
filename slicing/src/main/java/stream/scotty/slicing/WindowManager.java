@@ -93,7 +93,20 @@ public class WindowManager {
         this.lastWatermark = watermarkTs;
         this.lastCount = currentCount;
         clearAfterWatermark(watermarkTs - maxLateness);
-        return windows.aggregationStores;
+        return getResults(windows);
+    }
+
+    /**
+     * Computes the final aggregates of the triggered windows once.
+     * The results do not reference partial aggregates or aggregate functions,
+     * so connectors emit small results that serializers like Kryo can copy (#13).
+     */
+    private List<AggregateWindow> getResults(AggregationWindowCollector windows) {
+        List<AggregateWindow> results = new ArrayList<>(windows.aggregationStores.size());
+        for (AggregateWindow<Object> window : windows) {
+            results.add(new AggregateWindowResult<>(window.getMeasure(), window.getStart(), window.getEnd(), window.getAggValues(), window.hasValue()));
+        }
+        return results;
     }
 
     /**

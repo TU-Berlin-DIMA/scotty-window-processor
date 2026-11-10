@@ -26,8 +26,8 @@ import java.io.ObjectOutputStream;
  * <p>
  * The extractor is transient and written by Java serialization only.
  * Connectors ship aggregate functions with Java serialization, which supports serializable lambdas.
- * Field-based serializers like Kryo cannot serialize lambdas. Flink uses Kryo to copy the emitted
- * window results, which reference the aggregate function, but only need it to lower partial aggregates.
+ * Field-based serializers like Kryo cannot serialize lambdas, so a function copied with Kryo
+ * has no extractor and can only combine and lower partial aggregates.
  */
 abstract class ValueAggregateFunction<InputType, ValueType, PartialAggregateType, FinalAggregateType>
         implements AggregateFunction<InputType, PartialAggregateType, FinalAggregateType> {
