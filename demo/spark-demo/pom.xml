@@ -10,11 +10,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spark-demo</artifactId>
+
+    <properties>
+        <spark.version>2.4.4</spark.version>
+        <kafka.version>2.4.0</kafka.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>stream.scotty</groupId>
             <artifactId>spark-connector</artifactId>
             <version>0.4</version>
+        </dependency>
+
+        <!-- Kafka source and producer of the demo, the connector itself does not use Kafka -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
         </dependency>
     </dependencies>
 
