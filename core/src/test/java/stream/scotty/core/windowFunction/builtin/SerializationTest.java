@@ -83,7 +83,7 @@ public class SerializationTest {
 
     @Test
     public void kryoWithLambdaExtractor() throws Exception {
-        // Flink copies emitted window results with Kryo, they reference the aggregate function to lower partial aggregates
+        // a function copied with Kryo, which cannot serialize lambdas, can still combine and lower partial aggregates
         Sum<Map.Entry<String, Integer>, Integer> sum = kryoRoundTrip(new Sum<Map.Entry<String, Integer>, Integer>(Map.Entry::getValue));
         Mean<Map.Entry<String, Integer>> mean = kryoRoundTrip(new Mean<Map.Entry<String, Integer>>(t -> t.getValue()));
         Assert.assertEquals(Integer.valueOf(5), sum.lower(5));
