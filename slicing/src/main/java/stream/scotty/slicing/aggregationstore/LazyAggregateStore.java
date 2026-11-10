@@ -102,7 +102,6 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
         //        ws.addState(currentSlice.getAggState());
         //    }
         //}
-        //System.out.println(this.slices.size());
 
     }
 
@@ -137,7 +136,6 @@ public class LazyAggregateStore<InputType> implements AggregationStore<InputType
         if (index <= 0)
             return;
         this.slices.removeRange(0, index);
-        //System.out.println("remove");
 
     }
 

@@ -136,6 +136,15 @@ public class PunctuationWindow implements ForwardContextFree {
         }
 
         @Override
+        public boolean hasPendingWindows() {
+            // the window after the last punctuation is only triggered after the next punctuation arrived
+            if (hasActiveWindows())
+                return false;
+            ActiveWindow window = getWindow(0);
+            return window.getEnd() <= lastWindowEnd && window.getStart() != window.getEnd();
+        }
+
+        @Override
         public void triggerWindows(WindowCollector aggregateWindows, long lastWatermark, long currentWatermark) {
             ActiveWindow window = getWindow(0);
             while (window.getEnd() <= currentWatermark && window.getEnd() <= lastWindowEnd && window.getStart() != window.getEnd()) {

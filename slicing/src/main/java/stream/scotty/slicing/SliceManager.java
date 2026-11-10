@@ -1,5 +1,6 @@
 package stream.scotty.slicing;
 
+import stream.scotty.core.windowType.*;
 import stream.scotty.core.windowType.windowContext.*;
 import stream.scotty.slicing.aggregationstore.*;
 import stream.scotty.slicing.slice.*;
@@ -74,6 +75,11 @@ public class SliceManager<InputType> {
                 // updateSlices(windowStarts);
 
                 int indexOfSlice = this.aggregationStore.findSliceIndexByTimestamp(ts);
+                if (indexOfSlice < 0) {
+                    // tuple is in allowed lateness but older than the oldest slice -> make room for it
+                    prependSlices(ts);
+                    indexOfSlice = 0;
+                }
                 this.aggregationStore.insertValueToSlice(indexOfSlice, element, ts);
                 if (this.windowManager.hasCountMeasure()) {
                     // shift count in slices
@@ -170,11 +176,38 @@ public class SliceManager<InputType> {
                         splitSlice(sliceIndex, ((AddModification) mod).post);
                     }
                 }else {
-                    Slice sliceFirst = this.aggregationStore.getSlice(0);
-                    Slice newSlice = this.sliceFactory.createSlice(newWindowEdge, sliceFirst.getTStart(), 0, 0, sliceFirst.getType());
-                    this.aggregationStore.addSlice(0, newSlice);
+                    prependSlices(newWindowEdge);
                 }
             }
+        }
+    }
+
+    /**
+     * Prepend slices from startTs to the start of the oldest slice.
+     * This is required if a tuple in allowed lateness or a new window edge is older than the oldest slice.
+     * The new slices are split at all edges of time-based context-free windows,
+     * edges of context-aware windows are added by {@link #checkSliceEdges(Set)}.
+     *
+     * @param startTs the start timestamp of the first new slice
+     */
+    private void prependSlices(final long startTs) {
+        final Slice firstSlice = this.aggregationStore.getSlice(0);
+        final long firstSliceStart = firstSlice.getTStart();
+        int sliceIndex = 0;
+        long sliceStart = startTs;
+        while (sliceStart < firstSliceStart) {
+            long sliceEnd = firstSliceStart;
+            for (ContextFreeWindow window : this.windowManager.getContextFreeWindows()) {
+                if (window.getWindowMeasure() == WindowMeasure.Time) {
+                    long nextEdge = window.assignNextWindowStart(sliceStart);
+                    if (nextEdge > sliceStart && nextEdge < sliceEnd)
+                        sliceEnd = nextEdge;
+                }
+            }
+            // new slices are empty, they start at the count of the oldest slice
+            Slice<InputType, ?> slice = this.sliceFactory.createSlice(sliceStart, sliceEnd, firstSlice.getCStart(), firstSlice.getCStart(), new Slice.Fixed());
+            this.aggregationStore.addSlice(sliceIndex++, slice);
+            sliceStart = sliceEnd;
         }
     }
 

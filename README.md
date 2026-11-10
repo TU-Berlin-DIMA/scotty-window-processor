@@ -46,6 +46,12 @@ windowOperator.addWindow(new SessionWindow(WindowMeasure.Time, 1000));
 // Add operator to Flink job
 stream.keyBy(0)
       .process(windowOperator)
+
+// For non-keyed streams, use the GlobalScottyWindowOperator
+GlobalScottyWindowOperator<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> globalWindowOperator =
+new GlobalScottyWindowOperator<>(new SumWindowFunction());
+globalWindowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
+globalWindowOperator.applyTo(stream);
 ```
 
 More examples for Flink as well as demos for the other systems are provided in the [demo folder](demo).

@@ -104,6 +104,25 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <pluginManagement>
+            <!-- Pin the build plugins so builds do not depend on the defaults of the local Maven version
+                 (e.g. Maven 3.6 defaults to surefire 2.12.4, Maven 3.9 to surefire 3.x). -->
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <profiles>
         <profile>
             <!-- used for SNAPSHOT and regular releases -->
