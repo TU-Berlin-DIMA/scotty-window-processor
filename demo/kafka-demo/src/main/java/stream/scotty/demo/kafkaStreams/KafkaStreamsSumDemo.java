@@ -4,7 +4,7 @@ import stream.scotty.core.windowType.SlidingWindow;
 import stream.scotty.core.windowType.TumblingWindow;
 import stream.scotty.core.windowType.WindowMeasure;
 import stream.scotty.kafkastreamsconnector.KeyedScottyWindowOperatorSupplier;
-import stream.scotty.demo.kafkaStreams.windowFunctions.SumWindowFunction;
+import stream.scotty.core.windowFunction.builtin.Sum;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
@@ -26,7 +26,7 @@ public class KafkaStreamsSumDemo {
          * Topology approach
          */
 
-        KeyedScottyWindowOperatorSupplier<Integer, Integer> processorSupplier = new KeyedScottyWindowOperatorSupplier<>(new SumWindowFunction(), 100);
+        KeyedScottyWindowOperatorSupplier<Integer, Integer> processorSupplier = new KeyedScottyWindowOperatorSupplier<>(Sum.create(), 100);
         processorSupplier
             .addWindow(new TumblingWindow(WindowMeasure.Time, 2000))
             .addWindow(new SlidingWindow(WindowMeasure.Time, 5000,1000));
@@ -50,7 +50,7 @@ public class KafkaStreamsSumDemo {
         /*
         StreamsBuilder builder = new StreamsBuilder();
         KStream<Integer,Integer> input = builder.stream("testInput");
-        KeyedScottyWindowOperatorSupplier<Integer, Integer> processorSupplier = new KeyedScottyWindowOperatorSupplier<>(new SumWindowFunction(), 100);
+        KeyedScottyWindowOperatorSupplier<Integer, Integer> processorSupplier = new KeyedScottyWindowOperatorSupplier<>(Sum.create(), 100);
         processorSupplier
             .addWindow(new TumblingWindow(WindowMeasure.Time, 2000))
             .addWindow(new SlidingWindow(WindowMeasure.Time, 5000,1000));

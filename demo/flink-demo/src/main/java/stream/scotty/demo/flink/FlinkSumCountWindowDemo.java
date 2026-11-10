@@ -2,7 +2,7 @@ package stream.scotty.demo.flink;
 
 import stream.scotty.core.windowType.*;
 import stream.scotty.flinkconnector.*;
-import stream.scotty.demo.flink.windowFunctions.*;
+import stream.scotty.core.windowFunction.builtin.Sum;
 import org.apache.flink.api.java.tuple.*;
 import org.apache.flink.streaming.api.*;
 import org.apache.flink.streaming.api.datastream.*;
@@ -21,8 +21,8 @@ public class FlinkSumCountWindowDemo implements Serializable {
 
         DataStream<Tuple2<Integer, Integer>> stream = sev.addSource(new DemoSource());
 
-        KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> processingFunction =
-                new KeyedScottyWindowOperator<>(new SumWindowFunction());
+        KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Integer> processingFunction =
+                new KeyedScottyWindowOperator<>(new Sum<>(tuple -> tuple.f1));
 
         processingFunction.addWindow(new TumblingWindow(WindowMeasure.Count, 1000));
 
