@@ -3,7 +3,7 @@ package stream.scotty.demo.beam;
 import stream.scotty.beamconnector.KeyedScottyWindowOperator;
 import stream.scotty.demo.beam.dataGenerator.DataGeneratorSource;
 import stream.scotty.demo.beam.dataGenerator.TimeStampGenerator;
-import stream.scotty.demo.beam.windowFunctions.Sum;
+import stream.scotty.core.windowFunction.builtin.Sum;
 import stream.scotty.core.windowType.TumblingWindow;
 import stream.scotty.core.windowType.WindowMeasure;
 import org.apache.beam.sdk.Pipeline;
@@ -24,7 +24,7 @@ public class BeamSumDemo {
 
         PCollection<KV<Integer, Integer>> data = p.begin().apply(Read.from(new DataGeneratorSource(0, new TimeStampGenerator())));
 
-        KeyedScottyWindowOperator<Integer, Integer> scottyWindowDoFn = new KeyedScottyWindowOperator<Integer, Integer>(0, new Sum());
+        KeyedScottyWindowOperator<Integer, Integer> scottyWindowDoFn = new KeyedScottyWindowOperator<Integer, Integer>(0, new Sum<>((KV<Integer, Integer> tuple) -> tuple.getValue()));
         scottyWindowDoFn.addWindow(new TumblingWindow(WindowMeasure.Time, 5000));
         //scottyWindowDoFn.addWindow(new SlidingWindow(WindowMeasure.Time, 2000, 1000));
         //scottyWindowDoFn.addWindow(new SessionWindow(WindowMeasure.Time, 2000));

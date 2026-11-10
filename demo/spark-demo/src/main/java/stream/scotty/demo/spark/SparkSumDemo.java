@@ -14,7 +14,7 @@ import org.apache.spark.sql.streaming.StreamingQuery;
 import org.apache.spark.sql.streaming.Trigger;
 import scala.Tuple3;
 import stream.scotty.sparkconnector.KeyedScottyWindowOperator;
-import stream.scotty.demo.spark.windowFunctions.SumWindowFunction;
+import stream.scotty.core.windowFunction.builtin.Sum;
 
 import java.sql.Timestamp;
 
@@ -52,7 +52,7 @@ public class SparkSumDemo {
                 .as(Encoders.tuple(Encoders.INT(), Encoders.INT(), Encoders.TIMESTAMP()))
                 .map(streamToEvents, Encoders.bean(DemoEvent.class));
 
-        KeyedScottyWindowOperator<Integer, Integer> processingFunction2 = new KeyedScottyWindowOperator<>(new SumWindowFunction(), 100);
+        KeyedScottyWindowOperator<Integer, Integer> processingFunction2 = new KeyedScottyWindowOperator<>(Sum.create(), 100);
         processingFunction2
                 .addWindow(new TumblingWindow(WindowMeasure.Time, 5000))
                 .addWindow(new SlidingWindow(WindowMeasure.Time, 5000, 1000));

@@ -5,7 +5,7 @@ import stream.scotty.core.windowType.SlidingWindow;
 import stream.scotty.core.windowType.TumblingWindow;
 import stream.scotty.core.windowType.WindowMeasure;
 import stream.scotty.stormconnector.KeyedScottyWindowOperator;
-import stream.scotty.demo.storm.windowFunctions.Sum;
+import stream.scotty.core.windowFunction.builtin.Sum;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
@@ -33,7 +33,7 @@ public class ScottyDemoTopology {
         //Disable Acking
         conf.setNumAckers(0);
 
-        KeyedScottyWindowOperator scottyBolt = new KeyedScottyWindowOperator<Integer, Integer>(new Sum(), 0);
+        KeyedScottyWindowOperator scottyBolt = new KeyedScottyWindowOperator<Integer, Integer>(Sum.create(), 0);
         scottyBolt.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
         scottyBolt.addWindow(new SlidingWindow(WindowMeasure.Time, 1000, 250));
         scottyBolt.addWindow(new SessionWindow(WindowMeasure.Time, 1000));

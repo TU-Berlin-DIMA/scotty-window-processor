@@ -1,7 +1,7 @@
 package stream.scotty.demo.flink;
 
 import stream.scotty.core.windowType.PunctuationWindow;
-import stream.scotty.demo.flink.windowFunctions.SumWindowFunction;
+import stream.scotty.core.windowFunction.builtin.Sum;
 import stream.scotty.flinkconnector.KeyedScottyWindowOperator;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -22,8 +22,8 @@ public class FlinkPunctuationDemo  implements Serializable  {
 
         DataStream<Tuple2<Integer, Integer>> stream = sev.addSource(new DemoSource());
 
-        KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> processingFunction =
-                new KeyedScottyWindowOperator<>(new SumWindowFunction());
+        KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Integer> processingFunction =
+                new KeyedScottyWindowOperator<>(new Sum<>(tuple -> tuple.f1));
 
         //define the punctuation, can have different values
         Tuple2 p = new Tuple2(1, 9); //every time a tuple with the value 9 is emitted, a new window starts

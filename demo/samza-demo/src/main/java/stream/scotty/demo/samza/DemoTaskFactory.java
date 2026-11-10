@@ -4,7 +4,7 @@ import stream.scotty.core.windowType.SlidingWindow;
 import stream.scotty.core.windowType.TumblingWindow;
 import stream.scotty.core.windowType.WindowMeasure;
 import stream.scotty.samzaconnector.KeyedScottyWindowOperator;
-import stream.scotty.demo.samza.windowFunctions.SumWindowFunction;
+import stream.scotty.core.windowFunction.builtin.Sum;
 import org.apache.samza.system.SystemStream;
 import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.StreamTaskFactory;
@@ -22,7 +22,7 @@ public class DemoTaskFactory implements StreamTaskFactory {
     public StreamTask createInstance() {
         SystemStream stream = new SystemStream(SYSTEM_DESCRIPTOR_NAME, OUTPUT_DESCRIPTOR_NAME);
         KeyedScottyWindowOperator operator = new KeyedScottyWindowOperator<Integer, Integer>
-                (new SumWindowFunction(), 100, stream);
+                (Sum.create(), 100, stream);
         operator.addWindow(new SlidingWindow(WindowMeasure.Time, 5000, 1000));
         operator.addWindow(new TumblingWindow(WindowMeasure.Time, 2000));
 

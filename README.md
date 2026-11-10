@@ -35,8 +35,8 @@ This repository provides Scotty, a framework for efficient window aggregations f
 
 ```java
 // Instantiate Scotty window operator
-KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> windowOperator =
-new KeyedScottyWindowOperator<>(new SumWindowFunction());
+KeyedScottyWindowOperator<Tuple, Tuple2<Integer, Integer>, Integer> windowOperator =
+new KeyedScottyWindowOperator<>(new Sum<>(tuple -> tuple.f1));
 
 // Add multiple windows to the same operator
 windowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
@@ -48,13 +48,20 @@ stream.keyBy(0)
       .process(windowOperator)
 
 // For non-keyed streams, use the GlobalScottyWindowOperator
-GlobalScottyWindowOperator<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> globalWindowOperator =
-new GlobalScottyWindowOperator<>(new SumWindowFunction());
+GlobalScottyWindowOperator<Tuple2<Integer, Integer>, Integer> globalWindowOperator =
+new GlobalScottyWindowOperator<>(new Sum<>(tuple -> tuple.f1));
 globalWindowOperator.addWindow(new TumblingWindow(WindowMeasure.Time, 1000));
 globalWindowOperator.applyTo(stream);
 ```
 
 More examples for Flink as well as demos for the other systems are provided in the [demo folder](demo).
+
+### Aggregation Functions:
+Scotty provides the aggregation functions `Sum`, `Count`, `Min`, `Max` and `Mean` for all connectors
+in the package `stream.scotty.core.windowFunction.builtin`.
+They aggregate the input tuples themselves, e.g. `Sum.create()` for a stream of integers,
+or a value taken from each tuple, e.g. `new Sum<>(tuple -> tuple.f1)`.
+User-defined aggregation functions implement one of the interfaces in `stream.scotty.core.windowFunction`.
 
 ### Benchmark:  
 
