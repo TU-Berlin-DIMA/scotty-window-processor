@@ -83,18 +83,20 @@ public class KeyedScottyWindowOperator<Key, Value> extends BaseBasicBolt {
         SlicingWindowOperator<Value> slicingWindowOperator = slicingWindowOperatorMap.get(currentKey);
         //We only process the Value of a tuple
         slicingWindowOperator.processElement((Value) tuple.getValue(1), tuple.getLong(2));
-        processWatermark(currentKey, tuple.getLong(2), basicOutputCollector);
+        processWatermark(tuple.getLong(2), basicOutputCollector);
     }
 
-    private void processWatermark(Key currentKey, long timeStamp, BasicOutputCollector basicOutputCollector) {
+    private void processWatermark(long timeStamp, BasicOutputCollector basicOutputCollector) {
         // Every tuple represents a Watermark with its timestamp.
         // A watermark is processed if it is greater than the old watermark, i.e. monotonically increasing.
         // We process watermarks every watermarkEvictionPeriod in event-time
         if (timeStamp > lastWatermark + watermarkEvictionPeriod) {
-            for (SlicingWindowOperator<Value> slicingWindowOperator : this.slicingWindowOperatorMap.values()) {
-                List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(timeStamp);
+            for (Map.Entry<Key, SlicingWindowOperator<Value>> keyOperator : this.slicingWindowOperatorMap.entrySet()) {
+                List<AggregateWindow> aggregates = keyOperator.getValue().processWatermark(timeStamp);
                 for (AggregateWindow<Value> aggregateWindow : aggregates) {
-                    basicOutputCollector.emit(new Values(currentKey, aggregateWindow));
+                    // emit the window with the key it belongs to, not the key of the current tuple
+                    if (aggregateWindow.hasValue())
+                        basicOutputCollector.emit(new Values(keyOperator.getKey(), aggregateWindow));
                 }
             }
             lastWatermark = timeStamp;
