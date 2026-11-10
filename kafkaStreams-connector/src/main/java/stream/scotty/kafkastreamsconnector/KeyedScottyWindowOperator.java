@@ -9,6 +9,8 @@ import stream.scotty.slicing.SlicingWindowOperator;
 import stream.scotty.state.memory.MemoryStateFactory;
 import org.apache.kafka.streams.processor.Processor;
 import org.apache.kafka.streams.processor.ProcessorContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class KeyedScottyWindowOperator<Key, Value> implements Processor<Key,Value> {
+    private static final Logger LOG = LoggerFactory.getLogger(KeyedScottyWindowOperator.class);
     private ProcessorContext context;
     private MemoryStateFactory stateFactory;
     private HashMap<Key, SlicingWindowOperator<Value>> slicingWindowOperatorMap;
@@ -66,7 +69,7 @@ public class KeyedScottyWindowOperator<Key, Value> implements Processor<Key,Valu
               List<AggregateWindow> aggregates = keyOperatorSet.getValue().processWatermark(timeStamp);
               for (AggregateWindow<Value> aggregateWindow : aggregates) {
                   if (aggregateWindow.hasValue()) {
-                      System.out.println(aggregateWindow);
+                      LOG.debug("AggregateWindow: {}", aggregateWindow);
                       for (Value aggValue : aggregateWindow.getAggValues()) {
                           context.forward(keyOperatorSet.getKey(), aggValue);
                       }

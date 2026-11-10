@@ -8,6 +8,8 @@ import stream.scotty.slicing.SlicingWindowOperator;
 import stream.scotty.sparkconnector.demo.DemoEvent;
 import stream.scotty.state.memory.MemoryStateFactory;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class KeyedScottyWindowOperator<Key, Value> implements FlatMapFunction<DemoEvent, Value> {
+    private static final Logger LOG = LoggerFactory.getLogger(KeyedScottyWindowOperator.class);
     private MemoryStateFactory stateFactory;
     private HashMap<Key, SlicingWindowOperator<Value>> slicingWindowOperatorMap;
     private long lastWatermark;
@@ -62,7 +65,7 @@ public class KeyedScottyWindowOperator<Key, Value> implements FlatMapFunction<De
                 List<AggregateWindow> aggregates = slicingWindowOperator.processWatermark(timeStamp);
                 for (AggregateWindow<Value> aggregateWindow : aggregates) {
                     if (aggregateWindow.hasValue()) {
-                        System.out.println("AggregateWindow: "+aggregateWindow);
+                        LOG.debug("AggregateWindow: {}", aggregateWindow);
                         outputList.addAll(aggregateWindow.getAggValues());
                     }
                 }
